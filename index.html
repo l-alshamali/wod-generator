@@ -359,7 +359,7 @@ function setT(v){S.time=+v;var d=document.getElementById('td');if(d)d.textConten
 function setTF(v){S.time=v;var s=document.querySelector('input[type=range]');if(s)s.value=v;setT(v)}
 function step2(){
   app.innerHTML=dots(2)+'<div class="qc ani"><div class="ql">Step 3 / 5</div><div class="qt">Solo or team? 🤝</div><div class="qs">Affects volume and rep sharing</div><div class="og">'
-  +[[1,'🧍','Individual','Solo'],[2,'👥','Team of 2','Partner'],[3,'👨‍👩‍👦','Team of 3','Trio'],[4,'🏅','Team of 4','Squad']]
+  +[[1,'🧍','Individual','Solo'],[2,'👥','Team of 2','Partner']]
   .map(function(x){return'<button class="ob'+(S.teamSize===x[0]?' sel':'')+'" onclick="setTeam('+x[0]+',this)"><span class="oi">'+x[1]+'</span><span class="on">'+x[2]+'</span><span class="od">'+x[3]+'</span></button>'}).join('')+'</div>'
   +bkBtn('Time',1)+'</div>';
 }
@@ -421,7 +421,7 @@ function renderItems(items,si){var sn=0;return items.map(function(it,ii){
 function renderStr(it,si,ii,num){
   var ex=it.ex;
   var emTag=it.emomMin?'<span style="background:var(--og);color:var(--or);font-size:10px;font-weight:700;padding:1px 6px;border-radius:5px;margin-left:5px">'+it.emomMin+'</span>':'';
-  return'<div class="er" id="ex-'+si+'-'+ii+'"><div class="en">'+num+'</div><div class="eb"><div class="ename">'+ex.name+emTag+'</div><div class="edet">'+it.detail+'</div>'+(it.wt?'<div class="ewt">⚖️ '+it.wt+'</div>':'')+'</div><div class="ea"><button class="esb" onclick="toggleSwap(\''+si+'\',\''+ii+'\')">Swap ↕</button><button class="esb re" onclick="regenEx('+si+','+ii+',\'str\')">New ⟳</button></div></div>'
+  return'<div class="er" id="ex-'+si+'-'+ii+'"><div class="en">'+num+'</div><div class="eb"><div class="ename">'+ex.name+emTag+'</div><div class="edet">'+it.detail+'</div>'+'</div><div class="ea"><button class="esb" onclick="toggleSwap(\''+si+'\',\''+ii+'\')">Swap ↕</button><button class="esb re" onclick="regenEx('+si+','+ii+',\'str\')">New ⟳</button></div></div>'
   +'<div class="sp" id="sp-'+si+'-'+ii+'"><div class="sh">✅ Similar alternatives</div><div class="so">'
   +(ex.alts||[]).map(function(a){return'<div class="soi" onclick="swapStr('+si+','+ii+',\''+a.replace(/'/g,"\\'")+'\')">'+'<span class="sn">'+a+'</span><span class="stag">→ Use</span></div>'}).join('')
   +'</div><button class="gn" onclick="regenEx('+si+','+ii+',\'str\')">⟳ Generate completely different exercise</button></div>';
@@ -468,7 +468,7 @@ function copyWod(){
     s.items.forEach(function(it){
       if(it.kind==='sep'||it.kind==='buyin'){t+=it.label+'\n';return}
       if(it.kind==='cardio'){t+='  💨 '+it.ex.name+(it.detail?' — '+it.detail:'')+'\n';return}
-      t+='  '+it.ex.name+' — '+(it.detail||'')+(it.wt?' @ '+it.wt:'')+'\n';
+      t+='  '+it.ex.name+' — '+(it.detail||'')+'\n';
     });t+='\n';
   });
   if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(t).then(function(){toast('📋 Copied!')}).catch(function(){fbCopy(t)});}else{fbCopy(t)}
