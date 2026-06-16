@@ -57,7 +57,6 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:26px;heigh
 .eb{flex:1;min-width:0}
 .ename{font-size:13px;font-weight:500;color:var(--txt);margin-bottom:2px}
 .edet{font-size:12px;color:var(--or);font-weight:700}
-.ewt{font-size:11px;color:var(--txt3);margin-top:1px}
 .ea{display:flex;flex-direction:column;gap:4px;flex-shrink:0}
 .esb{background:var(--bg3);border:0.5px solid var(--bdr);border-radius:7px;padding:4px 9px;font-size:10px;color:var(--txt2);cursor:pointer;font-weight:600;min-height:28px;text-align:center}
 .esb:active{border-color:var(--gr);color:var(--gr)}
@@ -325,8 +324,8 @@ function mkGroupAB(time,lv,team){
 }
 var GEN={amrap:mkAmrap,'for-time':mkRFT,emom:mkEmom,e2mom:mkE2mom,e3mom:mkE3mom,chipper:mkChipper,tabata:mkTabata,'death-by':mkDeathBy,ladder:mkLadder,couplet:mkCouplet,triplet:mkTriplet,'buy-in-cashout':mkBuyInOut,ygig:mkYGIG,'interval-amrap':mkIntervalAmrap,'group-ab':mkGroupAB};
 function generate(cfg){var type=pk(cfg.wodTypes);return{type:type,sections:(GEN[type]||mkRFT)(cfg.time,cfg.level,cfg.teamSize),cfg:cfg}}
-var WN=['FURY','STORM','IRON','APEX','SURGE','BLAZE','GRIND','FORGE','CRUSH','NOVA','TITAN','GHOST','VENOM','EMBER','PULSE','SHARD','FLINT','DELTA','KRAKEN','REAPER','ZENITH','TORQUE','CIPHER','HAVOC','INFERNO'];
-var S={step:0,level:null,time:20,teamSize:1,wodTypes:[],wod:null,wodName:''};
+function todayStr(){var d=new Date();var m=['JAN','FEB','MAR','APR','MAY','JUN','JUL','AUG','SEP','OCT','NOV','DEC'];return d.getDate()+' '+m[d.getMonth()]+' '+d.getFullYear()}
+var S={step:0,level:null,time:20,teamSize:1,wodTypes:[],wod:null,wodName:'',regen:false};
 var app=document.getElementById('app');
 function toast(msg,color){var t=document.getElementById('tst');t.textContent=msg;t.style.background=color||'#00c853';t.classList.add('show');setTimeout(function(){t.classList.remove('show')},1800)}
 function dots(cur){
@@ -342,11 +341,11 @@ function step0(){
   +'<div style="width:40px;height:2px;background:var(--or);margin:14px auto 12px;border-radius:2px"></div>'
   +'<div style="font-size:13px;color:var(--txt2);font-weight:500;letter-spacing:1px">l.AlShamali</div>'
   +'</div>'
-  +dots(0)+'<div class="qc ani"><div class="ql">Step 1 / 5</div><div class="qt">What\'s your CrossFit level? 💪</div><div class="qs">Sets intensity and weights</div><div class="og">'
+  +dots(0)+'<div class="qc ani"><div class="ql">Step 1 / 5</div><div class="qt">What\'s your CrossFit level? 💪</div><div class="qs">Sets workout intensity</div><div class="og">'
   +[['beginner','🌱','Beginner','Under 6 months'],['intermediate','⚡','Intermediate','6mo – 2 years'],['advanced','🔥','Advanced','2 – 5 years'],['elite','🏆','Elite','5+ / competitive']]
-  .map(function(x){return'<button class="ob" onclick="setLevel(\''+x[0]+'\',this)"><span class="oi">'+x[1]+'</span><span class="on">'+x[2]+'</span><span class="od">'+x[3]+'</span></button>'}).join('')+'</div></div>';
+  .map(function(x){return'<button class="ob'+(S.level===x[0]?' sel':'')+'" onclick="setLevel(\''+x[0]+'\',this)"><span class="oi">'+x[1]+'</span><span class="on">'+x[2]+'</span><span class="od">'+x[3]+'</span></button>'}).join('')+'</div></div>';
 }
-function setLevel(l,el){S.level=l;if(el)el.classList.add('sel');setTimeout(function(){S.step=1;render()},220)}
+function setLevel(l,el){S.level=l;S.wod=null;if(el)el.classList.add('sel');setTimeout(function(){S.step=1;render()},220)}
 function step1(){
   app.innerHTML=dots(1)+'<div class="qc ani"><div class="ql">Step 2 / 5</div><div class="qt">How long? ⏱️</div><div class="qs">WOD duration (not including warm-up)</div>'
   +'<div class="td" id="td">'+S.time+'</div><div class="tu">minutes</div>'
@@ -359,25 +358,25 @@ function setT(v){S.time=+v;var d=document.getElementById('td');if(d)d.textConten
 function setTF(v){S.time=v;var s=document.querySelector('input[type=range]');if(s)s.value=v;setT(v)}
 function step2(){
   app.innerHTML=dots(2)+'<div class="qc ani"><div class="ql">Step 3 / 5</div><div class="qt">Solo or team? 🤝</div><div class="qs">Affects volume and rep sharing</div><div class="og">'
-  +[[1,'🧍','Individual','Solo'],[2,'👥','Team of 2','Partner']]
+  +[[1,'🧍','Individual','Solo'],[2,'🧍🧍','Team of 2','Partner']]
   .map(function(x){return'<button class="ob'+(S.teamSize===x[0]?' sel':'')+'" onclick="setTeam('+x[0]+',this)"><span class="oi">'+x[1]+'</span><span class="on">'+x[2]+'</span><span class="od">'+x[3]+'</span></button>'}).join('')+'</div>'
   +bkBtn('Time',1)+'</div>';
 }
-function setTeam(n,el){S.teamSize=n;if(el){document.querySelectorAll('.og .ob').forEach(function(b){b.classList.remove('sel')});el.classList.add('sel')}setTimeout(function(){S.step=3;render()},220)}
+function setTeam(n,el){S.teamSize=n;S.wod=null;if(el){document.querySelectorAll('.og .ob').forEach(function(b){b.classList.remove('sel')});el.classList.add('sel')}setTimeout(function(){S.step=3;render()},220)}
 var TYPES=[
   {id:'amrap',icon:'🔄',name:'AMRAP',desc:'As Many Rounds As Possible'},
   {id:'for-time',icon:'⏰',name:'For Time / RFT',desc:'Rounds For Time — finish AFAP'},
-  {id:'emom',icon:'📅',name:'EMOM',desc:'Every Minute On the Minute'},
+  {id:'emom',icon:'🔔',name:'EMOM',desc:'Every Minute On the Minute'},
   {id:'e2mom',icon:'⏱️',name:'E2MOM',desc:'Every 2 Min — heavier loads'},
   {id:'e3mom',icon:'🕐',name:'E3MOM',desc:'Every 3 Min — barbell cycling'},
   {id:'chipper',icon:'🪓',name:'Chipper',desc:'Long list of movements, done once'},
-  {id:'tabata',icon:'⚡',name:'Tabata',desc:'20s on / 10s off × 8 rounds'},
+  {id:'tabata',icon:'💥',name:'Tabata',desc:'20s on / 10s off × 8 rounds'},
   {id:'death-by',icon:'💀',name:'Death By',desc:'Add reps each minute until failure'},
   {id:'ladder',icon:'📈',name:'Ladder',desc:'Ascending / descending reps'},
   {id:'couplet',icon:'2️⃣',name:'Couplet',desc:'2 movements — classic Fran style'},
   {id:'triplet',icon:'3️⃣',name:'Triplet',desc:'3 movements — classic CrossFit'},
   {id:'buy-in-cashout',icon:'💰',name:'Buy-In / Cash-Out',desc:'Cardio bookends main WOD'},
-  {id:'ygig',icon:'🤜',name:'YGIG',desc:'You Go I Go — partner alternating',teamOnly:true},
+  {id:'ygig',icon:'🔀',name:'YGIG',desc:'You Go I Go — partner alternating',teamOnly:true},
   {id:'interval-amrap',icon:'🔁',name:'Interval AMRAP',desc:'Multiple AMRAPs + rest between'},
   {id:'group-ab',icon:'🅰️',name:'Group A / B',desc:'Two groups alternating stations'},
 ];
@@ -391,10 +390,10 @@ function step3(){
   +bkBtn('Team',2)+'</div>';
 }
 function toggleType(id){var i=S.wodTypes.indexOf(id);if(i===-1)S.wodTypes.push(id);else S.wodTypes.splice(i,1);step3()}
-function go(){if(S.wodTypes.length===0)return;S.step=4;render()}
+function go(){if(S.wodTypes.length===0)return;S.wod=null;S.step=4;render()}
 function step4(){
   app.innerHTML=dots(4)+'<div class="loading"><div class="spinner"></div><div class="lt">Generating your WOD...</div></div>';
-  setTimeout(function(){if(!S.wod||S.regen){S.wod=generate(S);S.wodName=pk(WN);S.regen=false}renderWod()},600);
+  setTimeout(function(){if(!S.wod||S.regen){S.wod=generate(S);S.wodName=todayStr();S.regen=false}renderWod()},600);
 }
 var TL={amrap:'AMRAP','for-time':'For Time/RFT',emom:'EMOM',e2mom:'E2MOM',e3mom:'E3MOM',chipper:'Chipper',tabata:'Tabata','death-by':'Death By',ladder:'Ladder',couplet:'Couplet',triplet:'Triplet','buy-in-cashout':'Buy-In/Cash-Out',ygig:'YGIG','interval-amrap':'Interval AMRAP','group-ab':'Group A/B'};
 var LL={beginner:'Beginner',intermediate:'Intermediate',advanced:'Advanced',elite:'Elite'};
