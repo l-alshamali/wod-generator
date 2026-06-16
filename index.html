@@ -1,0 +1,486 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>CrossFit WOD Generator</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+:root{--or:#ff6600;--og:rgba(255,102,0,.12);--gr:#00c853;--re:#ff1744;--ye:#ffd600;--bl:#448aff;--ca:#00bcd4;--cag:rgba(0,188,212,.1);--bg:#0f0f0f;--bg2:#1a1a1a;--bg3:#242424;--bdr:#333;--bdr2:#2a2a2a;--txt:#ffffff;--txt2:#aaaaaa;--txt3:#666}
+body{background:var(--bg);color:var(--txt);font-family:'Segoe UI',system-ui,-apple-system,sans-serif;min-height:100vh}
+.app{max-width:480px;margin:0 auto;padding:0 0 80px}
+.steps{display:flex;gap:6px;justify-content:center;margin-bottom:18px;padding-top:16px}
+.dot{width:8px;height:8px;border-radius:50%;background:var(--bdr);flex-shrink:0;transition:all .3s}
+.dot.active{background:var(--or);transform:scale(1.4)}
+.dot.done{background:var(--gr)}
+.bk{width:100%;background:transparent;color:var(--txt2);border:1px solid var(--bdr);border-radius:12px;padding:13px;font-size:13px;font-weight:600;cursor:pointer;margin-top:10px;min-height:46px}
+.bk:active{border-color:var(--or);color:var(--or)}
+.qc{background:var(--bg2);border:0.5px solid var(--bdr2);border-radius:16px;padding:20px 16px;margin:0 4px}
+.ql{font-size:10px;color:var(--or);text-transform:uppercase;letter-spacing:2px;margin-bottom:8px;font-weight:700}
+.qt{font-size:18px;font-weight:600;margin-bottom:4px;line-height:1.3;color:var(--txt)}
+.qs{font-size:12px;color:var(--txt2);margin-bottom:18px}
+.og{display:grid;gap:9px;grid-template-columns:1fr 1fr}
+.ob{background:var(--bg3);border:0.5px solid var(--bdr);border-radius:12px;padding:13px 8px;color:var(--txt);cursor:pointer;text-align:center;transition:all .15s}
+.ob:active,.ob.sel{border:1.5px solid var(--or);background:var(--og);color:var(--or)}
+.ob.dis{opacity:.3;pointer-events:none}
+.oi{font-size:22px;display:block;margin-bottom:5px}
+.on{font-size:12px;font-weight:600;display:block;color:inherit}
+.od{font-size:10px;color:var(--txt3);margin-top:2px;display:block}
+.ob.sel .od{color:rgba(255,102,0,.6)}
+.hint{font-size:11px;color:var(--txt3);text-align:center;margin-top:12px}
+.nb{width:100%;background:var(--or);color:#000;border:none;border-radius:12px;padding:15px;font-size:14px;font-weight:700;cursor:pointer;margin-top:18px;text-transform:uppercase;min-height:50px}
+.nb:disabled{background:var(--bdr);color:var(--txt3)}
+.td{font-size:64px;font-weight:900;color:var(--or);text-align:center;line-height:1;margin:14px 0 4px}
+.tu{text-align:center;font-size:11px;color:var(--txt3);margin-bottom:18px;text-transform:uppercase;letter-spacing:2px}
+input[type=range]{width:100%;-webkit-appearance:none;height:5px;border-radius:3px;background:var(--bdr);outline:none;cursor:pointer}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:26px;height:26px;border-radius:50%;background:var(--or);cursor:pointer}
+.tps{display:flex;gap:6px;margin-top:14px;justify-content:center;flex-wrap:wrap}
+.tp{background:var(--bg3);border:0.5px solid var(--bdr);border-radius:20px;padding:6px 14px;font-size:12px;color:var(--txt2);cursor:pointer;font-weight:500;min-height:34px}
+.tp:active{border-color:var(--or);color:var(--or)}
+.wh{text-align:center;margin-bottom:20px;padding:0 4px}
+.wl{font-size:10px;color:var(--or);text-transform:uppercase;letter-spacing:3px;font-weight:700}
+.wn{font-size:38px;font-weight:900;line-height:1;text-transform:uppercase;color:var(--txt)}
+.wm{display:flex;gap:7px;justify-content:center;margin-top:10px;flex-wrap:wrap}
+.wb{background:var(--bg2);border:0.5px solid var(--bdr);border-radius:20px;padding:4px 12px;font-size:11px;font-weight:700;color:var(--txt2)}
+.wb.o{border-color:var(--or);color:var(--or);background:var(--og)}
+.wb.b{border-color:var(--bl);color:var(--bl)}
+.ws{background:var(--bg2);border:0.5px solid var(--bdr2);border-radius:14px;padding:18px 14px;margin:0 4px 10px}
+.st{font-size:10px;color:var(--or);text-transform:uppercase;letter-spacing:2px;font-weight:700;margin-bottom:2px}
+.stt{font-size:15px;font-weight:600;margin-bottom:12px;padding-bottom:10px;border-bottom:0.5px solid var(--bdr2);color:var(--txt)}
+.si{font-size:12px;color:var(--txt2);padding:7px 10px;background:var(--bg3);border-radius:7px;border-left:2px solid var(--or);margin-bottom:8px;line-height:1.5}
+.si.team{border-left-color:var(--ye)}
+.si.sc{border-left-color:var(--bl)}
+.rsep{padding:8px 0 2px;font-size:10px;color:var(--or);text-align:center;letter-spacing:2px;font-weight:700;text-transform:uppercase}
+.er{display:flex;align-items:center;gap:9px;padding:11px 0;border-bottom:0.5px solid var(--bdr2)}
+.er:last-child{border-bottom:none}
+.en{width:26px;height:26px;border-radius:50%;background:var(--bg3);border:0.5px solid var(--or);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:var(--or);flex-shrink:0}
+.eb{flex:1;min-width:0}
+.ename{font-size:13px;font-weight:500;color:var(--txt);margin-bottom:2px}
+.edet{font-size:12px;color:var(--or);font-weight:700}
+.ewt{font-size:11px;color:var(--txt3);margin-top:1px}
+.ea{display:flex;flex-direction:column;gap:4px;flex-shrink:0}
+.esb{background:var(--bg3);border:0.5px solid var(--bdr);border-radius:7px;padding:4px 9px;font-size:10px;color:var(--txt2);cursor:pointer;font-weight:600;min-height:28px;text-align:center}
+.esb:active{border-color:var(--gr);color:var(--gr)}
+.esb.re{color:var(--re);border-color:rgba(255,23,68,.3)}
+.cb{display:flex;align-items:center;gap:9px;padding:9px 10px;margin:5px 0;background:var(--cag);border:0.5px solid rgba(0,188,212,.2);border-radius:10px}
+.ci{font-size:16px;flex-shrink:0}
+.cbb{flex:1;min-width:0}
+.cn{font-size:12px;font-weight:700;color:var(--ca)}
+.cd{font-size:10px;color:rgba(0,188,212,.7);margin-top:1px}
+.ct{font-size:10px;background:rgba(0,188,212,.12);color:var(--ca);padding:2px 7px;border-radius:7px;font-weight:700;flex-shrink:0}
+.csb{background:none;border:0.5px solid rgba(0,188,212,.3);border-radius:6px;padding:4px 8px;font-size:10px;color:var(--ca);cursor:pointer;font-weight:600;flex-shrink:0;min-height:26px}
+.sp{background:var(--bg3);border:0.5px solid rgba(0,200,83,.2);border-radius:10px;padding:11px;margin-top:3px;display:none}
+.sp.open{display:block}
+.sp.cp{border-color:rgba(0,188,212,.2)}
+.sh{font-size:10px;color:var(--gr);text-transform:uppercase;letter-spacing:1px;font-weight:700;margin-bottom:7px}
+.sh.ch{color:var(--ca)}
+.so{display:flex;flex-direction:column;gap:5px}
+.soi{background:var(--bg2);border:0.5px solid var(--bdr);border-radius:7px;padding:8px 11px;cursor:pointer;display:flex;justify-content:space-between;align-items:center;min-height:38px}
+.soi:active{border-color:var(--gr)}
+.soi.co:active{border-color:var(--ca)}
+.soi .sn{font-size:12px;font-weight:500;color:var(--txt)}
+.soi .stag{font-size:11px;color:var(--txt3)}
+.gn{width:100%;background:rgba(255,23,68,.06);border:0.5px dashed rgba(255,23,68,.3);border-radius:7px;padding:8px;font-size:11px;color:var(--re);cursor:pointer;font-weight:700;margin-top:7px;min-height:36px}
+.ar{display:flex;gap:8px;margin:16px 4px 0;flex-wrap:wrap}
+.ab{flex:1;border:none;border-radius:11px;padding:13px 6px;font-size:11px;font-weight:700;cursor:pointer;text-transform:uppercase;min-height:46px;min-width:0}
+.ab.pri{background:var(--or);color:#000}
+.ab.dan{background:rgba(255,23,68,.07);color:var(--re);border:0.5px solid rgba(255,23,68,.2)}
+.loading{text-align:center;padding:60px 20px}
+.spinner{width:48px;height:48px;border:3px solid var(--bdr);border-top-color:var(--or);border-radius:50%;animation:spin .7s linear infinite;margin:0 auto 16px}
+@keyframes spin{to{transform:rotate(360deg)}}
+.lt{font-size:13px;color:var(--txt2);font-weight:600}
+.tst{position:fixed;bottom:20px;left:50%;transform:translateX(-50%) translateY(80px);background:var(--gr);color:#000;padding:10px 20px;border-radius:30px;font-weight:700;font-size:13px;transition:transform .3s;z-index:999;white-space:nowrap;pointer-events:none}
+.tst.show{transform:translateX(-50%) translateY(0)}
+@keyframes su{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+.ani{animation:su .25s ease}
+@media(max-width:380px){.wn{font-size:30px}.ob{padding:10px 6px}.on{font-size:11px}}
+</style>
+</head>
+<body>
+<div class="app" id="app"></div>
+<div class="tst" id="tst"></div>
+<script>
+var STR=[
+  {name:'Power Clean',cat:'barbell',alts:['Hang Power Clean','Squat Clean','DB Power Clean']},
+  {name:'Squat Clean',cat:'barbell',alts:['Power Clean','Hang Squat Clean','DB Squat Clean']},
+  {name:'Hang Power Clean',cat:'barbell',alts:['Power Clean','High Hang Clean','DB Hang Clean']},
+  {name:'Power Snatch',cat:'barbell',alts:['Hang Power Snatch','DB Snatch','Squat Snatch']},
+  {name:'Hang Power Snatch',cat:'barbell',alts:['Power Snatch','DB Snatch','Overhead Squat']},
+  {name:'Clean & Jerk',cat:'barbell',alts:['Power Clean','Squat Clean + Push Jerk','DB C&J']},
+  {name:'Push Jerk',cat:'barbell',alts:['Push Press','Split Jerk','Strict Press']},
+  {name:'Thruster',cat:'barbell',alts:['DB Thruster','KB Thruster','Wall Ball']},
+  {name:'Deadlift',cat:'barbell',alts:['Romanian Deadlift','Sumo Deadlift','DB Deadlift']},
+  {name:'Front Squat',cat:'barbell',alts:['Back Squat','Goblet Squat','DB Front Squat']},
+  {name:'Back Squat',cat:'barbell',alts:['Front Squat','Box Squat','Goblet Squat']},
+  {name:'Overhead Squat',cat:'barbell',alts:['Front Squat','DB Overhead Squat','Snatch Balance']},
+  {name:'Strict Press',cat:'barbell',alts:['Push Press','Push Jerk','DB Strict Press']},
+  {name:'Push Press',cat:'barbell',alts:['Strict Press','Push Jerk','DB Push Press']},
+  {name:'Pull-Up',cat:'gymnastics',alts:['Jumping Pull-Up','Ring Row','Banded Pull-Up']},
+  {name:'Chest-to-Bar Pull-Up',cat:'gymnastics',alts:['Pull-Up','Banded C2B','Ring Row']},
+  {name:'Bar Muscle-Up',cat:'gymnastics',alts:['Chest-to-Bar Pull-Up','C2B + Ring Dip']},
+  {name:'Ring Muscle-Up',cat:'gymnastics',alts:['Bar Muscle-Up','Ring Dip + Pull-Up','Jumping Ring MU']},
+  {name:'Handstand Push-Up',cat:'gymnastics',alts:['Pike Push-Up','DB Strict Press','Z-Press']},
+  {name:'Handstand Walk',cat:'gymnastics',alts:['Bear Crawl 20m','HS Hold 30s','Wall Walk']},
+  {name:'Toes-to-Bar',cat:'gymnastics',alts:['Knees-to-Chest','Hanging Knee Raise','V-Up']},
+  {name:'Ring Dip',cat:'gymnastics',alts:['Bar Dip','Push-Up','Banded Ring Dip']},
+  {name:'Push-Up',cat:'gymnastics',alts:['Ring Push-Up','Hand-Release Push-Up','Pike Push-Up']},
+  {name:'Rope Climb',cat:'gymnastics',alts:['Legless Rope Climb','3 Pull-Ups per climb']},
+  {name:'Box Jump',cat:'gymnastics',alts:['Box Step-Up','Broad Jump','Jump Squat']},
+  {name:'Box Jump Over',cat:'gymnastics',alts:['Box Step Over','Burpee Box Jump Over']},
+  {name:'Burpee',cat:'gymnastics',alts:['Bar-Facing Burpee','Lateral Burpee','No Push-Up Burpee']},
+  {name:'Wall Ball',cat:'gymnastics',alts:['Thruster','DB Thruster','Med Ball Toss']},
+  {name:'GHD Sit-Up',cat:'gymnastics',alts:['AbMat Sit-Up','V-Up','Hollow Rock']},
+  {name:'Pistol Squat',cat:'gymnastics',alts:['Banded Pistol','Bulgarian Split Squat','Lunge']},
+  {name:'Walking Lunge',cat:'gymnastics',alts:['Overhead Lunge','Reverse Lunge','DB Lunge']},
+  {name:'Air Squat',cat:'gymnastics',alts:['Goblet Squat','Jump Squat','Wall Squat']},
+  {name:'KB Swing',cat:'kettlebell',alts:['American KB Swing','Russian KBS','DB Swing']},
+  {name:'American KB Swing',cat:'kettlebell',alts:['Russian KBS','KB Snatch','DB Swing']},
+  {name:'KB Snatch',cat:'kettlebell',alts:['DB Snatch','American KB Swing','Power Snatch']},
+  {name:'KB Goblet Squat',cat:'kettlebell',alts:['Front Squat','Air Squat','DB Goblet Squat']},
+  {name:'Farmers Carry',cat:'kettlebell',alts:['Suitcase Carry','Overhead Carry','Sandbag Carry']},
+];
+var CARDIO=[
+  {name:'Run 200m',alts:['Row 250m','Bike 500m','Ski Erg 200m']},
+  {name:'Run 400m',alts:['Row 500m','Bike 1000m','Ski Erg 400m']},
+  {name:'Run 800m',alts:['Row 1000m','Bike 2000m']},
+  {name:'Row 250m',alts:['Run 200m','Bike 500m','Ski Erg 250m']},
+  {name:'Row 500m',alts:['Run 400m','Bike 1000m','Ski Erg 500m']},
+  {name:'Row 1000m',alts:['Run 800m','Bike 2000m']},
+  {name:'Row 10 Cal',alts:['Bike 12 Cal','Run 200m','Assault Bike 8 Cal']},
+  {name:'Row 15 Cal',alts:['Bike 20 Cal','Run 400m','Assault Bike 12 Cal']},
+  {name:'Row 20 Cal',alts:['Bike 25 Cal','Assault Bike 15 Cal']},
+  {name:'Assault Bike 10 Cal',alts:['Row 10 Cal','Bike 12 Cal','Run 200m']},
+  {name:'Assault Bike 15 Cal',alts:['Row 15 Cal','Bike 20 Cal','Run 400m']},
+  {name:'Ski Erg 500m',alts:['Row 500m','Run 400m','Bike 1000m']},
+  {name:'Double-Unders 30',alts:['Single-Unders 90','Jump Rope 20s']},
+  {name:'Double-Unders 50',alts:['Single-Unders 150','Jump Rope 30s']},
+  {name:'Sprint 100m',alts:['Run 200m','Row 250m']},
+];
+function ri(a,b){return Math.floor(Math.random()*(b-a+1))+a}
+function pk(a){return a[Math.floor(Math.random()*a.length)]}
+function pkN(a,n){return a.slice().sort(function(){return Math.random()-.5}).slice(0,n)}
+function wgt(lv,cat){
+  var b=cat==='barbell'?{beginner:35,intermediate:50,advanced:65,elite:82}[lv]||50:cat==='kettlebell'?{beginner:16,intermediate:20,advanced:24,elite:28}[lv]||20:0;
+  return b?Math.round(b/2)*2+' kg':null;
+}
+function cico(n){return n.indexOf('Run')>=0||n.indexOf('Sprint')>=0?'🏃':n.indexOf('Row')>=0?'🚣':n.indexOf('Bike')>=0||n.indexOf('Assault')>=0?'🚴':n.indexOf('Ski')>=0?'⛷️':n.indexOf('Double')>=0||n.indexOf('Jump')>=0?'⚡':'💨'}
+function getScheme(type,lv){
+  var s={
+    descending:{beginner:[[10,8,6],[9,6,3]],intermediate:[[21,15,9],[15,12,9],[18,12,6]],advanced:[[21,15,9],[15,12,9,6],[20,15,10,5]],elite:[[30,20,10],[21,18,15,12]]},
+    ascending:{beginner:[[3,6,9],[4,6,8]],intermediate:[[9,15,21],[5,10,15,20]],advanced:[[9,12,15,18],[6,12,18,24]],elite:[[9,15,21,27],[10,15,20,25]]},
+    pyramid:{beginner:[[3,5,8,5,3]],intermediate:[[6,9,12,9,6],[8,10,12,10,8]],advanced:[[10,12,15,12,10]],elite:[[12,15,20,15,12]]},
+    fixed:{beginner:[8],intermediate:[10],advanced:[12],elite:[15]},
+  };
+  if(type==='fixed')return[s.fixed[lv]||10];
+  var opts=s[type]&&s[type][lv]?s[type][lv]:[[21,15,9]];
+  return pk(opts);
+}
+function schName(r){
+  if(r.length===1)return'Fixed ('+r[0]+' reps)';
+  var asc=r.every(function(v,i){return i===0||v>=r[i-1]});
+  var desc=r.every(function(v,i){return i===0||v<=r[i-1]});
+  if(asc)return'Ascending '+r.join('-');
+  if(desc)return'Descending '+r.join('-');
+  return'Pyramid '+r.join('-');
+}
+function mkAmrap(time,lv,team){
+  var chosen=pkN(STR,ri(3,4));var items=[];
+  chosen.forEach(function(ex,i){
+    items.push({kind:'str',ex:ex,detail:({beginner:10,intermediate:12,advanced:15,elite:20}[lv]||12)+' reps',wt:wgt(lv,ex.cat)});
+    if(i===Math.floor(chosen.length/2)-1&&Math.random()>.5)items.push({kind:'cardio',ex:pk(CARDIO)});
+  });
+  return[{type:'AMRAP',title:'AMRAP '+time+' Min',info:'As Many Rounds As Possible in '+time+' minutes.',score:'Score = total rounds + partial reps',items:items,team:team>1?'Team of '+team+' — one works at a time':null}];
+}
+function mkRFT(time,lv,team){
+  var rounds=ri(3,5);var reps={beginner:10,intermediate:12,advanced:15,elite:21}[lv]||12;
+  var chosen=pkN(STR,ri(2,4));var items=[];
+  for(var i=0;i<rounds;i++){
+    items.push({kind:'sep',label:'── Round '+(i+1)+' of '+rounds+' ──'});
+    chosen.forEach(function(ex){items.push({kind:'str',ex:ex,detail:reps+' reps',wt:wgt(lv,ex.cat)})});
+    if(Math.random()>.5&&i<rounds-1)items.push({kind:'cardio',ex:pk(CARDIO)});
+  }
+  return[{type:'For Time / RFT',title:rounds+' Rounds For Time',info:'Complete '+rounds+' rounds AFAP. Time cap: '+time+' min.',score:'Score = finish time',items:items,team:team>1?'Partition reps any way':null}];
+}
+function mkEmom(time,lv,team){
+  var numMov=ri(2,4);var chosen=pkN(STR,numMov-1);
+  var reps={beginner:6,intermediate:8,advanced:10,elite:12}[lv]||8;
+  var items=[];
+  chosen.forEach(function(ex,i){items.push({kind:'str',ex:ex,emomMin:'Min '+String.fromCharCode(65+i),detail:reps+' reps',wt:wgt(lv,ex.cat)})});
+  items.push({kind:'cardio',ex:pk(CARDIO),emomMin:'Min '+String.fromCharCode(65+chosen.length),detail:'Max effort'});
+  var sets=Math.floor(time/numMov);
+  return[{type:'EMOM',title:'EMOM '+time+' Min',info:'Every Minute On the Minute. '+numMov+' movements = '+sets+' full sets.',score:'Score = rounds completed',items:items,team:team>1?'Each athlete owns their minute':null}];
+}
+function mkE2mom(time,lv,team){
+  var chosen=pkN(STR.filter(function(e){return e.cat==='barbell'}),1).concat(pkN(STR.filter(function(e){return e.cat==='gymnastics'}),1));
+  var reps={beginner:5,intermediate:6,advanced:7,elite:8}[lv]||6;
+  var sets=Math.floor(time/2);var items=[];
+  chosen.forEach(function(ex){items.push({kind:'str',ex:ex,emomMin:'Every 2 Min',detail:reps+' reps × '+sets+' sets',wt:wgt(lv,ex.cat)})});
+  return[{type:'E2MOM',title:'E2MOM '+time+' Min',info:'Every 2 Minutes On the Minute × '+sets+' sets. Extra rest allows heavier loading.',score:'Score = heaviest load / sets completed',items:items,team:team>1?'Alternate on the 2-min window':null}];
+}
+function mkE3mom(time,lv,team){
+  var barbell=pkN(STR.filter(function(e){return e.cat==='barbell'}),1)[0];
+  var gym=pkN(STR.filter(function(e){return e.cat==='gymnastics'}),1)[0];
+  var c=pk(CARDIO);var reps={beginner:4,intermediate:5,advanced:6,elite:7}[lv]||5;
+  var sets=Math.floor(time/3);
+  return[{type:'E3MOM',title:'E3MOM '+time+' Min',info:'Every 3 Minutes On the Minute × '+sets+' sets. High volume per set.',score:'Score = all sets completed',items:[
+    {kind:'str',ex:barbell,emomMin:'Every 3 Min',detail:reps+' reps',wt:wgt(lv,barbell.cat)},
+    {kind:'str',ex:gym,emomMin:'Every 3 Min',detail:reps+' reps',wt:null},
+    {kind:'cardio',ex:c,emomMin:'Every 3 Min',detail:'Max effort'},
+  ],team:team>1?'All athletes work each 3-min window':null}];
+}
+function mkChipper(time,lv,team){
+  var exCnt=ri(6,9);var chosen=pkN(STR,exCnt);
+  var baseReps={beginner:20,intermediate:25,advanced:30,elite:40}[lv]||25;
+  var cardioAt=[Math.floor(exCnt*0.33),Math.floor(exCnt*0.66)];var pool=pkN(CARDIO,2);var items=[];
+  chosen.forEach(function(ex,i){
+    items.push({kind:'str',ex:ex,detail:baseReps+' reps',wt:wgt(lv,ex.cat)});
+    if(cardioAt.indexOf(i)>=0)items.push({kind:'cardio',ex:pool.shift()||pk(CARDIO)});
+  });
+  return[{type:'Chipper',title:'Chipper — For Time',info:exCnt+' movements done ONCE through in order. Time cap: '+time+' min.',score:'Score = finish time',items:items,team:team>1?'Shared reps — split any way':null}];
+}
+function mkTabata(time,lv,team){
+  var numMov=Math.min(ri(4,6),Math.floor(time/4));var all=STR.concat(CARDIO);var chosen=pkN(all,numMov);
+  return[{type:'Tabata',title:'Tabata — '+numMov+' Movements',info:'20s on / 10s off × 8 rounds per movement = 4 min each. Total: '+(numMov*4)+' min.',score:'Score = lowest reps each round (Tabata score)',items:chosen.map(function(ex){return CARDIO.indexOf(ex)>=0?{kind:'cardio',ex:ex,detail:'20s on / 10s off × 8'}:{kind:'str',ex:ex,detail:'20s on / 10s off × 8',wt:null}}),team:team>1?'All athletes work simultaneously':null}];
+}
+function mkDeathBy(time,lv,team){
+  var useDouble=Math.random()>.5;var ex1=pk(STR);
+  var ex2=useDouble?pk(STR.filter(function(e){return e.name!==ex1.name})):null;
+  var start={beginner:1,intermediate:2,advanced:2,elite:3}[lv]||2;
+  var title=useDouble?'Death By — '+ex1.name+' & '+ex2.name:'Death By — '+ex1.name;
+  var items=[{kind:'str',ex:ex1,emomMin:'Each Min',detail:'+'+start+' reps/min',wt:wgt(lv,ex1.cat)}];
+  if(ex2)items.push({kind:'str',ex:ex2,emomMin:'Each Min',detail:'Same reps',wt:wgt(lv,ex2.cat)});
+  return[{type:'Death By',title:title,info:'Min 1: '+start+' rep'+(start>1?'s':'')+'. Add '+start+' rep'+(start>1?'s':'')+' each minute until failure. Cap: '+time+' min.',score:'Score = last completed minute',items:items,team:team>1?'Both complete before time ends':null}];
+}
+function mkLadder(time,lv,team){
+  var dir=pk(['ascending','descending','pyramid']);var reps=getScheme(dir,lv);
+  var chosen=pkN(STR,ri(2,3));var items=[];
+  reps.forEach(function(r,i){
+    items.push({kind:'sep',label:'── Round '+(i+1)+': '+r+' reps ──'});
+    chosen.forEach(function(ex){items.push({kind:'str',ex:ex,detail:r+' reps',wt:wgt(lv,ex.cat)})});
+    if(i<reps.length-1)items.push({kind:'cardio',ex:pk(CARDIO)});
+  });
+  return[{type:'Ladder',title:dir.charAt(0).toUpperCase()+dir.slice(1)+' Rep Ladder',info:'Scheme: '+reps.join(' → ')+'. Cardio between rounds. Cap: '+time+' min.',score:'Score = finish time',items:items,team:team>1?'Partition reps any way':null}];
+}
+function mkCouplet(time,lv,team){
+  var reps=getScheme(pk(['descending','ascending','pyramid','fixed']),lv);
+  var ex1=pk(STR.filter(function(e){return e.cat==='barbell'}));
+  var ex2=pk(STR.filter(function(e){return e.cat==='gymnastics'}));
+  var items=[];
+  reps.forEach(function(r,i){
+    if(reps.length>1)items.push({kind:'sep',label:'── Round '+(i+1)+': '+r+' reps ──'});
+    items.push({kind:'str',ex:ex1,detail:r+' reps',wt:wgt(lv,ex1.cat)});
+    items.push({kind:'str',ex:ex2,detail:r+' reps',wt:null});
+  });
+  return[{type:'Couplet',title:'Couplet — For Time',info:'Classic 2-movement WOD. '+schName(reps)+'. Time cap: '+time+' min.',score:'Score = finish time',items:items,team:team>1?'Both complete full reps each':null}];
+}
+function mkTriplet(time,lv,team){
+  var reps=getScheme(pk(['descending','ascending','fixed']),lv);var chosen=pkN(STR,3);var items=[];
+  reps.forEach(function(r,i){
+    if(reps.length>1)items.push({kind:'sep',label:'── Round '+(i+1)+': '+r+' reps ──'});
+    chosen.forEach(function(ex){items.push({kind:'str',ex:ex,detail:r+' reps',wt:wgt(lv,ex.cat)})});
+  });
+  return[{type:'Triplet',title:'Triplet — For Time',info:'Classic 3-movement WOD. '+schName(reps)+'. Cap: '+time+' min.',score:'Score = finish time',items:items,team:team>1?'Partition reps freely':null}];
+}
+function mkBuyInOut(time,lv,team){
+  var bIn=pk(CARDIO);var bOut=pk(CARDIO.filter(function(c){return c!==bIn}));
+  var rounds=ri(3,5);var chosen=pkN(STR,ri(2,3));
+  var reps={beginner:8,intermediate:10,advanced:12,elite:15}[lv]||10;
+  var items=[{kind:'buyin',label:'BUY-IN — '+bIn.name}];
+  items.push({kind:'sep',label:'── Main: '+rounds+' Rounds ──'});
+  chosen.forEach(function(ex){items.push({kind:'str',ex:ex,detail:reps+' reps',wt:wgt(lv,ex.cat)})});
+  items.push({kind:'sep',label:'── CASH-OUT ──'});
+  items.push({kind:'buyin',label:'CASH-OUT — '+bOut.name});
+  return[{type:'Buy-In / Cash-Out',title:'Buy-In + WOD + Cash-Out',info:'Complete buy-in, then '+rounds+' rounds, then cash-out. Cap: '+time+' min.',score:'Score = finish time',items:items,team:team>1?'All athletes do buy-in & cash-out together':null}];
+}
+function mkYGIG(time,lv,team){
+  var eff=Math.max(team,2);var rounds=ri(4,7);
+  var reps={beginner:8,intermediate:10,advanced:12,elite:15}[lv]||10;
+  var chosen=pkN(STR,ri(2,3));var items=[];
+  chosen.forEach(function(ex){items.push({kind:'str',ex:ex,detail:reps+' reps each',wt:wgt(lv,ex.cat)})});
+  if(Math.random()>.4)items.push({kind:'cardio',ex:pk(CARDIO)});
+  return[{type:'YGIG / Partner WOD',title:'YGIG — '+rounds+' Rounds',info:'You Go I Go — one partner works, other rests. Switch every round. Cap: '+time+' min.',score:'Score = total rounds / finish time',items:items,team:eff>2?'Team of '+eff+': rotate in order':null}];
+}
+function mkIntervalAmrap(time,lv,team){
+  var numIntervals=pk([3,4]);var workTime=pk([4,5,6]);var restTime=pk([1,2]);
+  var chosen=pkN(STR,ri(3,4));var reps={beginner:8,intermediate:10,advanced:12,elite:15}[lv]||10;
+  var items=[];
+  chosen.forEach(function(ex){items.push({kind:'str',ex:ex,detail:reps+' reps',wt:wgt(lv,ex.cat)})});
+  if(Math.random()>.4)items.push({kind:'cardio',ex:pk(CARDIO)});
+  return[{type:'Interval AMRAP',title:numIntervals+' × '+workTime+'-Min AMRAP',info:numIntervals+' AMRAPs of '+workTime+' min with '+restTime+' min rest between. Same movements each interval.',score:'Score = total rounds across all intervals',items:items,team:team>1?'All athletes work simultaneously':null}];
+}
+function mkGroupAB(time,lv,team){
+  var half=Math.round(time/2);
+  var exA=pkN(STR,ri(2,3));var exB=pkN(STR.filter(function(e){return exA.indexOf(e)<0}),ri(2,3));
+  var repsA={beginner:8,intermediate:10,advanced:12,elite:15}[lv]||10;
+  var repsB={beginner:10,intermediate:12,advanced:15,elite:20}[lv]||12;
+  function mkI(arr,r,withC){
+    var its=arr.map(function(ex){return{kind:'str',ex:ex,detail:r+' reps',wt:wgt(lv,ex.cat)}});
+    if(withC)its.push({kind:'cardio',ex:pk(CARDIO)});
+    return its;
+  }
+  return[
+    {type:'Group A',title:'Group A — AMRAP '+half+' Min',info:'Half the group works A for '+half+' min, then switch.',score:'Score = rounds',items:mkI(exA,repsA,true),team:team>1?'Half on A simultaneously':null},
+    {type:'Group B',title:'Group B — AMRAP '+half+' Min',info:'Alternate group — work while A rests.',score:'',items:mkI(exB,repsB,false),team:null},
+  ];
+}
+var GEN={amrap:mkAmrap,'for-time':mkRFT,emom:mkEmom,e2mom:mkE2mom,e3mom:mkE3mom,chipper:mkChipper,tabata:mkTabata,'death-by':mkDeathBy,ladder:mkLadder,couplet:mkCouplet,triplet:mkTriplet,'buy-in-cashout':mkBuyInOut,ygig:mkYGIG,'interval-amrap':mkIntervalAmrap,'group-ab':mkGroupAB};
+function generate(cfg){var type=pk(cfg.wodTypes);return{type:type,sections:(GEN[type]||mkRFT)(cfg.time,cfg.level,cfg.teamSize),cfg:cfg}}
+var WN=['FURY','STORM','IRON','APEX','SURGE','BLAZE','GRIND','FORGE','CRUSH','NOVA','TITAN','GHOST','VENOM','EMBER','PULSE','SHARD','FLINT','DELTA','KRAKEN','REAPER','ZENITH','TORQUE','CIPHER','HAVOC','INFERNO'];
+var S={step:0,level:null,time:20,teamSize:1,wodTypes:[],wod:null,wodName:''};
+var app=document.getElementById('app');
+function toast(msg,color){var t=document.getElementById('tst');t.textContent=msg;t.style.background=color||'#00c853';t.classList.add('show');setTimeout(function(){t.classList.remove('show')},1800)}
+function dots(cur){
+  var h='<div class="steps">';
+  for(var i=0;i<5;i++)h+='<div class="dot'+(i<cur?' done':i===cur?' active':'')+'"></div>';
+  return h+'</div>';
+}
+function bkBtn(label,step){return'<button class="bk" onclick="S.step='+step+';render()">← Back to '+label+'</button>'}
+function step0(){
+  app.innerHTML='<div style="text-align:center;padding:32px 16px 24px">'
+  +'<div style="font-size:11px;color:var(--or);text-transform:uppercase;letter-spacing:3px;font-weight:700;margin-bottom:10px">🏋️ WOD</div>'
+  +'<div style="font-size:30px;font-weight:900;color:#fff;letter-spacing:-1px;line-height:1.1">Workout<br>Generator</div>'
+  +'<div style="width:40px;height:2px;background:var(--or);margin:14px auto 12px;border-radius:2px"></div>'
+  +'<div style="font-size:13px;color:var(--txt2);font-weight:500;letter-spacing:1px">l.AlShamali</div>'
+  +'</div>'
+  +dots(0)+'<div class="qc ani"><div class="ql">Step 1 / 5</div><div class="qt">What\'s your CrossFit level? 💪</div><div class="qs">Sets intensity and weights</div><div class="og">'
+  +[['beginner','🌱','Beginner','Under 6 months'],['intermediate','⚡','Intermediate','6mo – 2 years'],['advanced','🔥','Advanced','2 – 5 years'],['elite','🏆','Elite','5+ / competitive']]
+  .map(function(x){return'<button class="ob" onclick="setLevel(\''+x[0]+'\',this)"><span class="oi">'+x[1]+'</span><span class="on">'+x[2]+'</span><span class="od">'+x[3]+'</span></button>'}).join('')+'</div></div>';
+}
+function setLevel(l,el){S.level=l;if(el)el.classList.add('sel');setTimeout(function(){S.step=1;render()},220)}
+function step1(){
+  app.innerHTML=dots(1)+'<div class="qc ani"><div class="ql">Step 2 / 5</div><div class="qt">How long? ⏱️</div><div class="qs">WOD duration (not including warm-up)</div>'
+  +'<div class="td" id="td">'+S.time+'</div><div class="tu">minutes</div>'
+  +'<input type="range" min="5" max="60" step="5" value="'+S.time+'" oninput="setT(this.value)">'
+  +'<div class="tps">'+[10,15,20,25,30,40,45,60].map(function(t){return'<button class="tp" onclick="setTF('+t+')">'+t+'</button>'}).join('')+'</div>'
+  +'<button class="nb" onclick="S.step=2;render()">Next →</button>'
+  +bkBtn('Level',0)+'</div>';
+}
+function setT(v){S.time=+v;var d=document.getElementById('td');if(d)d.textContent=v}
+function setTF(v){S.time=v;var s=document.querySelector('input[type=range]');if(s)s.value=v;setT(v)}
+function step2(){
+  app.innerHTML=dots(2)+'<div class="qc ani"><div class="ql">Step 3 / 5</div><div class="qt">Solo or team? 🤝</div><div class="qs">Affects volume and rep sharing</div><div class="og">'
+  +[[1,'🧍','Individual','Solo'],[2,'👥','Team of 2','Partner'],[3,'👨‍👩‍👦','Team of 3','Trio'],[4,'🏅','Team of 4','Squad']]
+  .map(function(x){return'<button class="ob'+(S.teamSize===x[0]?' sel':'')+'" onclick="setTeam('+x[0]+',this)"><span class="oi">'+x[1]+'</span><span class="on">'+x[2]+'</span><span class="od">'+x[3]+'</span></button>'}).join('')+'</div>'
+  +bkBtn('Time',1)+'</div>';
+}
+function setTeam(n,el){S.teamSize=n;if(el){document.querySelectorAll('.og .ob').forEach(function(b){b.classList.remove('sel')});el.classList.add('sel')}setTimeout(function(){S.step=3;render()},220)}
+var TYPES=[
+  {id:'amrap',icon:'🔄',name:'AMRAP',desc:'As Many Rounds As Possible'},
+  {id:'for-time',icon:'⏰',name:'For Time / RFT',desc:'Rounds For Time — finish AFAP'},
+  {id:'emom',icon:'📅',name:'EMOM',desc:'Every Minute On the Minute'},
+  {id:'e2mom',icon:'⏱️',name:'E2MOM',desc:'Every 2 Min — heavier loads'},
+  {id:'e3mom',icon:'🕐',name:'E3MOM',desc:'Every 3 Min — barbell cycling'},
+  {id:'chipper',icon:'🪓',name:'Chipper',desc:'Long list of movements, done once'},
+  {id:'tabata',icon:'⚡',name:'Tabata',desc:'20s on / 10s off × 8 rounds'},
+  {id:'death-by',icon:'💀',name:'Death By',desc:'Add reps each minute until failure'},
+  {id:'ladder',icon:'📈',name:'Ladder',desc:'Ascending / descending reps'},
+  {id:'couplet',icon:'2️⃣',name:'Couplet',desc:'2 movements — classic Fran style'},
+  {id:'triplet',icon:'3️⃣',name:'Triplet',desc:'3 movements — classic CrossFit'},
+  {id:'buy-in-cashout',icon:'💰',name:'Buy-In / Cash-Out',desc:'Cardio bookends main WOD'},
+  {id:'ygig',icon:'🤜',name:'YGIG',desc:'You Go I Go — partner alternating',teamOnly:true},
+  {id:'interval-amrap',icon:'🔁',name:'Interval AMRAP',desc:'Multiple AMRAPs + rest between'},
+  {id:'group-ab',icon:'🅰️',name:'Group A / B',desc:'Two groups alternating stations'},
+];
+function step3(){
+  var sel=S.wodTypes;
+  app.innerHTML=dots(3)+'<div class="qc ani"><div class="ql">Step 4 / 5</div><div class="qt">WOD Type? 🎯</div><div class="qs">Pick one or more — one drawn at random</div><div class="og">'
+  +TYPES.map(function(t){
+    var dis=t.teamOnly&&S.teamSize<2;
+    return'<button class="ob'+(sel.indexOf(t.id)>=0?' sel':'')+' '+(dis?'dis':'')+'" onclick="'+(dis?'':'toggleType(\''+t.id+'\')')+'"><span class="oi">'+t.icon+'</span><span class="on">'+t.name+'</span><span class="od">'+(dis?'Team only':t.desc)+'</span></button>';
+  }).join('')+'</div><div class="hint">Select multiple types for variety</div><button class="nb" onclick="go()" '+(sel.length===0?'disabled':'')+'>Generate WOD 🚀</button>'
+  +bkBtn('Team',2)+'</div>';
+}
+function toggleType(id){var i=S.wodTypes.indexOf(id);if(i===-1)S.wodTypes.push(id);else S.wodTypes.splice(i,1);step3()}
+function go(){if(S.wodTypes.length===0)return;S.step=4;render()}
+function step4(){
+  app.innerHTML=dots(4)+'<div class="loading"><div class="spinner"></div><div class="lt">Generating your WOD...</div></div>';
+  setTimeout(function(){if(!S.wod||S.regen){S.wod=generate(S);S.wodName=pk(WN);S.regen=false}renderWod()},600);
+}
+var TL={amrap:'AMRAP','for-time':'For Time/RFT',emom:'EMOM',e2mom:'E2MOM',e3mom:'E3MOM',chipper:'Chipper',tabata:'Tabata','death-by':'Death By',ladder:'Ladder',couplet:'Couplet',triplet:'Triplet','buy-in-cashout':'Buy-In/Cash-Out',ygig:'YGIG','interval-amrap':'Interval AMRAP','group-ab':'Group A/B'};
+var LL={beginner:'Beginner',intermediate:'Intermediate',advanced:'Advanced',elite:'Elite'};
+function renderWod(){
+  var w=S.wod;
+  app.innerHTML=dots(4)+'<div class="wh ani"><div class="wl">WOD of the Day</div><div class="wn">'+S.wodName+'</div><div class="wm"><span class="wb o">'+(TL[w.type]||w.type)+'</span><span class="wb">'+LL[S.level]+'</span><span class="wb">'+S.time+' min</span>'+(S.teamSize>1?'<span class="wb b">Team '+S.teamSize+'</span>':'')+'</div></div>'
+  +'<div id="secs">'+w.sections.map(function(s,i){return renderSec(s,i)}).join('')+'</div>'
+  +'<div class="ar"><button class="ab dan" onclick="regen()">🔄 New WOD</button><button class="ab pri" onclick="copyWod()">📋 Copy</button></div>'
+  +'<button class="bk" style="margin:8px 4px 0" onclick="S.step=3;render()">← Back to Types</button>';
+}
+function renderSec(sec,si){
+  return'<div class="ws ani" id="sec-'+si+'"><div class="st">'+sec.type+'</div><div class="stt">'+sec.title+'</div>'
+  +(sec.info?'<div class="si">'+sec.info+'</div>':'')
+  +(sec.score?'<div class="si sc">🏆 '+sec.score+'</div>':'')
+  +(sec.team?'<div class="si team">👥 '+sec.team+'</div>':'')
+  +'<div>'+renderItems(sec.items,si)+'</div></div>';
+}
+function renderItems(items,si){var sn=0;return items.map(function(it,ii){
+  if(it.kind==='sep')return'<div class="rsep">'+it.label+'</div>';
+  if(it.kind==='buyin')return'<div class="rsep" style="color:var(--ye);border:0.5px solid rgba(255,214,0,.2);border-radius:7px;padding:8px;margin:5px 0;font-size:11px">'+it.label+'</div>';
+  if(it.kind==='cardio')return renderCardio(it,si,ii);
+  sn++;return renderStr(it,si,ii,sn);
+}).join('')}
+function renderStr(it,si,ii,num){
+  var ex=it.ex;
+  var emTag=it.emomMin?'<span style="background:var(--og);color:var(--or);font-size:10px;font-weight:700;padding:1px 6px;border-radius:5px;margin-left:5px">'+it.emomMin+'</span>':'';
+  return'<div class="er" id="ex-'+si+'-'+ii+'"><div class="en">'+num+'</div><div class="eb"><div class="ename">'+ex.name+emTag+'</div><div class="edet">'+it.detail+'</div>'+(it.wt?'<div class="ewt">⚖️ '+it.wt+'</div>':'')+'</div><div class="ea"><button class="esb" onclick="toggleSwap(\''+si+'\',\''+ii+'\')">Swap ↕</button><button class="esb re" onclick="regenEx('+si+','+ii+',\'str\')">New ⟳</button></div></div>'
+  +'<div class="sp" id="sp-'+si+'-'+ii+'"><div class="sh">✅ Similar alternatives</div><div class="so">'
+  +(ex.alts||[]).map(function(a){return'<div class="soi" onclick="swapStr('+si+','+ii+',\''+a.replace(/'/g,"\\'")+'\')">'+'<span class="sn">'+a+'</span><span class="stag">→ Use</span></div>'}).join('')
+  +'</div><button class="gn" onclick="regenEx('+si+','+ii+',\'str\')">⟳ Generate completely different exercise</button></div>';
+}
+function renderCardio(it,si,ii){
+  var ex=it.ex;
+  var emTag=it.emomMin?'<span style="background:var(--cag);color:var(--ca);font-size:10px;font-weight:700;padding:1px 6px;border-radius:5px;margin-left:5px">'+it.emomMin+'</span>':'';
+  return'<div class="cb" id="ex-'+si+'-'+ii+'"><div class="ci">'+cico(ex.name)+'</div><div class="cbb"><div class="cn">'+ex.name+emTag+'</div><div class="cd">'+(it.detail||'Cardio')+'</div></div><span class="ct">CARDIO</span><button class="csb" onclick="toggleSwap(\''+si+'\',\''+ii+'\')">Swap</button></div>'
+  +'<div class="sp cp" id="sp-'+si+'-'+ii+'"><div class="sh ch">💨 Cardio alternatives</div><div class="so">'
+  +(ex.alts||[]).map(function(a){return'<div class="soi co" onclick="swapCardio('+si+','+ii+',\''+a.replace(/'/g,"\\'")+'\')">'+'<span class="sn">'+a+'</span><span class="stag">→ Use</span></div>'}).join('')
+  +'</div><button class="gn" style="color:var(--ca);border-color:rgba(0,188,212,.3);background:rgba(0,188,212,.05)" onclick="regenEx('+si+','+ii+',\'cardio\')">⟳ Different cardio</button></div>';
+}
+function toggleSwap(si,ii){var p=document.getElementById('sp-'+si+'-'+ii);if(p)p.classList.toggle('open')}
+function swapStr(si,ii,name){
+  var found=null;for(var i=0;i<STR.length;i++){if(STR[i].name===name){found=STR[i];break}}
+  if(!found)found={name:name,alts:[],cat:'gymnastics'};
+  var old=S.wod.sections[si].items[ii];
+  S.wod.sections[si].items[ii]=Object.assign({},old,{ex:found,wt:wgt(S.level,found.cat)});
+  reRenderSec(si);toast('✅ Swapped!');
+}
+function swapCardio(si,ii,name){
+  var found=null;for(var i=0;i<CARDIO.length;i++){if(CARDIO[i].name===name){found=CARDIO[i];break}}
+  if(!found)found={name:name,alts:[]};
+  var old=S.wod.sections[si].items[ii];
+  S.wod.sections[si].items[ii]=Object.assign({},old,{ex:found});
+  reRenderSec(si);toast('✅ Swapped!');
+}
+function regenEx(si,ii,kind){
+  var old=S.wod.sections[si].items[ii];
+  if(kind==='cardio'){var newEx;do{newEx=pk(CARDIO)}while(newEx.name===old.ex.name);S.wod.sections[si].items[ii]=Object.assign({},old,{ex:newEx});}
+  else{var newEx;do{newEx=pk(STR)}while(newEx.name===old.ex.name);S.wod.sections[si].items[ii]=Object.assign({},old,{ex:newEx,wt:wgt(S.level,newEx.cat)});}
+  reRenderSec(si);toast('⟳ New exercise!','#ff6600');
+}
+function reRenderSec(si){
+  var sec=S.wod.sections[si];var el=document.getElementById('sec-'+si);
+  if(!el)return;var tmp=document.createElement('div');tmp.innerHTML=renderSec(sec,si);
+  el.parentNode.replaceChild(tmp.firstElementChild,el);
+}
+function regen(){S.regen=true;S.wod=null;step4()}
+function copyWod(){
+  var w=S.wod;var t='🏋️ WOD: '+S.wodName+'\n'+LL[S.level]+' | '+S.time+' min'+(S.teamSize>1?' | Team of '+S.teamSize:'')+'\n\n';
+  w.sections.forEach(function(s){
+    t+='━━ '+s.title+' ━━\n'+(s.info||'')+'\n'+(s.score?'🏆 '+s.score+'\n':'')+'\n';
+    s.items.forEach(function(it){
+      if(it.kind==='sep'||it.kind==='buyin'){t+=it.label+'\n';return}
+      if(it.kind==='cardio'){t+='  💨 '+it.ex.name+(it.detail?' — '+it.detail:'')+'\n';return}
+      t+='  '+it.ex.name+' — '+(it.detail||'')+(it.wt?' @ '+it.wt:'')+'\n';
+    });t+='\n';
+  });
+  if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(t).then(function(){toast('📋 Copied!')}).catch(function(){fbCopy(t)});}else{fbCopy(t)}
+}
+function fbCopy(t){
+  var ta=document.createElement('textarea');ta.value=t;ta.style.cssText='position:fixed;opacity:0;top:0;left:0';
+  document.body.appendChild(ta);ta.focus();ta.select();
+  try{document.execCommand('copy');toast('📋 Copied!')}catch(e){toast('Long-press to copy','#ff6600')}
+  document.body.removeChild(ta);
+}
+function render(){var fns=[step0,step1,step2,step3,step4];var fn=fns[S.step];if(fn)fn()}
+render();
+</script>
+</body>
+</html>
