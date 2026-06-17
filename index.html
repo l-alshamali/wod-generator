@@ -588,21 +588,32 @@ function renderStr(it,si,ii,num){
   +'</div><button class="gn" onclick="regenEx('+si+','+ii+',\'str\')">⟳ Generate completely different exercise</button>'
   +'<div style="margin-top:10px;border-top:0.5px solid var(--bdr2);padding-top:10px">'
   +'<div style="font-size:10px;color:var(--txt3);margin-bottom:6px;text-transform:uppercase;letter-spacing:1px">✏️ Manual entry</div>'
-  +'<input id="mn-'+si+'-'+ii+'" placeholder="Exercise name" style="width:100%;background:var(--bg2);border:0.5px solid var(--bdr);border-radius:8px;padding:8px 10px;color:var(--txt);font-size:12px;margin-bottom:5px;outline:none">'
+  +'<div style="position:relative">'
+  +'<input id="mn-'+si+'-'+ii+'" placeholder="Exercise name" oninput="swapAC(this,\'str\',\''+si+'-'+ii+'\')" autocomplete="off" style="width:100%;background:var(--bg2);border:0.5px solid var(--bdr);border-radius:8px;padding:8px 10px;color:var(--txt);font-size:12px;margin-bottom:5px;outline:none">'
+  +'<div id="sac-'+si+'-'+ii+'" style="position:absolute;left:0;right:0;top:36px;background:var(--bg3);border:0.5px solid var(--bdr);border-radius:8px;overflow:hidden;z-index:10"></div>'
+  +'</div>'
   +'<input id="md-'+si+'-'+ii+'" placeholder="Reps / distance / time" style="width:100%;background:var(--bg2);border:0.5px solid var(--bdr);border-radius:8px;padding:8px 10px;color:var(--txt);font-size:12px;margin-bottom:7px;outline:none">'
   +'<button onclick="manualSwap(\''+si+'\',\''+ii+'\')" style="width:100%;background:var(--og);border:1px solid var(--or);border-radius:8px;padding:8px;font-size:12px;color:var(--or);font-weight:700;cursor:pointer">✓ Use This</button>'
   +'</div></div>';
 }
+function splitCName(name){var m=name.match(/^([\D]*?)(\d+)([\s\S]*)$/);return m?{b:m[1],n:parseInt(m[2],10),a:m[3]}:{b:name,n:null,a:''}}
 function renderCardio(it,si,ii){
   var ex=it.ex;
   var emTag=it.emomMin?'<span style="background:var(--cag);color:var(--ca);font-size:10px;font-weight:700;padding:1px 6px;border-radius:5px;margin-left:5px">'+it.emomMin+'</span>':'';
-  return'<div class="cb" id="ex-'+si+'-'+ii+'"><div class="ci">'+cico(ex.name)+'</div><div class="cbb"><div class="cn">'+ex.name+emTag+'</div><div class="cd">'+(it.detail||'Cardio')+'</div></div><span class="ct">CARDIO</span><button class="csb" onclick="toggleSwap(\''+si+'\',\''+ii+'\')">Swap</button></div>'
+  var p=splitCName(ex.name);
+  var nameHtml=p.n!==null
+    ?'<span onclick="openEditCardioName('+si+','+ii+')" style="cursor:pointer">'+p.b+p.n+p.a+'<span style="font-size:9px;margin-left:4px;opacity:0.5">✏️</span></span>'
+    :ex.name;
+  return'<div class="cb" id="ex-'+si+'-'+ii+'"><div class="ci">'+cico(ex.name)+'</div><div class="cbb"><div class="cn">'+nameHtml+emTag+'</div><div class="cd">'+(it.detail||'Cardio')+'</div></div><span class="ct">CARDIO</span><button class="csb" onclick="toggleSwap(\''+si+'\',\''+ii+'\')">Swap</button></div>'
   +'<div class="sp cp" id="sp-'+si+'-'+ii+'"><div class="sh ch">💨 Cardio alternatives</div><div class="so">'
   +(ex.alts||[]).map(function(a){return'<div class="soi co" onclick="swapCardio('+si+','+ii+',\''+a.replace(/'/g,"\\'")+'\')">'+'<span class="sn">'+a+'</span><span class="stag">→ Use</span></div>'}).join('')
   +'</div><button class="gn" style="color:var(--ca);border-color:rgba(0,188,212,.3);background:rgba(0,188,212,.05)" onclick="regenEx('+si+','+ii+',\'cardio\')">⟳ Different cardio</button>'
   +'<div style="margin-top:10px;border-top:0.5px solid rgba(0,188,212,.15);padding-top:10px">'
   +'<div style="font-size:10px;color:var(--ca);margin-bottom:6px;text-transform:uppercase;letter-spacing:1px">✏️ Manual entry</div>'
-  +'<input id="cmn-'+si+'-'+ii+'" placeholder="e.g. Run 500m" style="width:100%;background:var(--bg2);border:0.5px solid rgba(0,188,212,.3);border-radius:8px;padding:8px 10px;color:var(--txt);font-size:12px;margin-bottom:7px;outline:none">'
+  +'<div style="position:relative">'
+  +'<input id="cmn-'+si+'-'+ii+'" placeholder="e.g. Run 500m" oninput="swapAC(this,\'cardio\',\''+si+'-'+ii+'\')" autocomplete="off" style="width:100%;background:var(--bg2);border:0.5px solid rgba(0,188,212,.3);border-radius:8px;padding:8px 10px;color:var(--txt);font-size:12px;margin-bottom:7px;outline:none">'
+  +'<div id="csac-'+si+'-'+ii+'" style="position:absolute;left:0;right:0;top:36px;background:var(--bg3);border:0.5px solid rgba(0,188,212,.3);border-radius:8px;overflow:hidden;z-index:10"></div>'
+  +'</div>'
   +'<button onclick="manualSwapCardio(\''+si+'\',\''+ii+'\')" style="width:100%;background:rgba(0,188,212,.1);border:1px solid rgba(0,188,212,.3);border-radius:8px;padding:8px;font-size:12px;color:var(--ca);font-weight:700;cursor:pointer">✓ Use This</button>'
   +'</div></div>';
 }
@@ -662,8 +673,47 @@ function fbCopy(t){
 }
 function render(){var fns=[step0,step1,step2,step3,step4];var fn=fns[S.step];if(fn)fn()}
 
+// ── Swap autocomplete ──
+function swapAC(inp,type,key){
+  var q=(inp.value||'').toLowerCase().trim();
+  var acId=(type==='cardio'?'csac-':'sac-')+key;
+  var ac=document.getElementById(acId);
+  if(!ac)return;
+  if(!q){ac.innerHTML='';return;}
+  var pool=type==='cardio'?CARDIO.map(function(e){return e.name;}):STR.map(function(e){return e.name;});
+  var matches=pool.filter(function(n){return n.toLowerCase().indexOf(q)>=0;}).slice(0,7);
+  if(!matches.length){ac.innerHTML='';return;}
+  var iid=inp.id;
+  var color=type==='cardio'?'var(--ca)':'var(--or)';
+  ac.innerHTML=matches.map(function(n){
+    var re=new RegExp('('+q.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')+')','gi');
+    var hi=n.replace(re,'<b style="color:'+color+'">$1</b>');
+    return'<div onclick="pickSwapAC(\''+iid+'\',\''+n.replace(/'/g,"\\'")+'\',\''+acId+'\')" style="padding:8px 10px;cursor:pointer;font-size:12px;color:var(--txt);border-bottom:0.5px solid var(--bdr2)">'+hi+'</div>';
+  }).join('');
+}
+function pickSwapAC(iid,name,acId){
+  var inp=document.getElementById(iid);if(inp)inp.value=name;
+  var ac=document.getElementById(acId);if(ac)ac.innerHTML='';
+}
+
 // ── Inline cardio editor ──
 var cardioEditUnit='m';
+function openEditCardioName(si,ii){
+  var item=S.wod&&S.wod.sections[si]&&S.wod.sections[si].items[ii];
+  if(!item)return;
+  var p=splitCName(item.ex.name);
+  if(p.n===null)return;
+  var after=p.a.trim().toLowerCase();
+  if(after.indexOf('cal')>=0)cardioEditUnit='Cal';
+  else if(after==='m'||after.endsWith('m'))cardioEditUnit='m';
+  else cardioEditUnit='m';
+  editingDetail={si:si,ii:ii,cardioName:true,nameParts:p};
+  var ov=document.getElementById('edit-overlay');
+  ov.style.display='block';
+  renderCardioSheet(item.ex.name,p.n);
+  setTimeout(function(){document.getElementById('edit-sheet').style.transform='translateX(-50%) translateY(0)';},10);
+  setTimeout(function(){var inp=document.getElementById('ed-num');if(inp)inp.focus();},80);
+}
 function openEditCardio(si,ii){
   var item=S.wod&&S.wod.sections[si]&&S.wod.sections[si].items[ii];
   if(!item)return;
@@ -716,7 +766,13 @@ function saveEditCardioNum(){
   if(isNaN(val)||val<1)return toast('ادخلي رقم','#00bcd4');
   var ed=editingDetail;
   var item=S.wod.sections[ed.si].items[ed.ii];
-  S.wod.sections[ed.si].items[ed.ii]=Object.assign({},item,{detail:val+cardioEditUnit,detailEdited:true});
+  if(ed.cardioName&&ed.nameParts){
+    var p=ed.nameParts;
+    var newName=p.b+val+p.a;
+    S.wod.sections[ed.si].items[ed.ii]=Object.assign({},item,{ex:Object.assign({},item.ex,{name:newName})});
+  } else {
+    S.wod.sections[ed.si].items[ed.ii]=Object.assign({},item,{detail:val+cardioEditUnit,detailEdited:true});
+  }
   closeEditDetail();
   reRenderSec(ed.si);
   toast('✅ تم التعديل!');
