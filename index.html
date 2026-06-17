@@ -93,11 +93,52 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:26px;heigh
 @keyframes su{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
 .ani{animation:su .25s ease}
 @media(max-width:380px){.wn{font-size:30px}.ob{padding:10px 6px}.on{font-size:11px}}
+.tnc-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.85);z-index:300;overflow-y:auto}
+.tnc-box{max-width:480px;margin:0 auto;background:var(--bg2);min-height:100vh;padding:24px 18px 48px}
+.tnc-title{font-size:16px;font-weight:800;color:var(--or);margin-bottom:4px}
+.tnc-date{font-size:10px;color:var(--txt3);margin-bottom:20px}
+.tnc-sec{font-size:13px;font-weight:700;color:var(--txt);margin:18px 0 6px}
+.tnc-p{font-size:12px;color:var(--txt2);line-height:1.7}
 </style>
 </head>
 <body>
 <div class="app" id="app"></div>
 <div class="tst" id="tst"></div>
+
+<div class="tnc-overlay" id="tnc-overlay">
+<div class="tnc-box">
+  <button onclick="hideTnC()" style="background:var(--bg3);border:0.5px solid var(--bdr);border-radius:9px;padding:8px 16px;color:var(--txt2);font-size:12px;cursor:pointer;margin-bottom:20px">← Back</button>
+  <div class="tnc-title">Terms & Conditions</div>
+  <div class="tnc-date">WOD Generator — Last updated: June 2026</div>
+
+  <div class="tnc-sec">1. Acceptance of Terms</div>
+  <div class="tnc-p">By using this app or entering your access code, you agree to all terms and conditions stated on this page. If you do not agree to any provision, please stop using the app.</div>
+
+  <div class="tnc-sec">2. Personal Use Only</div>
+  <div class="tnc-p">Your access code is granted for your personal use only. Sharing, reselling, or distributing the code in any form is strictly prohibited. Any violation may result in immediate revocation of access without refund or compensation.</div>
+
+  <div class="tnc-sec">3. Health & Fitness Disclaimer</div>
+  <div class="tnc-p">This app is a training suggestion tool only and is not a substitute for a certified coach or medical advice. The user is solely responsible for assessing their physical condition before performing any exercise. The developer is not liable for any injury, health damage, or consequences resulting from following the workouts suggested by this app.</div>
+
+  <div class="tnc-sec">4. Service Availability</div>
+  <div class="tnc-p">We aim to keep the app available at all times, but we do not guarantee uninterrupted access. Temporary outages may occur due to technical reasons beyond our control. No temporary interruption entitles the user to a refund or compensation.</div>
+
+  <div class="tnc-sec">5. Refund Policy</div>
+  <div class="tnc-p">As this is a digital product delivered immediately upon payment via access code, all purchases are non-refundable. Please review the product description carefully before purchasing.</div>
+
+  <div class="tnc-sec">6. Intellectual Property</div>
+  <div class="tnc-p">All app content — including design, code, and exercise database — is the sole intellectual property of the developer. Copying, redistributing, or building a similar product based on this app without prior written consent is strictly prohibited.</div>
+
+  <div class="tnc-sec">7. Limitation of Liability</div>
+  <div class="tnc-p">In all cases, our liability shall not exceed the amount paid by the user for access to the app.</div>
+
+  <div class="tnc-sec">8. Changes to Terms</div>
+  <div class="tnc-p">We reserve the right to modify these terms at any time. Continued use of the app after any changes constitutes acceptance of the new terms.</div>
+
+  <div class="tnc-sec">9. Contact</div>
+  <div class="tnc-p">For any inquiries, please reach out via Instagram.</div>
+</div>
+</div>
 <div id="edit-overlay" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:200" onclick="closeEditDetail()">
   <div id="edit-sheet" style="position:absolute;bottom:0;left:50%;transform:translateX(-50%) translateY(100%);width:100%;max-width:480px;background:var(--bg2);border:0.5px solid var(--bdr2);border-radius:18px 18px 0 0;padding:18px 18px 32px;transition:transform .25s ease" onclick="event.stopPropagation()"></div>
 </div>
@@ -504,18 +545,18 @@ function dots(cur){
 function bkBtn(label,step){return'<button class="bk" onclick="S.step='+step+';render()">← Back to '+label+'</button>'}
 function step0(){
   app.innerHTML='<div style="text-align:center;padding:32px 16px 24px">'
-  +'<div style="font-size:11px;color:var(--or);text-transform:uppercase;letter-spacing:3px;font-weight:700;margin-bottom:10px">🏋️ WOD</div>'
+  +'<div style="font-size:11px;color:var(--or);text-transform:uppercase;letter-spacing:3px;font-weight:700;margin-bottom:10px">WOD</div>'
   +'<div style="font-size:30px;font-weight:900;color:#fff;letter-spacing:-1px;line-height:1.1">Workout<br>Generator</div>'
   +'<div style="width:40px;height:2px;background:var(--or);margin:14px auto 12px;border-radius:2px"></div>'
-  +'<div style="font-size:13px;color:var(--txt2);font-weight:500;letter-spacing:1px">l.AlShamali</div>'
+  +'<div style="font-size:13px;color:var(--txt2);font-weight:500;letter-spacing:1px">v1.0</div>'
   +'</div>'
-  +dots(0)+'<div class="qc ani"><div class="ql">Step 1 / 5</div><div class="qt">What\'s your CrossFit level? 💪</div><div class="qs">Sets workout intensity</div><div class="og">'
+  +dots(0)+'<div class="qc ani"><div class="ql">Step 1 / 5</div><div class="qt">What\'s your CrossFit level?</div><div class="qs">Sets workout intensity</div><div class="og">'
   +[['beginner','🌱','Beginner','Under 6 months'],['intermediate','⚡','Intermediate','6mo – 2 years'],['advanced','🔥','Advanced','2 – 5 years'],['elite','🏆','Elite','5+ / competitive']]
   .map(function(x){return'<button class="ob'+(S.level===x[0]?' sel':'')+'" onclick="setLevel(\''+x[0]+'\',this)"><span class="oi">'+x[1]+'</span><span class="on">'+x[2]+'</span><span class="od">'+x[3]+'</span></button>'}).join('')+'</div></div>';
 }
 function setLevel(l,el){S.level=l;S.wod=null;if(el)el.classList.add('sel');setTimeout(function(){S.step=1;render()},220)}
 function step1(){
-  app.innerHTML=dots(1)+'<div class="qc ani"><div class="ql">Step 2 / 5</div><div class="qt">How long? ⏱️</div><div class="qs">WOD duration (not including warm-up)</div>'
+  app.innerHTML=dots(1)+'<div class="qc ani"><div class="ql">Step 2 / 5</div><div class="qt">How long?</div><div class="qs">WOD duration (not including warm-up)</div>'
   +'<div class="td" id="td">'+S.time+'</div><div class="tu">minutes</div>'
   +'<input type="range" min="5" max="60" step="5" value="'+S.time+'" oninput="setT(this.value)">'
   +'<div class="tps">'+[10,15,20,25,30,40,45,60].map(function(t){return'<button class="tp" onclick="setTF('+t+')">'+t+'</button>'}).join('')+'</div>'
@@ -525,7 +566,7 @@ function step1(){
 function setT(v){S.time=+v;var d=document.getElementById('td');if(d)d.textContent=v}
 function setTF(v){S.time=v;var s=document.querySelector('input[type=range]');if(s)s.value=v;setT(v)}
 function step2(){
-  app.innerHTML=dots(2)+'<div class="qc ani"><div class="ql">Step 3 / 5</div><div class="qt">Solo or team? 🤝</div><div class="qs">Affects volume and rep sharing</div><div class="og">'
+  app.innerHTML=dots(2)+'<div class="qc ani"><div class="ql">Step 3 / 5</div><div class="qt">Solo or team?</div><div class="qs">Affects volume and rep sharing</div><div class="og">'
   +[[1,'🧍','Individual','Solo'],[2,'🧍🧍','Team of 2','Partner']]
   .map(function(x){return'<button class="ob'+(S.teamSize===x[0]?' sel':'')+'" onclick="setTeam('+x[0]+',this)"><span class="oi">'+x[1]+'</span><span class="on">'+x[2]+'</span><span class="od">'+x[3]+'</span></button>'}).join('')+'</div>'
   +bkBtn('Time',1)+'</div>';
@@ -544,17 +585,17 @@ var TYPES=[
   {id:'couplet',icon:'2️⃣',name:'Couplet',desc:'2 movements — classic Fran style'},
   {id:'triplet',icon:'3️⃣',name:'Triplet',desc:'3 movements — classic CrossFit'},
   {id:'buy-in-cashout',icon:'💰',name:'Buy-In / Cash-Out',desc:'Cardio bookends main WOD'},
-  {id:'ygig',icon:'🔀',name:'YGIG',desc:'You Go I Go — partner alternating',teamOnly:true},
   {id:'interval-amrap',icon:'🔁',name:'Interval AMRAP',desc:'Multiple AMRAPs + rest between'},
   {id:'group-ab',icon:'🅰️',name:'Group A / B',desc:'Two groups alternating stations'},
+  {id:'ygig',icon:'🔀',name:'You Go I Go',desc:'Partner WOD — alternate rounds',teamOnly:true},
 ];
 function step3(){
   var sel=S.wodTypes;
-  app.innerHTML=dots(3)+'<div class="qc ani"><div class="ql">Step 4 / 5</div><div class="qt">WOD Type? 🎯</div><div class="qs">Pick one or more — one drawn at random</div><div class="og">'
+  app.innerHTML=dots(3)+'<div class="qc ani"><div class="ql">Step 4 / 5</div><div class="qt">WOD Type?</div><div class="qs">Pick one or more — one drawn at random</div><div class="og">'
   +TYPES.map(function(t){
     var dis=t.teamOnly&&S.teamSize<2;
     return'<button class="ob'+(sel.indexOf(t.id)>=0?' sel':'')+' '+(dis?'dis':'')+'" onclick="'+(dis?'':'toggleType(\''+t.id+'\')')+'"><span class="oi">'+t.icon+'</span><span class="on">'+t.name+'</span><span class="od">'+(dis?'Team only':t.desc)+'</span></button>';
-  }).join('')+'</div><div class="hint">Select multiple types for variety</div><button class="nb" onclick="go()" '+(sel.length===0?'disabled':'')+'>Generate WOD 🚀</button>'
+  }).join('')+'</div><div class="hint">Select multiple types for variety</div><button class="nb" onclick="go()" '+(sel.length===0?'disabled':'')+'>Generate WOD</button>'
   +bkBtn('Team',2)+'</div>';
 }
 function toggleType(id){var i=S.wodTypes.indexOf(id);if(i===-1)S.wodTypes.push(id);else S.wodTypes.splice(i,1);step3()}
@@ -570,7 +611,8 @@ function renderWod(){
   app.innerHTML=dots(4)+'<div class="wh ani"><div class="wl">WOD of the Day</div><div class="wn">'+S.wodName+'</div><div class="wm"><span class="wb o">'+(TL[w.type]||w.type)+'</span><span class="wb">'+LL[S.level]+'</span><span class="wb">'+S.time+' min</span>'+(S.teamSize>1?'<span class="wb b">Team '+S.teamSize+'</span>':'')+'</div></div>'
   +'<div id="secs">'+w.sections.map(function(s,i){return renderSec(s,i)}).join('')+'</div>'
   +'<div class="ar"><button class="ab dan" onclick="regen()">🔄 New WOD</button><button class="ab pri" onclick="copyWod()">📋 Copy</button></div>'
-  +'<button class="bk" style="margin:8px 4px 0" onclick="S.step=3;render()">← Back to Types</button>';
+  +'<button class="bk" style="margin:8px 4px 0" onclick="S.step=3;render()">← Back to Types</button>'
+  +'<div style="text-align:center;padding:16px 0 8px"><button onclick="showTnC()" style="background:none;border:none;color:var(--txt3);font-size:11px;cursor:pointer;text-decoration:underline">Terms & Conditions</button></div>';
 }
 function renderSecInfo(sec,si){
   if(!sec.scheme)return sec.info?'<div class="si">'+sec.info+'</div>':'';
@@ -634,7 +676,7 @@ function renderCardio(it,si,ii){
 function manualSwap(si,ii){
   var nEl=document.getElementById('mn-'+si+'-'+ii);
   var dEl=document.getElementById('md-'+si+'-'+ii);
-  if(!nEl||!nEl.value.trim())return toast('اكتبي اسم التمرين','#ff6600');
+  if(!nEl||!nEl.value.trim())return toast('Enter exercise name','#ff6600');
   var old=S.wod.sections[si].items[ii];
   var newEx={name:nEl.value.trim(),alts:[],cat:'gymnastics'};
   S.wod.sections[si].items[ii]=Object.assign({},old,{ex:newEx,detail:dEl&&dEl.value.trim()?dEl.value.trim():old.detail});
@@ -695,7 +737,7 @@ function openSchemeEdit(si){
   var sheet=document.getElementById('edit-sheet');
   sheet.innerHTML=
     '<div style="width:36px;height:4px;background:var(--bdr);border-radius:2px;margin:0 auto 16px"></div>'
-    +'<div style="font-size:10px;color:var(--or);text-transform:uppercase;letter-spacing:2px;margin-bottom:16px;font-weight:700">✏️ تعديل السجيم</div>'
+    +'<div style="font-size:10px;color:var(--or);text-transform:uppercase;letter-spacing:2px;margin-bottom:16px;font-weight:700">✏️ Edit Scheme</div>'
     +sec.scheme.map(function(r,i){
       return'<div style="display:flex;align-items:center;gap:10px;margin-bottom:10px">'
         +'<span style="font-size:12px;color:var(--txt2);width:60px;font-weight:600">Round '+(i+1)+'</span>'
@@ -705,8 +747,8 @@ function openSchemeEdit(si){
         +'</div>';
     }).join('')
     +'<div style="display:flex;gap:8px;margin-top:8px">'
-    +'<button onclick="closeEditDetail()" style="flex:1;background:var(--bg3);border:0.5px solid var(--bdr);border-radius:10px;padding:13px;font-size:13px;color:var(--txt2);cursor:pointer;font-weight:600;min-height:46px">إلغاء</button>'
-    +'<button onclick="saveSchemeEdit()" style="flex:2;background:var(--or);border:none;border-radius:10px;padding:13px;font-size:14px;color:#000;cursor:pointer;font-weight:700;min-height:46px">✓ حفظ</button>'
+    +'<button onclick="closeEditDetail()" style="flex:1;background:var(--bg3);border:0.5px solid var(--bdr);border-radius:10px;padding:13px;font-size:13px;color:var(--txt2);cursor:pointer;font-weight:600;min-height:46px">Cancel</button>'
+    +'<button onclick="saveSchemeEdit()" style="flex:2;background:var(--or);border:none;border-radius:10px;padding:13px;font-size:14px;color:#000;cursor:pointer;font-weight:700;min-height:46px">✓ Save</button>'
     +'</div>';
   var ov=document.getElementById('edit-overlay');
   ov.style.display='block';
@@ -724,7 +766,7 @@ function saveSchemeEdit(){
   sec.info='Scheme: '+newScheme.join(' → ')+'. Cardio between rounds. Cap: '+S.wod.cfg.time+' min.';
   closeEditDetail();
   reRenderSec(ed.si);
-  toast('✅ تم التعديل!');
+  toast('✅ Updated!');
 }
 
 // ── Swap autocomplete ──
@@ -791,7 +833,7 @@ function renderCardioSheet(name,initVal){
   var sheet=document.getElementById('edit-sheet');
   sheet.innerHTML=
     '<div style="width:36px;height:4px;background:var(--bdr);border-radius:2px;margin:0 auto 16px"></div>'
-    +'<div style="font-size:10px;color:var(--ca);text-transform:uppercase;letter-spacing:2px;margin-bottom:4px;font-weight:700">✏️ تعديل المسافة / الكمية</div>'
+    +'<div style="font-size:10px;color:var(--ca);text-transform:uppercase;letter-spacing:2px;margin-bottom:4px;font-weight:700">✏️ Edit Distance</div>'
     +'<div style="font-size:13px;color:var(--txt2);margin-bottom:14px;font-weight:500">'+(name||'')+'</div>'
     +'<div style="display:flex;align-items:center;gap:10px;justify-content:center;margin-bottom:12px">'
     +'<input id="ed-num" type="number" value="'+curVal+'" inputmode="numeric" min="1" max="9999"'
@@ -803,8 +845,8 @@ function renderCardioSheet(name,initVal){
     +presets.map(function(p){return'<button onclick="setEditNum('+p+')" style="background:var(--bg3);border:0.5px solid rgba(0,188,212,.3);border-radius:8px;padding:7px 14px;font-size:13px;color:var(--ca);cursor:pointer;font-weight:600;min-height:36px">'+p+'</button>'}).join('')
     +'</div>'
     +'<div style="display:flex;gap:8px">'
-    +'<button onclick="closeEditDetail()" style="flex:1;background:var(--bg3);border:0.5px solid var(--bdr);border-radius:10px;padding:13px;font-size:13px;color:var(--txt2);cursor:pointer;font-weight:600;min-height:46px">إلغاء</button>'
-    +'<button onclick="saveEditCardioNum()" style="flex:2;background:var(--ca);border:none;border-radius:10px;padding:13px;font-size:14px;color:#000;cursor:pointer;font-weight:700;min-height:46px">✓ حفظ</button>'
+    +'<button onclick="closeEditDetail()" style="flex:1;background:var(--bg3);border:0.5px solid var(--bdr);border-radius:10px;padding:13px;font-size:13px;color:var(--txt2);cursor:pointer;font-weight:600;min-height:46px">Cancel</button>'
+    +'<button onclick="saveEditCardioNum()" style="flex:2;background:var(--ca);border:none;border-radius:10px;padding:13px;font-size:14px;color:#000;cursor:pointer;font-weight:700;min-height:46px">✓ Save</button>'
     +'</div>';
 }
 function switchCardioUnit(u){
@@ -817,7 +859,7 @@ function saveEditCardioNum(){
   var inp=document.getElementById('ed-num');
   if(!inp)return;
   var val=parseInt(inp.value,10);
-  if(isNaN(val)||val<1)return toast('ادخلي رقم','#00bcd4');
+  if(isNaN(val)||val<1)return toast('Enter a number','#00bcd4');
   var ed=editingDetail;
   var item=S.wod.sections[ed.si].items[ed.ii];
   if(ed.cardioName&&ed.nameParts){
@@ -829,11 +871,11 @@ function saveEditCardioNum(){
   }
   closeEditDetail();
   reRenderSec(ed.si);
-  toast('✅ تم التعديل!');
+  toast('✅ Updated!');
 }
 function manualSwapCardio(si,ii){
   var nEl=document.getElementById('cmn-'+si+'-'+ii);
-  if(!nEl||!nEl.value.trim())return toast('اكتبي اسم التمرين','#00bcd4');
+  if(!nEl||!nEl.value.trim())return toast('Enter exercise name','#00bcd4');
   var old=S.wod.sections[si].items[ii];
   S.wod.sections[si].items[ii]=Object.assign({},old,{ex:{name:nEl.value.trim(),alts:[]}});
   reRenderSec(si);toast('✅ Done!');
@@ -856,7 +898,7 @@ function openEditDetail(si,ii){
   var sheet=document.getElementById('edit-sheet');
   sheet.innerHTML=
     '<div style="width:36px;height:4px;background:var(--bdr);border-radius:2px;margin:0 auto 16px"></div>'
-    +'<div style="font-size:10px;color:var(--or);text-transform:uppercase;letter-spacing:2px;margin-bottom:4px;font-weight:700">✏️ تعديل '+label+'</div>'
+    +'<div style="font-size:10px;color:var(--or);text-transform:uppercase;letter-spacing:2px;margin-bottom:4px;font-weight:700">✏️ Edit '+label+'</div>'
     +'<div style="font-size:13px;color:var(--txt2);margin-bottom:18px;font-weight:500">'+ex.name+'</div>'
     +'<div style="display:flex;align-items:center;gap:12px;justify-content:center;margin-bottom:16px">'
     +'<input id="ed-num" type="number" value="'+num+'" inputmode="numeric" min="1" max="999"'
@@ -867,8 +909,8 @@ function openEditDetail(si,ii){
     +presets.map(function(p){return'<button onclick="setEditNum('+p+')" style="background:var(--bg3);border:0.5px solid var(--bdr);border-radius:8px;padding:7px 14px;font-size:13px;color:var(--txt2);cursor:pointer;font-weight:600;min-height:36px">'+p+'</button>'}).join('')
     +'</div>'
     +'<div style="display:flex;gap:8px">'
-    +'<button onclick="closeEditDetail()" style="flex:1;background:var(--bg3);border:0.5px solid var(--bdr);border-radius:10px;padding:13px;font-size:13px;color:var(--txt2);cursor:pointer;font-weight:600;min-height:46px">إلغاء</button>'
-    +'<button onclick="saveEditDetail()" style="flex:2;background:var(--or);border:none;border-radius:10px;padding:13px;font-size:14px;color:#000;cursor:pointer;font-weight:700;min-height:46px">✓ حفظ</button>'
+    +'<button onclick="closeEditDetail()" style="flex:1;background:var(--bg3);border:0.5px solid var(--bdr);border-radius:10px;padding:13px;font-size:13px;color:var(--txt2);cursor:pointer;font-weight:600;min-height:46px">Cancel</button>'
+    +'<button onclick="saveEditDetail()" style="flex:2;background:var(--or);border:none;border-radius:10px;padding:13px;font-size:14px;color:#000;cursor:pointer;font-weight:700;min-height:46px">✓ Save</button>'
     +'</div>';
   var ov=document.getElementById('edit-overlay');
   ov.style.display='block';
@@ -887,7 +929,7 @@ function saveEditDetail(){
   var inp=document.getElementById('ed-num');
   if(!inp)return;
   var val=parseInt(inp.value,10);
-  if(isNaN(val)||val<1)return toast('ادخلي رقم صحيح','#ff6600');
+  if(isNaN(val)||val<1)return toast('Enter a valid number','#ff6600');
   var ed=editingDetail;
   var item=S.wod.sections[ed.si].items[ed.ii];
   var unit=ed.unit;
@@ -901,10 +943,82 @@ function saveEditDetail(){
   S.wod.sections[ed.si].items[ed.ii]=Object.assign({},item,{detail:newDetail,detailEdited:true});
   closeEditDetail();
   reRenderSec(ed.si);
-  toast('✅ تم التعديل!');
+  toast('✅ Updated!');
 }
 
-render();
+// ── T&C ──
+function showTnC(){document.getElementById('tnc-overlay').style.display='block';window.scrollTo(0,0)}
+function hideTnC(){document.getElementById('tnc-overlay').style.display='none'}
+
+// ── Access Gate ──
+var SUPABASE_URL='https://gjdqkitasyuwqatyitdj.supabase.co';
+var SUPABASE_KEY='sb_publishable_fEBMY_xuuK-SHDf1Yulxug_Y-sdutRG';
+var PAYHIP_URL='https://payhip.com/'; // ← put your Payhip product link here
+var AUTH_KEY='wod_auth_v1';
+function checkAccess(){
+  var saved=localStorage.getItem(AUTH_KEY);
+  if(saved){verifyCode(saved,function(ok){if(ok){render();}else{localStorage.removeItem(AUTH_KEY);showGate();}});return;}
+  showGate();
+}
+function verifyCode(code,cb){
+  fetch(SUPABASE_URL+'/rest/v1/access_codes?code=eq.'+encodeURIComponent(code)+'&select=code',{
+    headers:{'apikey':SUPABASE_KEY,'Authorization':'Bearer '+SUPABASE_KEY}
+  }).then(function(r){return r.json();}).then(function(d){cb(d&&d.length>0);}).catch(function(){cb(false);});
+}
+function showGate(){
+  app.innerHTML=
+    '<div style="min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:32px 20px;text-align:center">'
+    +'<div style="font-size:11px;color:var(--or);text-transform:uppercase;letter-spacing:3px;font-weight:700;margin-bottom:10px">WOD</div>'
+    +'<div style="font-size:30px;font-weight:900;color:#fff;letter-spacing:-1px;line-height:1.1;margin-bottom:6px">Workout<br>Generator</div>'
+    +'<div style="width:40px;height:2px;background:var(--or);margin:12px auto 6px;border-radius:2px"></div>'
+    +'<div style="font-size:13px;color:var(--txt2);margin-bottom:32px">v1.0</div>'
+    +'<div style="width:100%;max-width:340px">'
+    +'<div style="font-size:13px;color:var(--txt2);margin-bottom:14px;font-weight:500">Enter your access code</div>'
+    +'<input id="gate-inp" type="text" placeholder="XXXXXXXX" autocomplete="off" autocapitalize="characters"'
+    +' style="width:100%;background:var(--bg2);border:1.5px solid var(--bdr);border-radius:12px;padding:16px;font-size:20px;font-weight:800;color:var(--or);text-align:center;outline:none;letter-spacing:4px;margin-bottom:12px"'
+    +' oninput="this.value=this.value.toUpperCase()" onkeydown="if(event.key===\'Enter\')tryCode()">'
+    +'<button onclick="tryCode()" style="width:100%;background:var(--or);border:none;border-radius:12px;padding:15px;font-size:14px;font-weight:700;color:#000;cursor:pointer;margin-bottom:16px">Enter →</button>'
+    +'<a href="'+PAYHIP_URL+'" target="_blank" style="display:block;color:var(--txt2);font-size:12px;text-decoration:none;margin-bottom:10px">Buy Access ↗</a>'
+    +'<button onclick="showTnC()" style="background:none;border:none;color:var(--txt3);font-size:11px;cursor:pointer;text-decoration:underline">Terms & Conditions</button>'
+    +'</div></div>';
+  setTimeout(function(){var i=document.getElementById('gate-inp');if(i)i.focus();},100);
+}
+function tryCode(){
+  var inp=document.getElementById('gate-inp');
+  var val=(inp&&inp.value.trim().toUpperCase())||'';
+  if(!val)return;
+  var btn=document.querySelector('button[onclick="tryCode()"]');
+  if(btn){btn.disabled=true;btn.textContent='Checking...';}
+  verifyCode(val,function(ok){
+    if(btn){btn.disabled=false;btn.textContent='Enter →';}
+    if(!ok){
+      if(inp)inp.style.borderColor='var(--re)';
+      toast('Invalid code ❌','#ff1744');
+      setTimeout(function(){if(inp)inp.style.borderColor='var(--bdr)';},1500);
+      return;
+    }
+    localStorage.setItem(AUTH_KEY,val);
+  inp.style.borderColor='var(--gr)';
+  // Show success with copy reminder
+  app.innerHTML=
+    '<div style="min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:32px 20px;text-align:center">'
+    +'<div style="font-size:48px;margin-bottom:16px">✅</div>'
+    +'<div style="font-size:18px;font-weight:700;color:var(--gr);margin-bottom:8px">Access granted!</div>'
+    +'<div style="font-size:13px;color:var(--txt2);margin-bottom:20px;line-height:1.6">Save your code — you\'ll always find it<br>in your purchase email</div>'
+    +'<div style="background:var(--bg2);border:1px solid var(--gr);border-radius:12px;padding:14px 24px;margin-bottom:16px">'
+    +'<div style="font-size:11px;color:var(--txt3);margin-bottom:4px">Your code</div>'
+    +'<div style="font-size:22px;font-weight:900;color:var(--or);letter-spacing:4px">'+val+'</div>'
+    +'</div>'
+    +'<button onclick="copyCode(\''+val+'\')" style="background:var(--bg2);border:1px solid var(--gr);border-radius:10px;padding:10px 24px;color:var(--gr);font-size:13px;font-weight:700;cursor:pointer;margin-bottom:24px">📋 Copy Code</button>'
+    +'<button onclick="render()" style="background:var(--or);border:none;border-radius:12px;padding:14px 32px;font-size:14px;font-weight:700;color:#000;cursor:pointer">Start Training</button>'
+    +'</div>';
+  });
+}
+function copyCode(c){
+  if(navigator.clipboard)navigator.clipboard.writeText(c).then(function(){toast('📋 Code copied!')});
+  else{var t=document.createElement('textarea');t.value=c;document.body.appendChild(t);t.select();document.execCommand('copy');document.body.removeChild(t);toast('📋 Code copied!');}
+}
+checkAccess();
 </script>
 </body>
 </html>
