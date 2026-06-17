@@ -599,7 +599,12 @@ function renderCardio(it,si,ii){
   return'<div class="cb" id="ex-'+si+'-'+ii+'"><div class="ci">'+cico(ex.name)+'</div><div class="cbb"><div class="cn">'+ex.name+emTag+'</div><div class="cd">'+(it.detail||'Cardio')+'</div></div><span class="ct">CARDIO</span><button class="csb" onclick="toggleSwap(\''+si+'\',\''+ii+'\')">Swap</button></div>'
   +'<div class="sp cp" id="sp-'+si+'-'+ii+'"><div class="sh ch">💨 Cardio alternatives</div><div class="so">'
   +(ex.alts||[]).map(function(a){return'<div class="soi co" onclick="swapCardio('+si+','+ii+',\''+a.replace(/'/g,"\\'")+'\')">'+'<span class="sn">'+a+'</span><span class="stag">→ Use</span></div>'}).join('')
-  +'</div><button class="gn" style="color:var(--ca);border-color:rgba(0,188,212,.3);background:rgba(0,188,212,.05)" onclick="regenEx('+si+','+ii+',\'cardio\')">⟳ Different cardio</button></div>';
+  +'</div><button class="gn" style="color:var(--ca);border-color:rgba(0,188,212,.3);background:rgba(0,188,212,.05)" onclick="regenEx('+si+','+ii+',\'cardio\')">⟳ Different cardio</button>'
+  +'<div style="margin-top:10px;border-top:0.5px solid rgba(0,188,212,.15);padding-top:10px">'
+  +'<div style="font-size:10px;color:var(--ca);margin-bottom:6px;text-transform:uppercase;letter-spacing:1px">✏️ Manual entry</div>'
+  +'<input id="cmn-'+si+'-'+ii+'" placeholder="e.g. Run 500m" style="width:100%;background:var(--bg2);border:0.5px solid rgba(0,188,212,.3);border-radius:8px;padding:8px 10px;color:var(--txt);font-size:12px;margin-bottom:7px;outline:none">'
+  +'<button onclick="manualSwapCardio(\''+si+'\',\''+ii+'\')" style="width:100%;background:rgba(0,188,212,.1);border:1px solid rgba(0,188,212,.3);border-radius:8px;padding:8px;font-size:12px;color:var(--ca);font-weight:700;cursor:pointer">✓ Use This</button>'
+  +'</div></div>';
 }
 function manualSwap(si,ii){
   var nEl=document.getElementById('mn-'+si+'-'+ii);
@@ -656,6 +661,73 @@ function fbCopy(t){
   document.body.removeChild(ta);
 }
 function render(){var fns=[step0,step1,step2,step3,step4];var fn=fns[S.step];if(fn)fn()}
+
+// ── Inline cardio editor ──
+var cardioEditUnit='m';
+function openEditCardio(si,ii){
+  var item=S.wod&&S.wod.sections[si]&&S.wod.sections[si].items[ii];
+  if(!item)return;
+  editingDetail={si:si,ii:ii,cardio:true};
+  var current=item.detail||'';
+  var numMatch=current.match(/\d+/);
+  var initNum=numMatch?numMatch[0]:'';
+  if(current.indexOf('Cal')>=0)cardioEditUnit='Cal';
+  else if(/\d+min/.test(current)||current.indexOf('min')>=0)cardioEditUnit='min';
+  else if(/\d+s(\b| )/.test(current))cardioEditUnit='s';
+  else cardioEditUnit='m';
+  var ov=document.getElementById('edit-overlay');
+  ov.style.display='block';
+  renderCardioSheet(item.ex.name,initNum);
+  setTimeout(function(){document.getElementById('edit-sheet').style.transform='translateX(-50%) translateY(0)';},10);
+  setTimeout(function(){var inp=document.getElementById('ed-num');if(inp){inp.focus();}},80);
+}
+function renderCardioSheet(name,initVal){
+  var presets={m:[100,200,400,500,800,1000],Cal:[10,15,20,25,30,50],s:[15,20,30,45,60,90],min:[1,2,3,5,10,15]}[cardioEditUnit]||[];
+  var curVal=document.getElementById('ed-num')?document.getElementById('ed-num').value:(initVal||'');
+  var sheet=document.getElementById('edit-sheet');
+  sheet.innerHTML=
+    '<div style="width:36px;height:4px;background:var(--bdr);border-radius:2px;margin:0 auto 16px"></div>'
+    +'<div style="font-size:10px;color:var(--ca);text-transform:uppercase;letter-spacing:2px;margin-bottom:4px;font-weight:700">✏️ تعديل المسافة / الكمية</div>'
+    +'<div style="font-size:13px;color:var(--txt2);margin-bottom:14px;font-weight:500">'+(name||'')+'</div>'
+    +'<div style="display:flex;align-items:center;gap:10px;justify-content:center;margin-bottom:12px">'
+    +'<input id="ed-num" type="number" value="'+curVal+'" inputmode="numeric" min="1" max="9999"'
+    +' style="width:110px;background:var(--bg3);border:1.5px solid var(--ca);border-radius:12px;padding:14px 10px;font-size:32px;font-weight:900;color:var(--ca);text-align:center;outline:none">'
+    +'<div style="display:flex;flex-direction:column;gap:5px">'
+    +['m','Cal','s','min'].map(function(u){var sel=u===cardioEditUnit;return'<button onclick="switchCardioUnit(\''+u+'\')" style="background:'+(sel?'rgba(0,188,212,.15)':'var(--bg3)')+';border:0.5px solid '+(sel?'var(--ca)':'var(--bdr)')+';border-radius:7px;padding:4px 12px;font-size:12px;color:'+(sel?'var(--ca)':'var(--txt2)')+';cursor:pointer;font-weight:700;min-height:28px">'+u+'</button>'}).join('')
+    +'</div></div>'
+    +'<div style="display:flex;gap:6px;flex-wrap:wrap;justify-content:center;margin-bottom:18px">'
+    +presets.map(function(p){return'<button onclick="setEditNum('+p+')" style="background:var(--bg3);border:0.5px solid rgba(0,188,212,.3);border-radius:8px;padding:7px 14px;font-size:13px;color:var(--ca);cursor:pointer;font-weight:600;min-height:36px">'+p+'</button>'}).join('')
+    +'</div>'
+    +'<div style="display:flex;gap:8px">'
+    +'<button onclick="closeEditDetail()" style="flex:1;background:var(--bg3);border:0.5px solid var(--bdr);border-radius:10px;padding:13px;font-size:13px;color:var(--txt2);cursor:pointer;font-weight:600;min-height:46px">إلغاء</button>'
+    +'<button onclick="saveEditCardioNum()" style="flex:2;background:var(--ca);border:none;border-radius:10px;padding:13px;font-size:14px;color:#000;cursor:pointer;font-weight:700;min-height:46px">✓ حفظ</button>'
+    +'</div>';
+}
+function switchCardioUnit(u){
+  cardioEditUnit=u;
+  var ed=editingDetail;
+  var item=S.wod.sections[ed.si].items[ed.ii];
+  renderCardioSheet(item.ex.name);
+}
+function saveEditCardioNum(){
+  var inp=document.getElementById('ed-num');
+  if(!inp)return;
+  var val=parseInt(inp.value,10);
+  if(isNaN(val)||val<1)return toast('ادخلي رقم','#00bcd4');
+  var ed=editingDetail;
+  var item=S.wod.sections[ed.si].items[ed.ii];
+  S.wod.sections[ed.si].items[ed.ii]=Object.assign({},item,{detail:val+cardioEditUnit,detailEdited:true});
+  closeEditDetail();
+  reRenderSec(ed.si);
+  toast('✅ تم التعديل!');
+}
+function manualSwapCardio(si,ii){
+  var nEl=document.getElementById('cmn-'+si+'-'+ii);
+  if(!nEl||!nEl.value.trim())return toast('اكتبي اسم التمرين','#00bcd4');
+  var old=S.wod.sections[si].items[ii];
+  S.wod.sections[si].items[ii]=Object.assign({},old,{ex:{name:nEl.value.trim(),alts:[]}});
+  reRenderSec(si);toast('✅ Done!');
+}
 
 // ── Inline detail editor ──
 var editingDetail=null;
