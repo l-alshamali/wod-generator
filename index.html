@@ -6,12 +6,12 @@
 <title>CrossFit WOD Generator</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Almarai:wght@400;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css?family=Almarai:400,700,800&subset=arabic&display=swap" rel="stylesheet">
 <style>
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
 :root{--or:#ff6600;--og:rgba(255,102,0,.12);--gr:#00c853;--re:#ff1744;--ye:#ffd600;--bl:#448aff;--ca:#00bcd4;--cag:rgba(0,188,212,.1);--bg:#0f0f0f;--bg2:#1a1a1a;--bg3:#242424;--bdr:#333;--bdr2:#2a2a2a;--txt:#ffffff;--txt2:#aaaaaa;--txt3:#666}
 body{background:var(--bg);color:var(--txt);font-family:'Segoe UI',system-ui,-apple-system,sans-serif;min-height:100vh;font-size:15px}
-body[dir=rtl]{font-family:'Almarai',sans-serif}
+body[dir=rtl]{font-family:'Segoe UI',system-ui,-apple-system,sans-serif}
 .app{max-width:480px;margin:0 auto;padding:0 0 80px}
 .steps{display:flex;gap:6px;justify-content:center;margin-bottom:18px;padding-top:16px}
 .dot{width:8px;height:8px;border-radius:50%;background:var(--bdr);flex-shrink:0;transition:all .3s}
@@ -42,16 +42,16 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:26px;heigh
 .tp{background:var(--bg3);border:0.5px solid var(--bdr);border-radius:20px;padding:6px 14px;font-size:13px;color:var(--txt2);cursor:pointer;font-weight:500;min-height:36px}
 .tp:active{border-color:var(--or);color:var(--or)}
 .wh{text-align:center;margin-bottom:20px;padding:0 4px}
-.wl{font-size:11px;color:var(--or);text-transform:uppercase;letter-spacing:3px;font-weight:700}
-.wn{font-size:38px;font-weight:900;line-height:1;text-transform:uppercase;color:var(--txt)}
+.wl{font-size:13px;color:var(--or);text-transform:uppercase;letter-spacing:3px;font-weight:700}
+.wn{font-size:38px;font-weight:900;line-height:1;text-transform:uppercase;color:var(--txt);font-family:'Segoe UI',system-ui,-apple-system,sans-serif}
 .wm{display:flex;gap:7px;justify-content:center;margin-top:10px;flex-wrap:wrap}
 .wb{background:var(--bg2);border:0.5px solid var(--bdr);border-radius:20px;padding:4px 12px;font-size:12px;font-weight:700;color:var(--txt2)}
 .wb.o{border-color:var(--or);color:var(--or);background:var(--og)}
 .wb.b{border-color:var(--bl);color:var(--bl)}
 .ws{background:var(--bg2);border:0.5px solid var(--bdr2);border-radius:14px;padding:18px 14px;margin:0 4px 10px}
-.st{font-size:11px;color:var(--or);text-transform:uppercase;letter-spacing:2px;font-weight:700;margin-bottom:2px}
-.stt{font-size:16px;font-weight:600;margin-bottom:12px;padding-bottom:10px;border-bottom:0.5px solid var(--bdr2);color:var(--txt)}
-.si{font-size:13px;color:var(--txt2);padding:7px 10px;background:var(--bg3);border-radius:7px;border-left:2px solid var(--or);margin-bottom:8px;line-height:1.55}
+.st{font-size:11px;color:var(--or);text-transform:uppercase;letter-spacing:2px;font-weight:700;margin-bottom:2px;font-family:'Segoe UI',system-ui,-apple-system,sans-serif}
+.stt{font-size:16px;font-weight:600;margin-bottom:12px;padding-bottom:10px;border-bottom:0.5px solid var(--bdr2);color:var(--txt);font-family:'Segoe UI',system-ui,-apple-system,sans-serif}
+.si{font-size:13px;color:var(--txt2);padding:7px 10px;background:var(--bg3);border-radius:7px;border-left:2px solid var(--or);margin-bottom:8px;line-height:1.55;font-family:'Segoe UI',system-ui,-apple-system,sans-serif}
 .si.team{border-left-color:var(--ye)}
 .si.sc{border-left-color:var(--bl)}
 .rsep{padding:8px 0 2px;font-size:11px;color:var(--or);text-align:center;letter-spacing:2px;font-weight:700;text-transform:uppercase}
@@ -59,8 +59,8 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:26px;heigh
 .er:last-child{border-bottom:none}
 .en{width:26px;height:26px;border-radius:50%;background:var(--bg3);border:0.5px solid var(--or);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:var(--or);flex-shrink:0}
 .eb{flex:1;min-width:0}
-.ename{font-size:14px;font-weight:500;color:var(--txt);margin-bottom:2px}
-.edet{font-size:13px;color:var(--or);font-weight:700}
+.ename{font-size:14px;font-weight:500;color:var(--txt);margin-bottom:2px;font-family:'Segoe UI',system-ui,-apple-system,sans-serif}
+.edet{font-size:13px;color:var(--or);font-weight:700;font-family:'Segoe UI',system-ui,-apple-system,sans-serif}
 .ea{display:flex;flex-direction:column;gap:4px;flex-shrink:0}
 .esb{background:var(--bg3);border:0.5px solid var(--bdr);border-radius:7px;padding:5px 9px;font-size:11px;color:var(--txt2);cursor:pointer;font-weight:600;min-height:30px;text-align:center}
 .esb:active{border-color:var(--gr);color:var(--gr)}
@@ -103,8 +103,7 @@ body.light .nb{color:#000}
 body.light .spinner{border-color:#ddd;border-top-color:var(--or)}
 body[dir=rtl] .cfg-btn{right:auto;left:14px}
 body[dir=rtl] .ql,body[dir=rtl] .wl,body[dir=rtl] .nb,body[dir=rtl] .ab,body[dir=rtl] .rsep,body[dir=rtl] .sh,body[dir=rtl] .tu,body[dir=rtl] .st{letter-spacing:0}
-body[dir=rtl] .nb,body[dir=rtl] .bk,body[dir=rtl] .ab{font-family:'Almarai',sans-serif}
-body[dir=rtl] button,body[dir=rtl] input,body[dir=rtl] select,body[dir=rtl] textarea{font-family:'Almarai',sans-serif}
+body[dir=rtl] .nb,body[dir=rtl] .bk,body[dir=rtl] .ab,body[dir=rtl] .ql,body[dir=rtl] .qt,body[dir=rtl] .qs,body[dir=rtl] .wl,body[dir=rtl] .on,body[dir=rtl] .od,body[dir=rtl] .tu,body[dir=rtl] .sh,body[dir=rtl] .rsep,body[dir=rtl] .hint,body[dir=rtl] .lt,body[dir=rtl] button,body[dir=rtl] .tnc-title,body[dir=rtl] .tnc-date,body[dir=rtl] .tnc-sec,body[dir=rtl] .tnc-p{font-family:'Almarai',sans-serif}
 body[dir=rtl]{line-height:1.5}
 .cfg-btn{position:fixed;top:14px;right:14px;z-index:150;background:var(--bg2);border:0.5px solid var(--bdr);border-radius:50%;width:40px;height:40px;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:19px;box-shadow:none}
 .cfg-overlay{display:none;position:fixed;inset:0;z-index:200;background:rgba(0,0,0,.6)}
@@ -668,8 +667,8 @@ function bkBtn(key,step){return'<button class="bk" onclick="S.step='+step+';rend
 function step0(){
   var lvls=[['beginner','🌱',t('lv_b'),t('lv_b_d')],['intermediate','⚡',t('lv_i'),t('lv_i_d')],['advanced','🔥',t('lv_a'),t('lv_a_d')],['elite','🏆',t('lv_e'),t('lv_e_d')]];
   app.innerHTML='<div style="text-align:center;padding:32px 16px 24px">'
-  +'<div style="font-size:11px;color:var(--or);text-transform:uppercase;letter-spacing:3px;font-weight:700;margin-bottom:10px">'+t('wod')+'</div>'
-  +'<div style="font-size:30px;font-weight:900;color:var(--txt,#fff);letter-spacing:-1px;line-height:1.1">'+t('title')+'</div>'
+  +'<div style="font-size:11px;color:var(--or);text-transform:uppercase;letter-spacing:3px;font-weight:700;margin-bottom:10px;font-family:\'Segoe UI\',system-ui,-apple-system,sans-serif">'+t('wod')+'</div>'
+  +'<div style="font-size:30px;font-weight:900;color:var(--txt,#fff);letter-spacing:-1px;line-height:1.1;font-family:\'Segoe UI\',system-ui,-apple-system,sans-serif">'+t('title')+'</div>'
   +'<div style="width:40px;height:2px;background:var(--or);margin:14px auto 12px;border-radius:2px"></div>'
   +'<div style="font-size:13px;color:var(--txt2);font-weight:500;letter-spacing:1px">'+t('sub')+'</div>'
   +'</div>'
@@ -735,7 +734,7 @@ var TL={amrap:'AMRAP','for-time':'For Time/RFT',emom:'EMOM',e2mom:'E2MOM',e3mom:
 var LL={beginner:'Beginner',intermediate:'Intermediate',advanced:'Advanced',elite:'Elite'};
 function renderWod(){
   var w=S.wod;
-  app.innerHTML=dots(4)+'<div class="wh ani"><div class="wl">'+t('wod_day')+'</div><div class="wn">'+S.wodName+'</div><div class="wm"><span class="wb o">'+(TL[w.type]||w.type)+'</span><span class="wb">'+LL[S.level]+'</span><span class="wb">'+S.time+' min</span>'+(S.teamSize>1?'<span class="wb b">Team '+S.teamSize+'</span>':'')+'</div></div>'
+  app.innerHTML=dots(4)+'<div class="wh ani"><div class="wl">'+t('wod_day')+'</div><div class="wn"><bdi dir="ltr">'+S.wodName+'</bdi></div><div class="wm"><span class="wb o">'+(TL[w.type]||w.type)+'</span><span class="wb">'+LL[S.level]+'</span><span class="wb">'+S.time+' min</span>'+(S.teamSize>1?'<span class="wb b">Team '+S.teamSize+'</span>':'')+'</div></div>'
   +'<div id="secs">'+w.sections.map(function(s,i){return renderSec(s,i)}).join('')+'</div>'
   +'<div class="ar"><button class="ab dan" onclick="regen()">'+t('new_wod')+'</button><button class="ab pri" onclick="copyWod()">'+t('copy')+'</button></div>'
   +'<button class="bk" style="margin:8px 4px 0" onclick="S.step=3;render()">'+t('back_ty')+'</button>'
@@ -1173,4 +1172,4 @@ loadCfg();
 checkAccess();
 </script>
 </body>
-</html>                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     
+</html>                                                                                                                                                                                                                                                                                                                                                                                 
