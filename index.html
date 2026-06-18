@@ -93,6 +93,20 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:26px;heigh
 @keyframes su{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
 .ani{animation:su .25s ease}
 @media(max-width:380px){.wn{font-size:30px}.ob{padding:10px 6px}.on{font-size:11px}}
+body.light{--bg:#f5f5f5;--bg2:#ffffff;--bg3:#eeeeee;--bdr:#d8d8d8;--bdr2:#e2e2e2;--txt:#111111;--txt2:#555555;--txt3:#999999;--og:rgba(255,102,0,.10);--cag:rgba(0,150,180,.08)}
+body.light input{color:#111 !important}
+body.light .nb{color:#000}
+body.light .spinner{border-color:#ddd;border-top-color:var(--or)}
+.cfg-btn{position:fixed;top:14px;right:14px;z-index:150;background:var(--bg2);border:0.5px solid var(--bdr);border-radius:50%;width:40px;height:40px;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:19px;box-shadow:none}
+.cfg-overlay{display:none;position:fixed;inset:0;z-index:200;background:rgba(0,0,0,.6)}
+.cfg-box{position:absolute;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:480px;background:var(--bg2);border-radius:18px 18px 0 0;padding:22px 20px 40px}
+.cfg-title{font-size:14px;font-weight:700;color:var(--txt);margin-bottom:18px;text-align:center}
+.cfg-row{display:flex;align-items:center;justify-content:space-between;padding:12px 0;border-bottom:0.5px solid var(--bdr2)}
+.cfg-row:last-child{border-bottom:none}
+.cfg-lbl{font-size:13px;color:var(--txt2);font-weight:600}
+.cfg-seg{display:flex;background:var(--bg3);border-radius:8px;padding:2px;gap:2px}
+.cfg-seg button{background:none;border:none;border-radius:6px;padding:6px 14px;font-size:12px;font-weight:600;cursor:pointer;color:var(--txt2)}
+.cfg-seg button.on{background:var(--or);color:#fff}
 .tnc-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.85);z-index:300;overflow-y:auto}
 .tnc-box{max-width:480px;margin:0 auto;background:var(--bg2);min-height:100vh;padding:24px 18px 48px}
 .tnc-title{font-size:16px;font-weight:800;color:var(--or);margin-bottom:4px}
@@ -104,6 +118,26 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:26px;heigh
 <body>
 <div class="app" id="app"></div>
 <div class="tst" id="tst"></div>
+<button class="cfg-btn" onclick="openCfg()">⚙️</button>
+<div class="cfg-overlay" id="cfg-overlay" onclick="closeCfg()">
+  <div class="cfg-box" onclick="event.stopPropagation()">
+    <div class="cfg-title" id="cfg-title">Settings</div>
+    <div class="cfg-row">
+      <span class="cfg-lbl" id="cfg-lang-lbl">Language</span>
+      <div class="cfg-seg">
+        <button id="btn-en" class="on" onclick="setLang('en')">EN</button>
+        <button id="btn-ar" onclick="setLang('ar')">AR</button>
+      </div>
+    </div>
+    <div class="cfg-row">
+      <span class="cfg-lbl" id="cfg-theme-lbl">Theme</span>
+      <div class="cfg-seg">
+        <button id="btn-dark" class="on" onclick="setTheme('dark')">🌑 Dark</button>
+        <button id="btn-light" onclick="setTheme('light')">☀️ Light</button>
+      </div>
+    </div>
+  </div>
+</div>
 
 <div class="tnc-overlay" id="tnc-overlay">
 <div class="tnc-box">
@@ -143,6 +177,85 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:26px;heigh
   <div id="edit-sheet" style="position:absolute;bottom:0;left:50%;transform:translateX(-50%) translateY(100%);width:100%;max-width:480px;background:var(--bg2);border:0.5px solid var(--bdr2);border-radius:18px 18px 0 0;padding:18px 18px 32px;transition:transform .25s ease" onclick="event.stopPropagation()"></div>
 </div>
 <script>
+var T={
+  en:{s:'Settings',language:'Language',theme:'Theme',dark:'Dark',light:'Light',
+    wod:'WOD',title:'Workout<br>Generator',sub:'v1.0',
+    gate_hint:'Enter your email & password',enter:'Enter →',buy:'Buy Access ↗',tnc:'Terms & Conditions',
+    step1:'Step 1 / 5',step1q:"What's your CrossFit level?",step1s:'Sets workout intensity',
+    lv_b:'Beginner',lv_b_d:'Under 6 months',lv_i:'Intermediate',lv_i_d:'6mo – 2 years',
+    lv_a:'Advanced',lv_a_d:'2 – 5 years',lv_e:'Elite',lv_e_d:'5+ / competitive',
+    step2:'Step 2 / 5',step2q:'How long?',step2s:'WOD duration (not including warm-up)',
+    minutes:'minutes',next:'Next →',back_lv:'← Back to Level',back_ti:'← Back to Time',back_te:'← Back to Team',back_ty:'← Back to Types',
+    step3:'Step 3 / 5',step3q:'Solo or team?',step3s:'Affects volume and rep sharing',
+    solo:'Individual',solo_d:'Solo',team2:'Team of 2',team2_d:'Partner',
+    step4:'Step 4 / 5',step4q:'WOD Type?',step4s:'Pick one or more — one drawn at random',
+    type_hint:'Select multiple types for variety',generate:'Generate WOD',team_only:'Team only',
+    wod_day:'WOD of the Day',new_wod:'🔄 New WOD',copy:'📋 Copy',generating:'Generating your WOD...',
+    swap:'Swap ↕',new_ex:'New ⟳',similar:'✅ Similar alternatives',cardio_alts:'💨 Cardio alternatives',
+    gen_diff:'⟳ Generate completely different exercise',diff_c:'⟳ Different cardio',manual:'✏️ Manual entry',use:'✓ Use This',
+    cancel:'Cancel',save:'✓ Save',
+    granted:'Access granted!',save_pw:"Save your password — you'll find it<br>in your purchase email",your_pw:'Your password',
+    copy_pw:'📋 Copy Password',start:'Start Training',checking:'Checking...',invalid:'Invalid email or password ❌'},
+  ar:{s:'الإعدادات',language:'اللغة',theme:'الثيم',dark:'داكن',light:'فاتح',
+    wod:'WOD',title:'مولّد<br>التمارين',sub:'v1.0',
+    gate_hint:'أدخل إيميلك وكلمة المرور',enter:'دخول →',buy:'اشتري الوصول ↗',tnc:'الشروط والأحكام',
+    step1:'الخطوة ١ / ٥',step1q:'ما مستواك في CrossFit؟',step1s:'يحدد شدة التمرين',
+    lv_b:'مبتدئ',lv_b_d:'أقل من ٦ أشهر',lv_i:'متوسط',lv_i_d:'٦ أشهر – ٢ سنوات',
+    lv_a:'متقدم',lv_a_d:'٢ – ٥ سنوات',lv_e:'متميز',lv_e_d:'٥+ / تنافسي',
+    step2:'الخطوة ٢ / ٥',step2q:'كم الوقت؟',step2s:'مدة التمرين (بدون الإحماء)',
+    minutes:'دقائق',next:'التالي →',back_lv:'← رجوع للمستوى',back_ti:'← رجوع للوقت',back_te:'← رجوع للفريق',back_ty:'← رجوع للأنواع',
+    step3:'الخطوة ٣ / ٥',step3q:'منفرد أو فريق؟',step3s:'يؤثر على الحجم وتقسيم التكرارات',
+    solo:'منفرد',solo_d:'Solo',team2:'ثنائي',team2_d:'Partner',
+    step4:'الخطوة ٤ / ٥',step4q:'نوع التمرين؟',step4s:'اختر نوع أو أكثر — يُختار عشوائياً',
+    type_hint:'اختر أنواع متعددة للتنويع',generate:'ولّد التمرين',team_only:'للفريق فقط',
+    wod_day:'تمرين اليوم',new_wod:'🔄 تمرين جديد',copy:'📋 نسخ',generating:'جارٍ توليد تمرينك...',
+    swap:'تبديل ↕',new_ex:'جديد ⟳',similar:'✅ بدائل مشابهة',cardio_alts:'💨 بدائل الكارديو',
+    gen_diff:'⟳ ولّد تمريناً مختلفاً كلياً',diff_c:'⟳ كارديو مختلف',manual:'✏️ إدخال يدوي',use:'✓ استخدم هذا',
+    cancel:'إلغاء',save:'✓ حفظ',
+    granted:'تم الدخول!',save_pw:'احفظ كلمة مرورك — ستجدها<br>في إيميل الشراء',your_pw:'كلمة مرورك',
+    copy_pw:'📋 نسخ كلمة المرور',start:'ابدأ التدريب',checking:'جارٍ التحقق...',invalid:'إيميل أو كلمة مرور خاطئة ❌'}
+};
+var CFG={lang:'en',theme:'dark'};
+function t(k){return T[CFG.lang][k]||T.en[k]||k;}
+function openCfg(){document.getElementById('cfg-overlay').style.display='block';}
+function closeCfg(){document.getElementById('cfg-overlay').style.display='none';}
+function setLang(l){
+  CFG.lang=l;
+  localStorage.setItem('wod_cfg',JSON.stringify(CFG));
+  document.getElementById('btn-en').classList.toggle('on',l==='en');
+  document.getElementById('btn-ar').classList.toggle('on',l==='ar');
+  document.getElementById('cfg-title').textContent=t('s');
+  document.getElementById('cfg-lang-lbl').textContent=t('language');
+  document.getElementById('cfg-theme-lbl').textContent=t('theme');
+  document.getElementById('btn-dark').textContent=(l==='ar'?'🌑 داكن':'🌑 Dark');
+  document.getElementById('btn-light').textContent=(l==='ar'?'☀️ فاتح':'☀️ Light');
+  document.body.dir=l==='ar'?'rtl':'ltr';
+  render();
+}
+function setTheme(th){
+  CFG.theme=th;
+  localStorage.setItem('wod_cfg',JSON.stringify(CFG));
+  document.body.classList.toggle('light',th==='light');
+  document.getElementById('btn-dark').classList.toggle('on',th==='dark');
+  document.getElementById('btn-light').classList.toggle('on',th==='light');
+}
+function loadCfg(){
+  try{var c=JSON.parse(localStorage.getItem('wod_cfg')||'{}');
+    if(c.lang)CFG.lang=c.lang;
+    if(c.theme)CFG.theme=c.theme;
+  }catch(e){}
+  document.body.classList.toggle('light',CFG.theme==='light');
+  document.body.dir=CFG.lang==='ar'?'rtl':'ltr';
+  document.getElementById('btn-en').classList.toggle('on',CFG.lang==='en');
+  document.getElementById('btn-ar').classList.toggle('on',CFG.lang==='ar');
+  document.getElementById('btn-dark').classList.toggle('on',CFG.theme==='dark');
+  document.getElementById('btn-light').classList.toggle('on',CFG.theme==='light');
+  document.getElementById('cfg-title').textContent=t('s');
+  document.getElementById('cfg-lang-lbl').textContent=t('language');
+  document.getElementById('cfg-theme-lbl').textContent=t('theme');
+  document.getElementById('btn-dark').textContent=(CFG.lang==='ar'?'🌑 داكن':'🌑 Dark');
+  document.getElementById('btn-light').textContent=(CFG.lang==='ar'?'☀️ فاتح':'☀️ Light');
+}
 var STR=[
   {name:'Deadlift',cat:'barbell',tier:1,alts:['Romanian Deadlift','Sumo Deadlift','DB Deadlift','KB Gorilla Row']},
   {name:'Strict Press',cat:'barbell',tier:1,alts:['Push Press','DB Strict Press','Chin-Up','Z-Press']},
@@ -542,34 +655,34 @@ function dots(cur){
   for(var i=0;i<5;i++)h+='<div class="dot'+(i<cur?' done':i===cur?' active':'')+'"></div>';
   return h+'</div>';
 }
-function bkBtn(label,step){return'<button class="bk" onclick="S.step='+step+';render()">← Back to '+label+'</button>'}
+function bkBtn(key,step){return'<button class="bk" onclick="S.step='+step+';render()">'+t(key)+'</button>'}
 function step0(){
+  var lvls=[['beginner','🌱',t('lv_b'),t('lv_b_d')],['intermediate','⚡',t('lv_i'),t('lv_i_d')],['advanced','🔥',t('lv_a'),t('lv_a_d')],['elite','🏆',t('lv_e'),t('lv_e_d')]];
   app.innerHTML='<div style="text-align:center;padding:32px 16px 24px">'
-  +'<div style="font-size:11px;color:var(--or);text-transform:uppercase;letter-spacing:3px;font-weight:700;margin-bottom:10px">WOD</div>'
-  +'<div style="font-size:30px;font-weight:900;color:#fff;letter-spacing:-1px;line-height:1.1">Workout<br>Generator</div>'
+  +'<div style="font-size:11px;color:var(--or);text-transform:uppercase;letter-spacing:3px;font-weight:700;margin-bottom:10px">'+t('wod')+'</div>'
+  +'<div style="font-size:30px;font-weight:900;color:var(--txt,#fff);letter-spacing:-1px;line-height:1.1">'+t('title')+'</div>'
   +'<div style="width:40px;height:2px;background:var(--or);margin:14px auto 12px;border-radius:2px"></div>'
-  +'<div style="font-size:13px;color:var(--txt2);font-weight:500;letter-spacing:1px">v1.0</div>'
+  +'<div style="font-size:13px;color:var(--txt2);font-weight:500;letter-spacing:1px">'+t('sub')+'</div>'
   +'</div>'
-  +dots(0)+'<div class="qc ani"><div class="ql">Step 1 / 5</div><div class="qt">What\'s your CrossFit level?</div><div class="qs">Sets workout intensity</div><div class="og">'
-  +[['beginner','🌱','Beginner','Under 6 months'],['intermediate','⚡','Intermediate','6mo – 2 years'],['advanced','🔥','Advanced','2 – 5 years'],['elite','🏆','Elite','5+ / competitive']]
-  .map(function(x){return'<button class="ob'+(S.level===x[0]?' sel':'')+'" onclick="setLevel(\''+x[0]+'\',this)"><span class="oi">'+x[1]+'</span><span class="on">'+x[2]+'</span><span class="od">'+x[3]+'</span></button>'}).join('')+'</div></div>';
+  +dots(0)+'<div class="qc ani"><div class="ql">'+t('step1')+'</div><div class="qt">'+t('step1q')+'</div><div class="qs">'+t('step1s')+'</div><div class="og">'
+  +lvls.map(function(x){return'<button class="ob'+(S.level===x[0]?' sel':'')+'" onclick="setLevel(\''+x[0]+'\',this)"><span class="oi">'+x[1]+'</span><span class="on">'+x[2]+'</span><span class="od">'+x[3]+'</span></button>'}).join('')+'</div></div>';
 }
 function setLevel(l,el){S.level=l;S.wod=null;if(el)el.classList.add('sel');setTimeout(function(){S.step=1;render()},220)}
 function step1(){
-  app.innerHTML=dots(1)+'<div class="qc ani"><div class="ql">Step 2 / 5</div><div class="qt">How long?</div><div class="qs">WOD duration (not including warm-up)</div>'
-  +'<div class="td" id="td">'+S.time+'</div><div class="tu">minutes</div>'
+  app.innerHTML=dots(1)+'<div class="qc ani"><div class="ql">'+t('step2')+'</div><div class="qt">'+t('step2q')+'</div><div class="qs">'+t('step2s')+'</div>'
+  +'<div class="td" id="td">'+S.time+'</div><div class="tu">'+t('minutes')+'</div>'
   +'<input type="range" min="5" max="60" step="5" value="'+S.time+'" oninput="setT(this.value)">'
-  +'<div class="tps">'+[10,15,20,25,30,40,45,60].map(function(t){return'<button class="tp" onclick="setTF('+t+')">'+t+'</button>'}).join('')+'</div>'
-  +'<button class="nb" onclick="S.step=2;render()">Next →</button>'
-  +bkBtn('Level',0)+'</div>';
+  +'<div class="tps">'+[10,15,20,25,30,40,45,60].map(function(v){return'<button class="tp" onclick="setTF('+v+')">'+v+'</button>'}).join('')+'</div>'
+  +'<button class="nb" onclick="S.step=2;render()">'+t('next')+'</button>'
+  +bkBtn('back_lv',0)+'</div>';
 }
 function setT(v){S.time=+v;var d=document.getElementById('td');if(d)d.textContent=v}
 function setTF(v){S.time=v;var s=document.querySelector('input[type=range]');if(s)s.value=v;setT(v)}
 function step2(){
-  app.innerHTML=dots(2)+'<div class="qc ani"><div class="ql">Step 3 / 5</div><div class="qt">Solo or team?</div><div class="qs">Affects volume and rep sharing</div><div class="og">'
-  +[[1,'🧍','Individual','Solo'],[2,'🧍🧍','Team of 2','Partner']]
+  app.innerHTML=dots(2)+'<div class="qc ani"><div class="ql">'+t('step3')+'</div><div class="qt">'+t('step3q')+'</div><div class="qs">'+t('step3s')+'</div><div class="og">'
+  +[[1,'🧍',t('solo'),t('solo_d')],[2,'🧍🧍',t('team2'),t('team2_d')]]
   .map(function(x){return'<button class="ob'+(S.teamSize===x[0]?' sel':'')+'" onclick="setTeam('+x[0]+',this)"><span class="oi">'+x[1]+'</span><span class="on">'+x[2]+'</span><span class="od">'+x[3]+'</span></button>'}).join('')+'</div>'
-  +bkBtn('Time',1)+'</div>';
+  +bkBtn('back_ti',1)+'</div>';
 }
 function setTeam(n,el){S.teamSize=n;S.wod=null;if(el){document.querySelectorAll('.og .ob').forEach(function(b){b.classList.remove('sel')});el.classList.add('sel')}setTimeout(function(){S.step=3;render()},220)}
 var TYPES=[
@@ -591,28 +704,28 @@ var TYPES=[
 ];
 function step3(){
   var sel=S.wodTypes;
-  app.innerHTML=dots(3)+'<div class="qc ani"><div class="ql">Step 4 / 5</div><div class="qt">WOD Type?</div><div class="qs">Pick one or more — one drawn at random</div><div class="og">'
-  +TYPES.map(function(t){
-    var dis=t.teamOnly&&S.teamSize<2;
-    return'<button class="ob'+(sel.indexOf(t.id)>=0?' sel':'')+' '+(dis?'dis':'')+'" onclick="'+(dis?'':'toggleType(\''+t.id+'\')')+'"><span class="oi">'+t.icon+'</span><span class="on">'+t.name+'</span><span class="od">'+(dis?'Team only':t.desc)+'</span></button>';
-  }).join('')+'</div><div class="hint">Select multiple types for variety</div><button class="nb" onclick="go()" '+(sel.length===0?'disabled':'')+'>Generate WOD</button>'
-  +bkBtn('Team',2)+'</div>';
+  app.innerHTML=dots(3)+'<div class="qc ani"><div class="ql">'+t('step4')+'</div><div class="qt">'+t('step4q')+'</div><div class="qs">'+t('step4s')+'</div><div class="og">'
+  +TYPES.map(function(tp){
+    var dis=tp.teamOnly&&S.teamSize<2;
+    return'<button class="ob'+(sel.indexOf(tp.id)>=0?' sel':'')+' '+(dis?'dis':'')+'" onclick="'+(dis?'':'toggleType(\''+tp.id+'\')')+'"><span class="oi">'+tp.icon+'</span><span class="on">'+tp.name+'</span><span class="od">'+(dis?t('team_only'):tp.desc)+'</span></button>';
+  }).join('')+'</div><div class="hint">'+t('type_hint')+'</div><button class="nb" onclick="go()" '+(sel.length===0?'disabled':'')+'>'+t('generate')+'</button>'
+  +bkBtn('back_te',2)+'</div>';
 }
 function toggleType(id){var i=S.wodTypes.indexOf(id);if(i===-1)S.wodTypes.push(id);else S.wodTypes.splice(i,1);step3()}
 function go(){if(S.wodTypes.length===0)return;S.wod=null;S.step=4;render()}
 function step4(){
-  app.innerHTML=dots(4)+'<div class="loading"><div class="spinner"></div><div class="lt">Generating your WOD...</div></div>';
+  app.innerHTML=dots(4)+'<div class="loading"><div class="spinner"></div><div class="lt">'+t('generating')+'</div></div>';
   setTimeout(function(){if(!S.wod||S.regen){S.wod=generate(S);S.wodName=todayStr();S.regen=false}renderWod()},600);
 }
 var TL={amrap:'AMRAP','for-time':'For Time/RFT',emom:'EMOM',e2mom:'E2MOM',e3mom:'E3MOM',chipper:'Chipper',tabata:'Tabata','death-by':'Death By',ladder:'Ladder',couplet:'Couplet',triplet:'Triplet','buy-in-cashout':'Buy-In/Cash-Out',ygig:'YGIG','interval-amrap':'Interval AMRAP','group-ab':'Group A/B'};
 var LL={beginner:'Beginner',intermediate:'Intermediate',advanced:'Advanced',elite:'Elite'};
 function renderWod(){
   var w=S.wod;
-  app.innerHTML=dots(4)+'<div class="wh ani"><div class="wl">WOD of the Day</div><div class="wn">'+S.wodName+'</div><div class="wm"><span class="wb o">'+(TL[w.type]||w.type)+'</span><span class="wb">'+LL[S.level]+'</span><span class="wb">'+S.time+' min</span>'+(S.teamSize>1?'<span class="wb b">Team '+S.teamSize+'</span>':'')+'</div></div>'
+  app.innerHTML=dots(4)+'<div class="wh ani"><div class="wl">'+t('wod_day')+'</div><div class="wn">'+S.wodName+'</div><div class="wm"><span class="wb o">'+(TL[w.type]||w.type)+'</span><span class="wb">'+LL[S.level]+'</span><span class="wb">'+S.time+' min</span>'+(S.teamSize>1?'<span class="wb b">Team '+S.teamSize+'</span>':'')+'</div></div>'
   +'<div id="secs">'+w.sections.map(function(s,i){return renderSec(s,i)}).join('')+'</div>'
-  +'<div class="ar"><button class="ab dan" onclick="regen()">🔄 New WOD</button><button class="ab pri" onclick="copyWod()">📋 Copy</button></div>'
-  +'<button class="bk" style="margin:8px 4px 0" onclick="S.step=3;render()">← Back to Types</button>'
-  +'<div style="text-align:center;padding:16px 0 8px"><button onclick="showTnC()" style="background:none;border:none;color:var(--txt3);font-size:11px;cursor:pointer;text-decoration:underline">Terms & Conditions</button></div>';
+  +'<div class="ar"><button class="ab dan" onclick="regen()">'+t('new_wod')+'</button><button class="ab pri" onclick="copyWod()">'+t('copy')+'</button></div>'
+  +'<button class="bk" style="margin:8px 4px 0" onclick="S.step=3;render()">'+t('back_ty')+'</button>'
+  +'<div style="text-align:center;padding:16px 0 8px"><button onclick="showTnC()" style="background:none;border:none;color:var(--txt3);font-size:11px;cursor:pointer;text-decoration:underline">'+t('tnc')+'</button></div>';
 }
 function renderSecInfo(sec,si){
   if(!sec.scheme)return sec.info?'<div class="si">'+sec.info+'</div>':'';
@@ -638,18 +751,18 @@ function renderItems(items,si){var sn=0;return items.map(function(it,ii){
 function renderStr(it,si,ii,num){
   var ex=it.ex;
   var emTag=it.emomMin?'<span style="background:var(--og);color:var(--or);font-size:10px;font-weight:700;padding:1px 6px;border-radius:5px;margin-left:5px">'+it.emomMin+'</span>':'';
-  return'<div class="er" id="ex-'+si+'-'+ii+'"><div class="en">'+num+'</div><div class="eb"><div class="ename">'+ex.name+emTag+'</div><div class="edet" onclick="openEditDetail('+si+','+ii+')" style="cursor:pointer;display:inline-flex;align-items:center;gap:4px">'+it.detail+'<span style="font-size:9px;opacity:'+(it.detailEdited?'1':'0.35')+';color:'+(it.detailEdited?'var(--ye)':'var(--txt3)')+'">✏️</span></div>'+'</div><div class="ea"><button class="esb" onclick="toggleSwap(\''+si+'\',\''+ii+'\')">Swap ↕</button><button class="esb re" onclick="regenEx('+si+','+ii+',\'str\')">New ⟳</button></div></div>'
-  +'<div class="sp" id="sp-'+si+'-'+ii+'"><div class="sh">✅ Similar alternatives</div><div class="so">'
-  +(ex.alts||[]).slice(0,4).map(function(a){return'<div class="soi" onclick="swapStr('+si+','+ii+',\''+a.replace(/'/g,"\\'")+'\')">'+'<span class="sn">'+a+'</span><span class="stag">→ Use</span></div>'}).join('')
-  +'</div><button class="gn" onclick="regenEx('+si+','+ii+',\'str\')">⟳ Generate completely different exercise</button>'
+  return'<div class="er" id="ex-'+si+'-'+ii+'"><div class="en">'+num+'</div><div class="eb"><div class="ename">'+ex.name+emTag+'</div><div class="edet" onclick="openEditDetail('+si+','+ii+')" style="cursor:pointer;display:inline-flex;align-items:center;gap:4px">'+it.detail+'<span style="font-size:9px;opacity:'+(it.detailEdited?'1':'0.35')+';color:'+(it.detailEdited?'var(--ye)':'var(--txt3)')+'">✏️</span></div>'+'</div><div class="ea"><button class="esb" onclick="toggleSwap(\''+si+'\',\''+ii+'\')">'+t('swap')+'</button><button class="esb re" onclick="regenEx('+si+','+ii+',\'str\')">'+t('new_ex')+'</button></div></div>'
+  +'<div class="sp" id="sp-'+si+'-'+ii+'"><div class="sh">'+t('similar')+'</div><div class="so">'
+  +(ex.alts||[]).slice(0,4).map(function(a){return'<div class="soi" onclick="swapStr('+si+','+ii+',\''+a.replace(/'/g,"\\'")+'\')">'+'<span class="sn">'+a+'</span><span class="stag">→ '+t('use')+'</span></div>'}).join('')
+  +'</div><button class="gn" onclick="regenEx('+si+','+ii+',\'str\')">'+t('gen_diff')+'</button>'
   +'<div style="margin-top:10px;border-top:0.5px solid var(--bdr2);padding-top:10px">'
-  +'<div style="font-size:10px;color:var(--txt3);margin-bottom:6px;text-transform:uppercase;letter-spacing:1px">✏️ Manual entry</div>'
+  +'<div style="font-size:10px;color:var(--txt3);margin-bottom:6px;text-transform:uppercase;letter-spacing:1px">'+t('manual')+'</div>'
   +'<div style="position:relative">'
   +'<input id="mn-'+si+'-'+ii+'" placeholder="Exercise name" oninput="swapAC(this,\'str\',\''+si+'-'+ii+'\')" autocomplete="off" style="width:100%;background:var(--bg2);border:0.5px solid var(--bdr);border-radius:8px;padding:8px 10px;color:var(--txt);font-size:12px;margin-bottom:5px;outline:none">'
   +'<div id="sac-'+si+'-'+ii+'" style="position:absolute;left:0;right:0;top:36px;background:var(--bg3);border:0.5px solid var(--bdr);border-radius:8px;overflow:hidden;z-index:10"></div>'
   +'</div>'
   +'<input id="md-'+si+'-'+ii+'" placeholder="Reps / distance / time" style="width:100%;background:var(--bg2);border:0.5px solid var(--bdr);border-radius:8px;padding:8px 10px;color:var(--txt);font-size:12px;margin-bottom:7px;outline:none">'
-  +'<button onclick="manualSwap(\''+si+'\',\''+ii+'\')" style="width:100%;background:var(--og);border:1px solid var(--or);border-radius:8px;padding:8px;font-size:12px;color:var(--or);font-weight:700;cursor:pointer">✓ Use This</button>'
+  +'<button onclick="manualSwap(\''+si+'\',\''+ii+'\')" style="width:100%;background:var(--og);border:1px solid var(--or);border-radius:8px;padding:8px;font-size:12px;color:var(--or);font-weight:700;cursor:pointer">'+t('use')+'</button>'
   +'</div></div>';
 }
 function splitCName(name){var m=name.match(/^([\D]*?)(\d+)([\s\S]*)$/);return m?{b:m[1],n:parseInt(m[2],10),a:m[3]}:{b:name,n:null,a:''}}
@@ -660,17 +773,17 @@ function renderCardio(it,si,ii){
   var nameHtml=p.n!==null
     ?'<span onclick="openEditCardioName('+si+','+ii+')" style="cursor:pointer">'+p.b+p.n+p.a+'<span style="font-size:9px;margin-left:4px;opacity:0.5">✏️</span></span>'
     :ex.name;
-  return'<div class="cb" id="ex-'+si+'-'+ii+'"><div class="ci">'+cico(ex.name)+'</div><div class="cbb"><div class="cn">'+nameHtml+emTag+'</div><div class="cd">'+(it.detail||'Cardio')+'</div></div><span class="ct">CARDIO</span><button class="csb" onclick="toggleSwap(\''+si+'\',\''+ii+'\')">Swap</button></div>'
-  +'<div class="sp cp" id="sp-'+si+'-'+ii+'"><div class="sh ch">💨 Cardio alternatives</div><div class="so">'
-  +(ex.alts||[]).map(function(a){return'<div class="soi co" onclick="swapCardio('+si+','+ii+',\''+a.replace(/'/g,"\\'")+'\')">'+'<span class="sn">'+a+'</span><span class="stag">→ Use</span></div>'}).join('')
-  +'</div><button class="gn" style="color:var(--ca);border-color:rgba(0,188,212,.3);background:rgba(0,188,212,.05)" onclick="regenEx('+si+','+ii+',\'cardio\')">⟳ Different cardio</button>'
+  return'<div class="cb" id="ex-'+si+'-'+ii+'"><div class="ci">'+cico(ex.name)+'</div><div class="cbb"><div class="cn">'+nameHtml+emTag+'</div><div class="cd">'+(it.detail||'Cardio')+'</div></div><span class="ct">CARDIO</span><button class="csb" onclick="toggleSwap(\''+si+'\',\''+ii+'\')">'+t('swap').replace(' ↕','')+'</button></div>'
+  +'<div class="sp cp" id="sp-'+si+'-'+ii+'"><div class="sh ch">'+t('cardio_alts')+'</div><div class="so">'
+  +(ex.alts||[]).map(function(a){return'<div class="soi co" onclick="swapCardio('+si+','+ii+',\''+a.replace(/'/g,"\\'")+'\')">'+'<span class="sn">'+a+'</span><span class="stag">→ '+t('use')+'</span></div>'}).join('')
+  +'</div><button class="gn" style="color:var(--ca);border-color:rgba(0,188,212,.3);background:rgba(0,188,212,.05)" onclick="regenEx('+si+','+ii+',\'cardio\')">'+t('diff_c')+'</button>'
   +'<div style="margin-top:10px;border-top:0.5px solid rgba(0,188,212,.15);padding-top:10px">'
-  +'<div style="font-size:10px;color:var(--ca);margin-bottom:6px;text-transform:uppercase;letter-spacing:1px">✏️ Manual entry</div>'
+  +'<div style="font-size:10px;color:var(--ca);margin-bottom:6px;text-transform:uppercase;letter-spacing:1px">'+t('manual')+'</div>'
   +'<div style="position:relative">'
   +'<input id="cmn-'+si+'-'+ii+'" placeholder="e.g. Run 500m" oninput="swapAC(this,\'cardio\',\''+si+'-'+ii+'\')" autocomplete="off" style="width:100%;background:var(--bg2);border:0.5px solid rgba(0,188,212,.3);border-radius:8px;padding:8px 10px;color:var(--txt);font-size:12px;margin-bottom:7px;outline:none">'
   +'<div id="csac-'+si+'-'+ii+'" style="position:absolute;left:0;right:0;top:36px;background:var(--bg3);border:0.5px solid rgba(0,188,212,.3);border-radius:8px;overflow:hidden;z-index:10"></div>'
   +'</div>'
-  +'<button onclick="manualSwapCardio(\''+si+'\',\''+ii+'\')" style="width:100%;background:rgba(0,188,212,.1);border:1px solid rgba(0,188,212,.3);border-radius:8px;padding:8px;font-size:12px;color:var(--ca);font-weight:700;cursor:pointer">✓ Use This</button>'
+  +'<button onclick="manualSwapCardio(\''+si+'\',\''+ii+'\')" style="width:100%;background:rgba(0,188,212,.1);border:1px solid rgba(0,188,212,.3);border-radius:8px;padding:8px;font-size:12px;color:var(--ca);font-weight:700;cursor:pointer">'+t('use')+'</button>'
   +'</div></div>';
 }
 function manualSwap(si,ii){
@@ -973,21 +1086,21 @@ function verifyCode(email,password,cb){
 function showGate(){
   app.innerHTML=
     '<div style="min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:32px 20px;text-align:center">'
-    +'<div style="font-size:11px;color:var(--or);text-transform:uppercase;letter-spacing:3px;font-weight:700;margin-bottom:10px">WOD</div>'
-    +'<div style="font-size:30px;font-weight:900;color:#fff;letter-spacing:-1px;line-height:1.1;margin-bottom:6px">Workout<br>Generator</div>'
+    +'<div style="font-size:11px;color:var(--or);text-transform:uppercase;letter-spacing:3px;font-weight:700;margin-bottom:10px">'+t('wod')+'</div>'
+    +'<div style="font-size:30px;font-weight:900;color:var(--txt,#fff);letter-spacing:-1px;line-height:1.1;margin-bottom:6px">'+t('title')+'</div>'
     +'<div style="width:40px;height:2px;background:var(--or);margin:12px auto 6px;border-radius:2px"></div>'
-    +'<div style="font-size:13px;color:var(--txt2);margin-bottom:32px">v1.0</div>'
+    +'<div style="font-size:13px;color:var(--txt2);margin-bottom:32px">'+t('sub')+'</div>'
     +'<div style="width:100%;max-width:340px">'
-    +'<div style="font-size:13px;color:var(--txt2);margin-bottom:14px;font-weight:500">Enter your email & password</div>'
+    +'<div style="font-size:13px;color:var(--txt2);margin-bottom:14px;font-weight:500">'+t('gate_hint')+'</div>'
     +'<input id="gate-email" type="email" placeholder="your@email.com" autocomplete="email"'
-    +' style="width:100%;background:var(--bg2);border:1.5px solid var(--bdr);border-radius:12px;padding:16px;font-size:15px;font-weight:600;color:#fff;text-align:center;outline:none;margin-bottom:10px"'
+    +' style="width:100%;background:var(--bg2);border:1.5px solid var(--bdr);border-radius:12px;padding:16px;font-size:15px;font-weight:600;color:var(--txt);text-align:center;outline:none;margin-bottom:10px"'
     +' onkeydown="if(event.key===\'Enter\')document.getElementById(\'gate-inp\').focus()">'
     +'<input id="gate-inp" type="text" placeholder="WOD-XXXX-XXXX" autocomplete="off" autocapitalize="characters"'
     +' style="width:100%;background:var(--bg2);border:1.5px solid var(--bdr);border-radius:12px;padding:16px;font-size:18px;font-weight:800;color:var(--or);text-align:center;outline:none;letter-spacing:3px;margin-bottom:12px"'
     +' oninput="this.value=this.value.toUpperCase()" onkeydown="if(event.key===\'Enter\')tryCode()">'
-    +'<button onclick="tryCode()" style="width:100%;background:var(--or);border:none;border-radius:12px;padding:15px;font-size:14px;font-weight:700;color:#000;cursor:pointer;margin-bottom:16px">Enter →</button>'
-    +'<a href="'+PAYHIP_URL+'" target="_blank" style="display:block;color:var(--txt2);font-size:15px;text-decoration:none;margin-bottom:10px">Buy Access ↗</a>'
-    +'<button onclick="showTnC()" style="background:none;border:none;color:var(--txt3);font-size:11px;cursor:pointer;text-decoration:underline">Terms & Conditions</button>'
+    +'<button onclick="tryCode()" style="width:100%;background:var(--or);border:none;border-radius:12px;padding:15px;font-size:14px;font-weight:700;color:#000;cursor:pointer;margin-bottom:16px">'+t('enter')+'</button>'
+    +'<a href="'+PAYHIP_URL+'" target="_blank" style="display:block;color:var(--txt2);font-size:15px;text-decoration:none;margin-bottom:10px">'+t('buy')+'</a>'
+    +'<button onclick="showTnC()" style="background:none;border:none;color:var(--txt3);font-size:11px;cursor:pointer;text-decoration:underline">'+t('tnc')+'</button>'
     +'</div></div>';
   setTimeout(function(){var i=document.getElementById('gate-email');if(i)i.focus();},100);
 }
@@ -998,13 +1111,13 @@ function tryCode(){
   var val=(inp&&inp.value.trim().toUpperCase())||'';
   if(!email||!val)return;
   var btn=document.querySelector('button[onclick="tryCode()"]');
-  if(btn){btn.disabled=true;btn.textContent='Checking...';}
+  if(btn){btn.disabled=true;btn.textContent=t('checking');}
   verifyCode(email,val,function(ok){
-    if(btn){btn.disabled=false;btn.textContent='Enter →';}
+    if(btn){btn.disabled=false;btn.textContent=t('enter');}
     if(!ok){
       if(inp)inp.style.borderColor='var(--re)';
       if(emailInp)emailInp.style.borderColor='var(--re)';
-      toast('Invalid email or password ❌','#ff1744');
+      toast(t('invalid'),'#ff1744');
       setTimeout(function(){if(inp)inp.style.borderColor='var(--bdr)';if(emailInp)emailInp.style.borderColor='var(--bdr)';},1500);
       return;
     }
@@ -1013,14 +1126,14 @@ function tryCode(){
     app.innerHTML=
       '<div style="min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:32px 20px;text-align:center">'
       +'<div style="font-size:48px;margin-bottom:16px">✅</div>'
-      +'<div style="font-size:18px;font-weight:700;color:var(--gr);margin-bottom:8px">Access granted!</div>'
-      +'<div style="font-size:13px;color:var(--txt2);margin-bottom:20px;line-height:1.6">Save your password — you\'ll find it<br>in your purchase email</div>'
+      +'<div style="font-size:18px;font-weight:700;color:var(--gr);margin-bottom:8px">'+t('granted')+'</div>'
+      +'<div style="font-size:13px;color:var(--txt2);margin-bottom:20px;line-height:1.6">'+t('save_pw')+'</div>'
       +'<div style="background:var(--bg2);border:1px solid var(--gr);border-radius:12px;padding:14px 24px;margin-bottom:16px">'
-      +'<div style="font-size:11px;color:var(--txt3);margin-bottom:4px">Your password</div>'
+      +'<div style="font-size:11px;color:var(--txt3);margin-bottom:4px">'+t('your_pw')+'</div>'
       +'<div style="font-size:22px;font-weight:900;color:var(--or);letter-spacing:4px">'+val+'</div>'
       +'</div>'
-      +'<button onclick="copyCode(\''+val+'\')" style="background:var(--bg2);border:1px solid var(--gr);border-radius:10px;padding:10px 24px;color:var(--gr);font-size:13px;font-weight:700;cursor:pointer;margin-bottom:24px">📋 Copy Password</button>'
-      +'<button onclick="render()" style="background:var(--or);border:none;border-radius:12px;padding:14px 32px;font-size:14px;font-weight:700;color:#000;cursor:pointer">Start Training</button>'
+      +'<button onclick="copyCode(\''+val+'\')" style="background:var(--bg2);border:1px solid var(--gr);border-radius:10px;padding:10px 24px;color:var(--gr);font-size:13px;font-weight:700;cursor:pointer;margin-bottom:24px">'+t('copy_pw')+'</button>'
+      +'<button onclick="render()" style="background:var(--or);border:none;border-radius:12px;padding:14px 32px;font-size:14px;font-weight:700;color:#000;cursor:pointer">'+t('start')+'</button>'
       +'</div>';
   });
 }
@@ -1028,6 +1141,7 @@ function copyCode(c){
   if(navigator.clipboard)navigator.clipboard.writeText(c).then(function(){toast('📋 Password copied!')});
   else{var t=document.createElement('textarea');t.value=c;document.body.appendChild(t);t.select();document.execCommand('copy');document.body.removeChild(t);toast('📋 Password copied!');}
 }
+loadCfg();
 checkAccess();
 </script>
 </body>
