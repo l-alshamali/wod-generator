@@ -4,10 +4,14 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 <title>CrossFit WOD Generator</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Almarai:wght@400;700;800&display=swap" rel="stylesheet">
 <style>
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
 :root{--or:#ff6600;--og:rgba(255,102,0,.12);--gr:#00c853;--re:#ff1744;--ye:#ffd600;--bl:#448aff;--ca:#00bcd4;--cag:rgba(0,188,212,.1);--bg:#0f0f0f;--bg2:#1a1a1a;--bg3:#242424;--bdr:#333;--bdr2:#2a2a2a;--txt:#ffffff;--txt2:#aaaaaa;--txt3:#666}
 body{background:var(--bg);color:var(--txt);font-family:'Segoe UI',system-ui,-apple-system,sans-serif;min-height:100vh;font-size:15px}
+body[dir=rtl]{font-family:'Almarai',sans-serif}
 .app{max-width:480px;margin:0 auto;padding:0 0 80px}
 .steps{display:flex;gap:6px;justify-content:center;margin-bottom:18px;padding-top:16px}
 .dot{width:8px;height:8px;border-radius:50%;background:var(--bdr);flex-shrink:0;transition:all .3s}
@@ -99,6 +103,8 @@ body.light .nb{color:#000}
 body.light .spinner{border-color:#ddd;border-top-color:var(--or)}
 body[dir=rtl] .cfg-btn{right:auto;left:14px}
 body[dir=rtl] .ql,body[dir=rtl] .wl,body[dir=rtl] .nb,body[dir=rtl] .ab,body[dir=rtl] .rsep,body[dir=rtl] .sh,body[dir=rtl] .tu,body[dir=rtl] .st{letter-spacing:0}
+body[dir=rtl] .nb,body[dir=rtl] .bk,body[dir=rtl] .ab{font-family:'Almarai',sans-serif}
+body[dir=rtl] button,body[dir=rtl] input,body[dir=rtl] select,body[dir=rtl] textarea{font-family:'Almarai',sans-serif}
 body[dir=rtl]{line-height:1.5}
 .cfg-btn{position:fixed;top:14px;right:14px;z-index:150;background:var(--bg2);border:0.5px solid var(--bdr);border-radius:50%;width:40px;height:40px;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:19px;box-shadow:none}
 .cfg-overlay{display:none;position:fixed;inset:0;z-index:200;background:rgba(0,0,0,.6)}
@@ -115,7 +121,7 @@ body[dir=rtl]{line-height:1.5}
 .tnc-title{font-size:18px;font-weight:800;color:var(--or);margin-bottom:4px}
 .tnc-date{font-size:12px;color:var(--txt3);margin-bottom:20px}
 .tnc-sec{font-size:14px;font-weight:700;color:var(--txt);margin:18px 0 6px}
-.tnc-p{font-size:13px;color:var(--txt2);line-height:1.75}
+.tnc-p{font-size:13px;color:var(--txt2);line-height:1.75;text-align:justify}
 </style>
 </head>
 <body>
@@ -1167,4 +1173,4 @@ loadCfg();
 checkAccess();
 </script>
 </body>
-</html>                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            
+</html>                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     
