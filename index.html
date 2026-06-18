@@ -953,7 +953,7 @@ function hideTnC(){document.getElementById('tnc-overlay').style.display='none'}
 // ── Access Gate ──
 var SUPABASE_URL='https://gjdqkitasyuwqatyitdj.supabase.co';
 var SUPABASE_KEY='sb_publishable_fEBMY_xuuK-SHDf1Yulxug_Y-sdutRG';
-var PAYHIP_URL='https://payhip.com/b/X9tYJ'; // ← put your Payhip product link here
+var PAYHIP_URL='https://wodgenerator.lemonsqueezy.com/checkout';
 var AUTH_KEY='wod_auth_v2';
 function checkAccess(){
   var saved=localStorage.getItem(AUTH_KEY);
@@ -986,7 +986,7 @@ function showGate(){
     +' style="width:100%;background:var(--bg2);border:1.5px solid var(--bdr);border-radius:12px;padding:16px;font-size:18px;font-weight:800;color:var(--or);text-align:center;outline:none;letter-spacing:3px;margin-bottom:12px"'
     +' oninput="this.value=this.value.toUpperCase()" onkeydown="if(event.key===\'Enter\')tryCode()">'
     +'<button onclick="tryCode()" style="width:100%;background:var(--or);border:none;border-radius:12px;padding:15px;font-size:14px;font-weight:700;color:#000;cursor:pointer;margin-bottom:16px">Enter →</button>'
-    +'<a href="'+PAYHIP_URL+'" target="_blank" style="display:block;color:var(--txt2);font-size:12px;text-decoration:none;margin-bottom:10px">Buy Access ↗</a>'
+    +'<a href="'+PAYHIP_URL+'" target="_blank" style="display:block;color:var(--txt2);font-size:15px;text-decoration:none;margin-bottom:10px">Buy Access ↗</a>'
     +'<button onclick="showTnC()" style="background:none;border:none;color:var(--txt3);font-size:11px;cursor:pointer;text-decoration:underline">Terms & Conditions</button>'
     +'</div></div>';
   setTimeout(function(){var i=document.getElementById('gate-email');if(i)i.focus();},100);
