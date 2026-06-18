@@ -11,7 +11,6 @@
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
 :root{--or:#ff6600;--og:rgba(255,102,0,.12);--gr:#00c853;--re:#ff1744;--ye:#ffd600;--bl:#448aff;--ca:#00bcd4;--cag:rgba(0,188,212,.1);--bg:#0f0f0f;--bg2:#1a1a1a;--bg3:#242424;--bdr:#333;--bdr2:#2a2a2a;--txt:#ffffff;--txt2:#aaaaaa;--txt3:#666}
 body{background:var(--bg);color:var(--txt);font-family:'Segoe UI',system-ui,-apple-system,sans-serif;min-height:100vh;font-size:15px}
-body[dir=rtl]{font-family:'Segoe UI',system-ui,-apple-system,sans-serif}
 .app{max-width:480px;margin:0 auto;padding:0 0 80px}
 .steps{display:flex;gap:6px;justify-content:center;margin-bottom:18px;padding-top:16px}
 .dot{width:8px;height:8px;border-radius:50%;background:var(--bdr);flex-shrink:0;transition:all .3s}
@@ -162,7 +161,7 @@ var T={
     step2:'Step 2 / 5',step2q:'How long?',step2s:'WOD duration (not including warm-up)',
     minutes:'minutes',next:'Next →',back_lv:'← Back to Level',back_ti:'← Back to Time',back_te:'← Back to Team',back_ty:'← Back to Types',
     step3:'Step 3 / 5',step3q:'Solo or team?',step3s:'Affects volume and rep sharing',
-    solo:'Individual',solo_d:'Solo',team2:'Team of 2',team2_d:'Partner',
+    solo:'Individual',team2:'Team of 2',
     step4:'Step 4 / 5',step4q:'WOD Type?',step4s:'Pick one or more — one drawn at random',
     type_hint:'Select multiple types for variety',generate:'Generate WOD',team_only:'Team only',
     wod_day:'WOD of the Day',new_wod:'🔄 New WOD',copy:'📋 Copy',generating:'Generating your WOD...',
@@ -182,7 +181,7 @@ var T={
     step2:'الخطوة ٢ / ٥',step2q:'كم الوقت؟',step2s:'مدة التمرين (بدون الإحماء)',
     minutes:'دقائق',next:'التالي ←',back_lv:'رجوع للمستوى →',back_ti:'رجوع للوقت →',back_te:'رجوع للفريق →',back_ty:'رجوع للأنواع →',
     step3:'الخطوة ٣ / ٥',step3q:'منفرد أو فريق؟',step3s:'يؤثر على الحجم وتقسيم التكرارات',
-    solo:'منفرد',solo_d:'Solo',team2:'ثنائي',team2_d:'Partner',
+    solo:'منفرد',team2:'ثنائي',
     step4:'الخطوة ٤ / ٥',step4q:'نوع التمرين؟',step4s:'اختر نوع أو أكثر — يُختار عشوائياً',
     type_hint:'اختر أنواع متعددة للتنويع',generate:'ولّد التمرين',team_only:'للفريق فقط',
     wod_day:'تمرين اليوم',new_wod:'🔄 تمرين جديد',copy:'📋 نسخ',generating:'جارٍ توليد تمرينك...',
@@ -310,11 +309,6 @@ var STR=[
   {name:'DB Deadlift',cat:'dumbbell',tier:1,alts:['Deadlift','KB Deadlift','Romanian Deadlift','Trap Bar Deadlift']},
   {name:'DB Row',cat:'dumbbell',tier:1,alts:['Barbell Row','KB Row','Ring Row','Renegade Row']},
   {name:'DB Romanian Deadlift',cat:'dumbbell',tier:1,alts:['Romanian Deadlift','KB Deadlift','Good Morning','Single-Leg RDL']},
-  {name:'Run 400m',cat:'cardio',tier:1,unit:'carry',alts:['Row 500m','Bike 1km','Shuttle Run','Jump Rope 2min']},
-  {name:'Row (Calories)',cat:'cardio',tier:1,alts:['Bike Cal','Ski Erg Cal','Run 400m','Jump Rope 2min']},
-  {name:'Double-Under',cat:'cardio',tier:1,alts:['Single-Under x3','Box Jump','Jumping Jack','Shuttle Run']},
-  {name:'Jump Rope',cat:'cardio',tier:1,alts:['Double-Under','Shuttle Run','Jumping Jack','High Knees']},
-  {name:'Assault Bike (Cal)',cat:'cardio',tier:1,alts:['Row Cal','Ski Erg Cal','Run 400m','Jump Rope 2min']},
   {name:'Power Clean',cat:'barbell',tier:2,alts:['Hang Power Clean','DB Power Clean','Muscle Clean','Squat Clean']},
   {name:'Push Press',cat:'barbell',tier:2,alts:['Strict Press','Push Jerk','DB Push Press','KB Press']},
   {name:'Thruster',cat:'barbell',tier:2,alts:['DB Thruster','KB Thruster','Wall Ball','Front Squat + Push Press']},
@@ -346,8 +340,6 @@ var STR=[
   {name:'DB Power Clean',cat:'dumbbell',tier:2,alts:['Power Clean','Hang Power Clean','KB Clean','DB Hang Power Clean']},
   {name:'DB Front Rack Lunge',cat:'dumbbell',tier:2,alts:['Walking Lunge','DB Overhead Lunge','KB Front Rack Lunge','Step-Up']},
   {name:'Renegade Row',cat:'dumbbell',tier:2,alts:['DB Row','KB Row','Ring Row','Barbell Row']},
-  {name:'Run 800m',cat:'cardio',tier:2,unit:'carry',alts:['Row 1000m','Bike 2km','Run 400m x2','Shuttle Run']},
-  {name:'Ski Erg (Cal)',cat:'cardio',tier:2,alts:['Row Cal','Bike Cal','Run 400m','Jump Rope']},
   {name:'Hang Power Clean',cat:'barbell',tier:3,alts:['Power Clean','High Hang Clean','Squat Clean','DB Hang Clean']},
   {name:'Power Snatch',cat:'barbell',tier:3,alts:['Hang Power Snatch','DB Snatch','Squat Snatch','Snatch Balance']},
   {name:'Ground to Overhead',cat:'barbell',tier:3,alts:['Clean & Jerk','Power Snatch','Thruster','DB GtOH']},
@@ -403,10 +395,6 @@ var STR=[
   {name:'DB Strict Press',cat:'dumbbell',tier:1,alts:['Strict Press','KB Press','DB Push Press','Z-Press']},
   {name:'DB Bench Press',cat:'dumbbell',tier:1,alts:['Bench Press','Floor Press','DB Floor Press','Push-Up']},
   // ── NEW T1 · Cardio ───────────────────────────────────────
-  {name:'Shuttle Run',cat:'cardio',tier:1,alts:['Run 400m','Jump Rope','High Knees','Jumping Jack']},
-  {name:'Row 500m',cat:'cardio',tier:1,unit:'carry',alts:['Run 400m','Bike 1km','Jump Rope 2min','Shuttle Run']},
-  {name:'High Knees',cat:'cardio',tier:1,alts:['Jump Rope','Jumping Jack','Shuttle Run','Mountain Climber']},
-  {name:'Jumping Jack',cat:'cardio',tier:1,alts:['High Knees','Jump Rope','Shuttle Run','Mountain Climber']},
   // ── NEW T2 · Barbell ──────────────────────────────────────
   {name:'Box Squat',cat:'barbell',tier:2,alts:['Back Squat','Front Squat','Paused Squat','Goblet Squat']},
   {name:'Pause Front Squat',cat:'barbell',tier:2,alts:['Front Squat','Zercher Squat','Goblet Squat','Back Squat']},
@@ -427,8 +415,6 @@ var STR=[
   {name:'DB Push Press',cat:'dumbbell',tier:2,alts:['Push Press','DB Strict Press','KB Push Press','DB S2OH']},
   {name:'DB Hang Power Clean',cat:'dumbbell',tier:2,alts:['DB Power Clean','Hang Power Clean','KB Clean','DB Snatch']},
   // ── NEW T2 · Cardio ───────────────────────────────────────
-  {name:'Echo Bike (Cal)',cat:'cardio',tier:2,alts:['Row Cal','Assault Bike Cal','Ski Erg Cal','Run 400m']},
-  {name:'Bike Erg (Cal)',cat:'cardio',tier:2,alts:['Row Cal','Ski Erg Cal','Echo Bike Cal','Run 400m']},
   // ── NEW T3 · Barbell ──────────────────────────────────────
   {name:'High Hang Power Clean',cat:'barbell',tier:3,alts:['Hang Power Clean','Power Clean','Muscle Clean','DB Hang Clean']},
   {name:'Muscle Snatch',cat:'barbell',tier:3,alts:['Power Snatch','Hang Power Snatch','DB Snatch','Overhead Squat']},
@@ -441,9 +427,6 @@ var STR=[
   {name:'DB Hang Power Snatch',cat:'dumbbell',tier:3,alts:['DB Snatch','Power Snatch','KB Snatch','DB Power Clean']},
   {name:'DB Overhead Squat',cat:'dumbbell',tier:3,alts:['Overhead Squat','DB Front Squat','Goblet Squat','Zercher Squat']},
   // ── NEW T3 · Cardio ───────────────────────────────────────
-  {name:'Run 1 Mile',cat:'cardio',tier:3,unit:'carry',alts:['Row 2000m','Bike 4km','Echo Bike 40 Cal','Run 800m x2']},
-  {name:'Row 2000m',cat:'cardio',tier:3,unit:'carry',alts:['Run 1 Mile','Echo Bike 40 Cal','Ski Erg 2000m','Run 800m x2']},
-  {name:'Echo Bike 50 Cal',cat:'cardio',tier:3,alts:['Row 1000m','Assault Bike 50 Cal','Run 800m','Ski Erg 1000m']},
   // ── NEW T4 · Barbell ──────────────────────────────────────
   {name:'Squat Snatch',cat:'barbell',tier:4,alts:['Power Snatch','Hang Squat Snatch','Overhead Squat','Hang Power Snatch']},
   {name:'Power Jerk',cat:'barbell',tier:4,alts:['Push Jerk','Split Jerk','Push Press','Clean & Jerk']},
@@ -454,8 +437,6 @@ var STR=[
   {name:'Double KB Front Squat',cat:'kettlebell',tier:4,alts:['Front Squat','KB Front Squat','Goblet Squat','Double KB Clean']},
   {name:'Double KB Clean & Press',cat:'kettlebell',tier:4,alts:['Clean & Jerk','KB Thruster','Double KB Front Squat','KB Complex']},
   // ── NEW T4 · Cardio ───────────────────────────────────────
-  {name:'Run 5K',cat:'cardio',tier:4,unit:'carry',alts:['Row 5000m','Bike 10km','Echo Bike 100 Cal','Run 1 Mile x3']},
-  {name:'Row 5000m',cat:'cardio',tier:4,unit:'carry',alts:['Run 5K','Bike 10km','Echo Bike 100 Cal','Ski Erg 5000m']}
 ];
 var CARDIO=[
   {name:'Run 200m',alts:['Row 250m','Bike 500m','Ski Erg 200m']},
@@ -688,8 +669,8 @@ function setT(v){S.time=+v;var d=document.getElementById('td');if(d)d.textConten
 function setTF(v){S.time=v;var s=document.querySelector('input[type=range]');if(s)s.value=v;setT(v)}
 function step2(){
   app.innerHTML=dots(2)+'<div class="qc ani"><div class="ql">'+t('step3')+'</div><div class="qt">'+t('step3q')+'</div><div class="qs">'+t('step3s')+'</div><div class="og">'
-  +[[1,'🧍',t('solo'),t('solo_d')],[2,'🧍🧍',t('team2'),t('team2_d')]]
-  .map(function(x){return'<button class="ob'+(S.teamSize===x[0]?' sel':'')+'" onclick="setTeam('+x[0]+',this)"><span class="oi">'+x[1]+'</span><span class="on">'+x[2]+'</span><span class="od">'+x[3]+'</span></button>'}).join('')+'</div>'
+  +[[1,'🧍',t('solo')],[2,'🧍🧍',t('team2')]]
+  .map(function(x){return'<button class="ob'+(S.teamSize===x[0]?' sel':'')+'" onclick="setTeam('+x[0]+',this)"><span class="oi">'+x[1]+'</span><span class="on">'+x[2]+'</span></button>'}).join('')+'</div>'
   +bkBtn('back_ti',1)+'</div>';
 }
 function setTeam(n,el){
@@ -1089,7 +1070,7 @@ function hideTnC(){document.getElementById('tnc-overlay').style.display='none';}
 // ── Access Gate ──
 var SUPABASE_URL='https://gjdqkitasyuwqatyitdj.supabase.co';
 var SUPABASE_KEY='sb_publishable_fEBMY_xuuK-SHDf1Yulxug_Y-sdutRG';
-var PAYHIP_URL='https://wodgenerator.lemonsqueezy.com/checkout/buy/bdc0fd64-6ad9-49c7-9807-b296246e2b45';
+var CHECKOUT_URL='https://wodgenerator.lemonsqueezy.com/checkout/buy/bdc0fd64-6ad9-49c7-9807-b296246e2b45';
 var AUTH_KEY='wod_auth_v2';
 function checkAccess(){
   var saved=localStorage.getItem(AUTH_KEY);
@@ -1126,7 +1107,7 @@ function showGate(){
     +' style="width:100%;background:var(--bg2);border:1.5px solid var(--bdr);border-radius:12px;padding:16px;font-size:18px;font-weight:800;color:var(--or);text-align:center;outline:none;letter-spacing:3px;margin-bottom:12px"'
     +' oninput="this.value=this.value.toUpperCase()" onkeydown="if(event.key===\'Enter\')tryCode()">'
     +'<button onclick="tryCode()" style="width:100%;background:var(--or);border:none;border-radius:12px;padding:15px;font-size:14px;font-weight:700;color:#000;cursor:pointer;margin-bottom:16px">'+t('enter')+'</button>'
-    +'<a href="'+PAYHIP_URL+'" target="_blank" style="display:block;color:var(--txt2);font-size:15px;text-decoration:none;margin-bottom:10px">'+t('buy')+'</a>'
+    +'<a href="'+CHECKOUT_URL+'" target="_blank" style="display:block;color:var(--txt2);font-size:15px;text-decoration:none;margin-bottom:10px">'+t('buy')+'</a>'
     +'<button onclick="showTnC()" style="background:none;border:none;color:var(--txt3);font-size:11px;cursor:pointer;text-decoration:underline">'+t('tnc')+'</button>'
     +'</div></div>';
   setTimeout(function(){var i=document.getElementById('gate-email');if(i)i.focus();},100);
