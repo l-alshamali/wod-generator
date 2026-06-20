@@ -1216,7 +1216,7 @@ function renderChipperCfg(sec,si){
   var cv=cfg.withCardio;
   var cardioBtn='<button id="chipper-cardio-'+si+'" onclick="toggleChipperCardio('+si+')" style="'+(cv===true?S_sel:S_btn)+'">'+( cv===true?'ON':cv===false?'OFF':'–')+'</button>';
   return'<div id="chipper-cfg-'+si+'" style="display:none;background:var(--bg3);border:0.5px solid var(--bdr);border-radius:10px;padding:12px;margin-top:6px">'
-  +'<div style="display:flex;justify-content:flex-end;margin-bottom:10px"><button onclick="randomChipper('+si+')" style="background:rgba(99,102,241,0.12);border:0.5px solid #6366f1;border-radius:20px;padding:4px 12px;font-size:11px;color:#6366f1;cursor:pointer;font-weight:600">🎲 '+t('random')+'</button></div>'
+  +'<div style="display:flex;justify-content:flex-end;margin-bottom:10px"><button onclick="randomChipper('+si+')" style="background:rgba(99,102,241,0.12);border:0.5px solid #6366f1;border-radius:20px;padding:4px 12px;font-size:11px;color:#6366f1;cursor:pointer;font-weight:600">'+t('random')+'</button></div>'
   +'<div style="font-size:13px;font-weight:600;color:var(--txt2);text-transform:uppercase;margin-bottom:6px">'+t('chip_mov')+'</div>'
   +'<div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px;direction:'+(CFG.lang==='ar'?'rtl':'ltr')+'">'+movBtns+'</div>'
   +'<div style="font-size:13px;font-weight:600;color:var(--txt2);text-transform:uppercase;margin-bottom:6px">'+t('chip_reps')+'</div>'
@@ -1579,7 +1579,7 @@ function renderAmrapCfg(sec,si){
     +'</select>';
   var cv=cfg.withCardio;
   return'<div id="amrap-cfg-'+si+'" style="display:none;background:var(--bg3);border:0.5px solid var(--bdr);border-radius:10px;padding:12px;margin-top:6px">'
-  +'<div style="display:flex;justify-content:flex-end;margin-bottom:10px"><button onclick="randomAmrap('+si+')" style="background:rgba(99,102,241,0.12);border:0.5px solid #6366f1;border-radius:20px;padding:4px 12px;font-size:11px;color:#6366f1;cursor:pointer;font-weight:600">🎲 '+t('random')+'</button></div>'
+  +'<div style="display:flex;justify-content:flex-end;margin-bottom:10px"><button onclick="randomAmrap('+si+')" style="background:rgba(99,102,241,0.12);border:0.5px solid #6366f1;border-radius:20px;padding:4px 12px;font-size:11px;color:#6366f1;cursor:pointer;font-weight:600">'+t('random')+'</button></div>'
   +'<div style="font-size:13px;font-weight:600;color:var(--txt2);text-transform:uppercase;margin-bottom:6px">'+t('am_mov')+'</div>'
   +'<div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px;direction:'+(CFG.lang==='ar'?'rtl':'ltr')+'">'+movBtns+'</div>'
   +'<div style="font-size:13px;font-weight:600;color:var(--txt2);text-transform:uppercase;margin-bottom:6px">'+t('am_reps')+'</div>'
@@ -1692,7 +1692,7 @@ function renderRftCfg(sec,si){
   var schemeBtns=schemeSelectHtml(si,cfg,TYPE_SCHEMES.rft,'setRftSchemeSelect');
   var cv=cfg.withCardio;
   return'<div id="rft-cfg-'+si+'" style="display:none;background:var(--bg3);border:0.5px solid var(--bdr);border-radius:10px;padding:12px;margin-top:6px">'
-  +'<div style="display:flex;justify-content:flex-end;margin-bottom:10px"><button onclick="randomRft('+si+')" style="background:rgba(99,102,241,0.12);border:0.5px solid #6366f1;border-radius:20px;padding:4px 12px;font-size:11px;color:#6366f1;cursor:pointer;font-weight:600">🎲 '+t('random')+'</button></div>'
+  +'<div style="display:flex;justify-content:flex-end;margin-bottom:10px"><button onclick="randomRft('+si+')" style="background:rgba(99,102,241,0.12);border:0.5px solid #6366f1;border-radius:20px;padding:4px 12px;font-size:11px;color:#6366f1;cursor:pointer;font-weight:600">'+t('random')+'</button></div>'
   +'<div style="font-size:13px;font-weight:600;color:var(--txt2);text-transform:uppercase;margin-bottom:6px">'+t('rft_rounds')+'</div>'
   +'<div id="rft-rounds-'+si+'" style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px;direction:'+(CFG.lang==='ar'?'rtl':'ltr')+';opacity:'+(cfg.schemeKey?'0.35':'1')+';pointer-events:'+(cfg.schemeKey?'none':'auto')+'">'+roundBtns+'</div>'
   +'<div style="font-size:13px;font-weight:600;color:var(--txt2);text-transform:uppercase;margin-bottom:6px">'+t('rft_mov')+'</div>'
@@ -1764,7 +1764,7 @@ function renderEmomCfg(sec,si){
   +'<input type="number" min="1" max="50" placeholder="'+t('chip_custom')+'" value="'+(cfg.baseReps&&[5,10,15,20,25].indexOf(cfg.baseReps)===-1?cfg.baseReps:'')+'" oninput="setEmomManualReps('+si+',this.value)" style="width:90px;background:var(--bg2);border:0.5px solid var(--bdr);border-radius:7px;padding:5px 8px;font-size:13px;color:var(--txt2);outline:none;min-height:30px;text-align:center;font-family:inherit">';
   var cv=cfg.withCardio;
   return'<div id="emom-cfg-'+si+'" style="display:none;background:var(--bg3);border:0.5px solid var(--bdr);border-radius:10px;padding:12px;margin-top:6px">'
-  +'<div style="display:flex;justify-content:flex-end;margin-bottom:10px"><button onclick="randomEmom('+si+')" style="background:rgba(99,102,241,0.12);border:0.5px solid #6366f1;border-radius:20px;padding:4px 12px;font-size:11px;color:#6366f1;cursor:pointer;font-weight:600">🎲 '+t('random')+'</button></div>'
+  +'<div style="display:flex;justify-content:flex-end;margin-bottom:10px"><button onclick="randomEmom('+si+')" style="background:rgba(99,102,241,0.12);border:0.5px solid #6366f1;border-radius:20px;padding:4px 12px;font-size:11px;color:#6366f1;cursor:pointer;font-weight:600">'+t('random')+'</button></div>'
   +'<div style="font-size:13px;font-weight:600;color:var(--txt2);letter-spacing:0.5px;text-transform:uppercase;margin-bottom:6px">'+t('em_mov')+'</div>'
   +'<div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px;direction:'+(CFG.lang==='ar'?'rtl':'ltr')+'">'+movBtns+'</div>'
   +'<div style="font-size:13px;font-weight:600;color:var(--txt2);letter-spacing:0.5px;text-transform:uppercase;margin-bottom:6px">'+t('em_reps')+'</div>'
@@ -1836,7 +1836,7 @@ function renderIntervalCfg(sec,si){
   +'<input type="number" min="1" max="100" placeholder="'+t('chip_custom')+'" value="'+(cfg.baseReps&&_repPresets.indexOf(cfg.baseReps)===-1?cfg.baseReps:'')+'" oninput="setIntervalManualReps('+si+',this.value)" style="width:90px;background:var(--bg2);border:0.5px solid var(--bdr);border-radius:7px;padding:5px 8px;font-size:13px;color:var(--txt2);outline:none;min-height:30px;text-align:center;font-family:inherit">';
   var cv=cfg.withCardio;
   return'<div id="interval-cfg-'+si+'" style="display:none;background:var(--bg3);border:0.5px solid var(--bdr);border-radius:10px;padding:12px;margin-top:6px">'
-  +'<div style="display:flex;justify-content:flex-end;margin-bottom:10px"><button onclick="randomInterval('+si+')" style="background:rgba(99,102,241,0.12);border:0.5px solid #6366f1;border-radius:20px;padding:4px 12px;font-size:11px;color:#6366f1;cursor:pointer;font-weight:600">🎲 '+t('random')+'</button></div>'
+  +'<div style="display:flex;justify-content:flex-end;margin-bottom:10px"><button onclick="randomInterval('+si+')" style="background:rgba(99,102,241,0.12);border:0.5px solid #6366f1;border-radius:20px;padding:4px 12px;font-size:11px;color:#6366f1;cursor:pointer;font-weight:600">'+t('random')+'</button></div>'
   
   +'<div style="font-size:13px;font-weight:600;color:var(--txt2);letter-spacing:0.5px;text-transform:uppercase;margin-bottom:6px">'+t('int_work')+'</div>'
   +'<div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px;direction:'+(CFG.lang==='ar'?'rtl':'ltr')+'">'+workBtns+'</div>'
@@ -1887,7 +1887,7 @@ function renderE2momCfg(sec,si){
   +'<input type="number" min="1" max="50" placeholder="'+t('chip_custom')+'" value="'+(cfg.baseReps&&[5,10,15,20,25].indexOf(cfg.baseReps)===-1?cfg.baseReps:'')+'" oninput="setE2momManualReps('+si+',this.value)" style="width:90px;background:var(--bg2);border:0.5px solid var(--bdr);border-radius:7px;padding:5px 8px;font-size:13px;color:var(--txt2);outline:none;min-height:30px;text-align:center;font-family:inherit">';
   var cv=cfg.withCardio;
   return'<div id="e2mom-cfg-'+si+'" style="display:none;background:var(--bg3);border:0.5px solid var(--bdr);border-radius:10px;padding:12px;margin-top:6px">'
-  +'<div style="display:flex;justify-content:flex-end;margin-bottom:10px"><button onclick="randomE2mom('+si+')" style="background:rgba(99,102,241,0.12);border:0.5px solid #6366f1;border-radius:20px;padding:4px 12px;font-size:11px;color:#6366f1;cursor:pointer;font-weight:600">🎲 '+t('random')+'</button></div>'
+  +'<div style="display:flex;justify-content:flex-end;margin-bottom:10px"><button onclick="randomE2mom('+si+')" style="background:rgba(99,102,241,0.12);border:0.5px solid #6366f1;border-radius:20px;padding:4px 12px;font-size:11px;color:#6366f1;cursor:pointer;font-weight:600">'+t('random')+'</button></div>'
   +'<div style="font-size:13px;font-weight:600;color:var(--txt2);letter-spacing:0.5px;text-transform:uppercase;margin-bottom:6px">'+t('e2_reps')+'</div>'
   +'<div id="e2mom-rep-btns-'+si+'" style="display:flex;gap:6px;flex-wrap:wrap;align-items:center;margin-bottom:12px;direction:'+(CFG.lang==='ar'?'rtl':'ltr')+'">'+repBtns+'</div>'
   +'<div style="font-size:13px;font-weight:600;color:var(--txt2);letter-spacing:0.5px;text-transform:uppercase;margin-bottom:6px">'+t('em_cardio')+'</div>'
@@ -1939,7 +1939,7 @@ function renderE3momCfg(sec,si){
   +'<input type="number" min="1" max="50" placeholder="'+t('chip_custom')+'" value="'+(cfg.baseReps&&[5,10,15,20,25].indexOf(cfg.baseReps)===-1?cfg.baseReps:'')+'" oninput="setE3momManualReps('+si+',this.value)" style="width:90px;background:var(--bg2);border:0.5px solid var(--bdr);border-radius:7px;padding:5px 8px;font-size:13px;color:var(--txt2);outline:none;min-height:30px;text-align:center;font-family:inherit">';
   var cv=cfg.withCardio;
   return'<div id="e3mom-cfg-'+si+'" style="display:none;background:var(--bg3);border:0.5px solid var(--bdr);border-radius:10px;padding:12px;margin-top:6px">'
-  +'<div style="display:flex;justify-content:flex-end;margin-bottom:10px"><button onclick="randomE3mom('+si+')" style="background:rgba(99,102,241,0.12);border:0.5px solid #6366f1;border-radius:20px;padding:4px 12px;font-size:11px;color:#6366f1;cursor:pointer;font-weight:600">🎲 '+t('random')+'</button></div>'
+  +'<div style="display:flex;justify-content:flex-end;margin-bottom:10px"><button onclick="randomE3mom('+si+')" style="background:rgba(99,102,241,0.12);border:0.5px solid #6366f1;border-radius:20px;padding:4px 12px;font-size:11px;color:#6366f1;cursor:pointer;font-weight:600">'+t('random')+'</button></div>'
   +'<div style="font-size:13px;font-weight:600;color:var(--txt2);letter-spacing:0.5px;text-transform:uppercase;margin-bottom:6px">'+t('e3_reps')+'</div>'
   +'<div id="e3mom-rep-btns-'+si+'" style="display:flex;gap:6px;flex-wrap:wrap;align-items:center;margin-bottom:12px;direction:'+(CFG.lang==='ar'?'rtl':'ltr')+'">'+repBtns+'</div>'
   +'<div style="font-size:13px;font-weight:600;color:var(--txt2);letter-spacing:0.5px;text-transform:uppercase;margin-bottom:6px">'+t('em_cardio')+'</div>'
@@ -1980,7 +1980,7 @@ function renderTabataCfg(sec,si){
   var movBtns=[2,3,4,5,6].map(function(n){return'<button onclick="setTabataVal('+si+',\'numMov\','+n+',this)" style="'+(cfg.numMov===n?S_sel:S_btn)+'">'+n+'</button>';}).join('');
   var cv=cfg.withCardio;
   return'<div id="tabata-cfg-'+si+'" style="display:none;background:var(--bg3);border:0.5px solid var(--bdr);border-radius:10px;padding:12px;margin-top:6px">'
-  +'<div style="display:flex;justify-content:flex-end;margin-bottom:10px"><button onclick="randomTabata('+si+')" style="background:rgba(99,102,241,0.12);border:0.5px solid #6366f1;border-radius:20px;padding:4px 12px;font-size:11px;color:#6366f1;cursor:pointer;font-weight:600">🎲 '+t('random')+'</button></div>'
+  +'<div style="display:flex;justify-content:flex-end;margin-bottom:10px"><button onclick="randomTabata('+si+')" style="background:rgba(99,102,241,0.12);border:0.5px solid #6366f1;border-radius:20px;padding:4px 12px;font-size:11px;color:#6366f1;cursor:pointer;font-weight:600">'+t('random')+'</button></div>'
   +'<div style="font-size:13px;font-weight:600;color:var(--txt2);letter-spacing:0.5px;text-transform:uppercase;margin-bottom:6px">'+t('tab_mov')+'</div>'
   +'<div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px;direction:'+(CFG.lang==='ar'?'rtl':'ltr')+'">'+movBtns+'</div>'
   +'<div style="font-size:13px;font-weight:600;color:var(--txt2);letter-spacing:0.5px;text-transform:uppercase;margin-bottom:6px">'+t('em_cardio')+'</div>'
@@ -2032,7 +2032,7 @@ function renderDeathByCfg(sec,si){
   // startReps locked to 1 per spec
   var incBtns=[1,2].map(function(n){return'<button onclick="setDeathByVal('+si+',\'increment\','+n+',this)" style="'+(cfg.increment===n?S_sel:S_btn)+'">+'+n+'</button>';}).join('');
   return'<div id="deathby-cfg-'+si+'" style="display:none;background:var(--bg3);border:0.5px solid var(--bdr);border-radius:10px;padding:12px;margin-top:6px">'
-  +'<div style="display:flex;justify-content:flex-end;margin-bottom:10px"><button onclick="randomDeathBy('+si+')" style="background:rgba(99,102,241,0.12);border:0.5px solid #6366f1;border-radius:20px;padding:4px 12px;font-size:11px;color:#6366f1;cursor:pointer;font-weight:600">' + '🎲' + ' '+t('random')+'</button></div>'
+  +'<div style="display:flex;justify-content:flex-end;margin-bottom:10px"><button onclick="randomDeathBy('+si+')" style="background:rgba(99,102,241,0.12);border:0.5px solid #6366f1;border-radius:20px;padding:4px 12px;font-size:11px;color:#6366f1;cursor:pointer;font-weight:600">' + t('random')+'</button></div>'
   +'<div style="font-size:13px;font-weight:600;color:var(--txt2);letter-spacing:0.5px;text-transform:uppercase;margin-bottom:6px">'+t('db_inc')+'</div>'
   +'<div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px;direction:'+(CFG.lang==='ar'?'rtl':'ltr')+'">'+incBtns+'</div>'
   +'<div style="font-size:13px;font-weight:600;color:var(--txt2);letter-spacing:0.5px;text-transform:uppercase;margin-bottom:6px">'+t('db_mode')+'</div>'
@@ -2100,7 +2100,7 @@ function renderLadderCfg(sec,si){
   var dynHtml=renderDynInputsHTML(dTypeMap[dir],cfg.dynStart,cfg.dynStep,si,'ladder');
   var movBtns=[2,3,4,5,6].map(function(n){return'<button onclick="setLadderVal('+si+',\'exCnt\','+n+',this)" style="'+(cfg.exCnt===n?S_sel:S_btn)+'">'+n+'</button>';}).join('');
   return'<div id="ladder-cfg-'+si+'" style="display:none;background:var(--bg3);border:0.5px solid var(--bdr);border-radius:10px;padding:12px;margin-top:6px">'
-  +'<div style="display:flex;justify-content:flex-end;margin-bottom:10px"><button onclick="randomLadder('+si+')" style="background:rgba(99,102,241,0.12);border:0.5px solid #6366f1;border-radius:20px;padding:4px 12px;font-size:11px;color:#6366f1;cursor:pointer;font-weight:600">🎲 '+t('random')+'</button></div>'
+  +'<div style="display:flex;justify-content:flex-end;margin-bottom:10px"><button onclick="randomLadder('+si+')" style="background:rgba(99,102,241,0.12);border:0.5px solid #6366f1;border-radius:20px;padding:4px 12px;font-size:11px;color:#6366f1;cursor:pointer;font-weight:600">'+t('random')+'</button></div>'
   +'<div style="font-size:13px;font-weight:600;color:var(--txt2);letter-spacing:0.5px;text-transform:uppercase;margin-bottom:6px">'+t('rft_mov')+'</div>'
   +'<div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px;direction:'+(CFG.lang==='ar'?'rtl':'ltr')+'">'+movBtns+'</div>'
   +'<div style="font-size:13px;font-weight:600;color:var(--txt2);letter-spacing:0.5px;text-transform:uppercase;margin-bottom:6px">'+t('lad_type')+'</div>'
@@ -2172,7 +2172,7 @@ function renderBuyInCfg(sec,si){
     +'<option value="cashout"'+(cfg.mode==='cashout'?' selected':'')+'>'+t('bi_cashout')+'</option>'
     +'</select>';
   return'<div id="buyin-cfg-'+si+'" style="display:none;background:var(--bg3);border:0.5px solid var(--bdr);border-radius:10px;padding:12px;margin-top:6px">'
-  +'<div style="display:flex;justify-content:flex-end;margin-bottom:10px"><button onclick="randomBuyIn('+si+')" style="background:rgba(99,102,241,0.12);border:0.5px solid #6366f1;border-radius:20px;padding:4px 12px;font-size:11px;color:#6366f1;cursor:pointer;font-weight:600">' + '🎲' + ' '+t('random')+'</button></div>'
+  +'<div style="display:flex;justify-content:flex-end;margin-bottom:10px"><button onclick="randomBuyIn('+si+')" style="background:rgba(99,102,241,0.12);border:0.5px solid #6366f1;border-radius:20px;padding:4px 12px;font-size:11px;color:#6366f1;cursor:pointer;font-weight:600">' + t('random')+'</button></div>'
   +'<div style="font-size:13px;font-weight:600;color:var(--txt2);letter-spacing:0.5px;text-transform:uppercase;margin-bottom:6px">'+t('bi_mode')+'</div>'
   +'<div style="margin-bottom:12px">'+modeDdl+'</div>'
   +'<div style="font-size:13px;font-weight:600;color:var(--txt2);letter-spacing:0.5px;text-transform:uppercase;margin-bottom:6px">'+t('bi_rounds')+'</div>'
@@ -2267,7 +2267,7 @@ function renderYgigCfg(sec,si){
   }
   return'<div id="ygig-cfg-'+si+'" style="display:none;background:var(--bg3);border:0.5px solid var(--bdr);border-radius:10px;padding:12px;margin-top:6px">'
   +'<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">'+modeBtns
-  +'<button onclick="randomYgig('+si+')" style="background:rgba(99,102,241,0.12);border:0.5px solid #6366f1;border-radius:20px;padding:4px 12px;font-size:11px;color:#6366f1;cursor:pointer;font-weight:600">🎲 '+t('random')+'</button></div>'
+  +'<button onclick="randomYgig('+si+')" style="background:rgba(99,102,241,0.12);border:0.5px solid #6366f1;border-radius:20px;padding:4px 12px;font-size:11px;color:#6366f1;cursor:pointer;font-weight:600">'+t('random')+'</button></div>'
   +body
   +'<button onclick="regenYgig('+si+')" style="width:100%;background:var(--or);color:#000;border:none;border-radius:10px;padding:11px;font-size:14px;font-weight:700;cursor:pointer;min-height:42px">⟳ '+t('chip_regen')+'</button>'
   +'</div>';
@@ -2500,7 +2500,7 @@ function renderCoupletCfg(sec,si){
   var schemeBtns=schemeSelectHtml(si,cfg,TYPE_SCHEMES.couplet,'setCoupletSchemeSelect');
   return'<div id="couplet-cfg-'+si+'" style="display:none;background:var(--bg3);border:0.5px solid var(--bdr);border-radius:10px;padding:12px;margin-top:6px">'
   +'<div style="display:flex;justify-content:flex-start;align-items:center;margin-bottom:10px">'
-  +'<button onclick="randomCouplet('+si+')" style="background:rgba(99,102,241,0.12);border:0.5px solid #6366f1;border-radius:20px;padding:4px 12px;font-size:11px;color:#6366f1;cursor:pointer;font-weight:600">🎲 '+t('random')+'</button>'
+  +'<button onclick="randomCouplet('+si+')" style="background:rgba(99,102,241,0.12);border:0.5px solid #6366f1;border-radius:20px;padding:4px 12px;font-size:11px;color:#6366f1;cursor:pointer;font-weight:600">'+t('random')+'</button>'
   +'</div>'
   +'<div style="font-size:13px;font-weight:600;color:var(--txt2);text-transform:uppercase;margin-bottom:6px">'+t('chip_reps')+'</div>'
   +'<div id="couplet-reps-row-'+si+'" style="display:flex;gap:6px;flex-wrap:wrap;align-items:center;margin-bottom:12px;direction:'+(CFG.lang==='ar'?'rtl':'ltr')+';opacity:'+(cfg.schemeKey&&!(SCHEMES[cfg.schemeKey]&&SCHEMES[cfg.schemeKey].dynamic)?'0.35':'1')+';pointer-events:'+(cfg.schemeKey&&!(SCHEMES[cfg.schemeKey]&&SCHEMES[cfg.schemeKey].dynamic)?'none':'auto')+'">'+repBtns+'</div>'
@@ -2534,7 +2534,7 @@ function renderTripletCfg(sec,si){
   var schemeBtns=schemeSelectHtml(si,cfg,TYPE_SCHEMES.triplet,'setTripletSchemeSelect');
   return'<div id="triplet-cfg-'+si+'" style="display:none;background:var(--bg3);border:0.5px solid var(--bdr);border-radius:10px;padding:12px;margin-top:6px">'
   +'<div style="display:flex;justify-content:flex-start;align-items:center;margin-bottom:10px">'
-  +'<button onclick="randomTriplet('+si+')" style="background:rgba(99,102,241,0.12);border:0.5px solid #6366f1;border-radius:20px;padding:4px 12px;font-size:11px;color:#6366f1;cursor:pointer;font-weight:600">🎲 '+t('random')+'</button>'
+  +'<button onclick="randomTriplet('+si+')" style="background:rgba(99,102,241,0.12);border:0.5px solid #6366f1;border-radius:20px;padding:4px 12px;font-size:11px;color:#6366f1;cursor:pointer;font-weight:600">'+t('random')+'</button>'
   +'</div>'
   +'<div style="font-size:13px;font-weight:600;color:var(--txt2);text-transform:uppercase;margin-bottom:6px">'+t('chip_reps')+'</div>'
   +'<div id="triplet-reps-row-'+si+'" style="display:flex;gap:6px;flex-wrap:wrap;align-items:center;margin-bottom:12px;direction:'+(CFG.lang==='ar'?'rtl':'ltr')+';opacity:'+(cfg.schemeKey&&!(SCHEMES[cfg.schemeKey]&&SCHEMES[cfg.schemeKey].dynamic)?'0.35':'1')+';pointer-events:'+(cfg.schemeKey&&!(SCHEMES[cfg.schemeKey]&&SCHEMES[cfg.schemeKey].dynamic)?'none':'auto')+'">'+repBtns+'</div>'
@@ -2609,7 +2609,7 @@ function renderGroupAbCfg(sec,si){
   +'<input type="number" min="1" max="50" placeholder="'+t('chip_custom')+'" value="'+(cfg.repsB&&repsPreset.indexOf(cfg.repsB)===-1?cfg.repsB:'')+'" oninput="setGroupAbManualRepsB('+si+',this.value)" style="width:90px;background:var(--bg2);border:0.5px solid var(--bdr);border-radius:7px;padding:5px 8px;font-size:13px;color:var(--txt2);outline:none;min-height:30px;text-align:center;font-family:inherit">';
   var cA=cfg.withCardioA;var cB=cfg.withCardioB;
   return'<div id="groupab-cfg-'+si+'" style="display:none;background:var(--bg3);border:0.5px solid var(--bdr);border-radius:10px;padding:12px;margin-top:6px">'
-  +'<div style="display:flex;justify-content:flex-end;margin-bottom:12px"><button onclick="randomGroupAb('+si+')" style="background:rgba(99,102,241,0.12);border:0.5px solid #6366f1;border-radius:20px;padding:4px 12px;font-size:11px;color:#6366f1;cursor:pointer;font-weight:600">🎲 '+t('random')+'</button></div>'
+  +'<div style="display:flex;justify-content:flex-end;margin-bottom:12px"><button onclick="randomGroupAb('+si+')" style="background:rgba(99,102,241,0.12);border:0.5px solid #6366f1;border-radius:20px;padding:4px 12px;font-size:11px;color:#6366f1;cursor:pointer;font-weight:600">'+t('random')+'</button></div>'
   +'<div style="font-size:14px;font-weight:700;color:var(--txt);margin-bottom:10px">Group A</div>'
   +'<div style="font-size:13px;font-weight:600;color:var(--txt2);letter-spacing:0.5px;text-transform:uppercase;margin-bottom:6px">'+t('bi_mov')+'</div>'
   +'<div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px;direction:'+(CFG.lang==='ar'?'rtl':'ltr')+'">'+[2,3,4,5,6].map(function(n){return'<button onclick="setGroupAbVal('+si+',\'exCntA\','+n+',this)" style="'+(cfg.exCntA===n?S_sel:S_btn)+'">'+n+'</button>';}).join('')+'</div>'
