@@ -431,7 +431,7 @@ var STR=[
   {name:'Push-Up',cat:'gymnastics',tier:1,alts:['Ring Dip','Hand-Release Push-Up','Handstand Push-Up','Wall Walk']},
   {name:'Pull-Up',cat:'gymnastics',tier:1,alts:['Jumping Pull-Up','Banded Pull-Up','Ring Row','Negative Pull-Up']},
   {name:'Chin-Up',cat:'gymnastics',tier:1,alts:['Pull-Up','Jumping Pull-Up','Banded Pull-Up','Ring Row']},
-  {name:'Kipping Pull-Up',cat:'gymnastics',tier:1,alts:['Strict Pull-Up','Jumping Pull-Up','Banded Pull-Up','Ring Row']},
+  {name:'Kipping Pull-Up',cat:'gymnastics',tier:2,alts:['Strict Pull-Up','Jumping Pull-Up','Banded Pull-Up','Ring Row']},
   {name:'Negative Pull-Up',cat:'gymnastics',tier:1,alts:['Jumping Pull-Up','Ring Row','Banded Pull-Up','Pull-Up']},
   {name:'Hanging Knee Raise',cat:'gymnastics',tier:1,alts:['AbMat Sit-Up','V-Up','Toes-to-Bar','Leg Raise']},
   {name:'Wall Ball',cat:'gymnastics',tier:1,alts:['DB Thruster','KB Swing','Hollow Rock','Thruster']},
@@ -507,7 +507,7 @@ var STR=[
   {name:'L-Sit',cat:'gymnastics',tier:3,unit:'time',alts:['Hollow Hold','Plank Hold','V-Up','AbMat Sit-Up']},
   {name:'D-Ball Over Shoulder',cat:'gymnastics',tier:3,alts:['Sandbag Over Shoulder','Power Clean','KB Clean','DB Power Clean']},
   {name:'Tire Flip',cat:'gymnastics',tier:3,alts:['Deadlift','Power Clean','Sandbag Over Shoulder','D-Ball Over Shoulder']},
-  {name:'KB Clean',cat:'kettlebell',tier:3,alts:['KB Swing','DB Clean','Power Clean','Hang Power Clean']},
+  {name:'KB Clean',cat:'kettlebell',tier:2,alts:['KB Swing','DB Clean','Power Clean','Hang Power Clean']},
   {name:'KB Press',cat:'kettlebell',tier:3,alts:['Strict Press','Push Press','DB Strict Press','Z-Press']},
   {name:'Overhead Carry',cat:'kettlebell',tier:3,unit:'carry',alts:['Farmers Carry','Waiters Walk','Suitcase Carry','KB Press Walk']},
   {name:'KB Windmill',cat:'kettlebell',tier:3,alts:['Turkish Get-Up','KB Press','DB Windmill','Overhead Squat']},
@@ -517,7 +517,7 @@ var STR=[
   {name:'DB Clean and Press',cat:'dumbbell',tier:3,alts:['DB Power Clean','DB Thruster','DB S2OH','Power Clean']},
   {name:'Squat Clean',cat:'barbell',tier:4,alts:['Power Clean','Hang Squat Clean','DB Squat Clean','Hang Clean']},
   {name:'Clean & Jerk',cat:'barbell',tier:4,alts:['Power Clean','Ground to Overhead','DB C&J','Squat Clean + Split Jerk']},
-  {name:'Hang Power Snatch',cat:'barbell',tier:4,alts:['Power Snatch','DB Snatch','Overhead Squat','Hang Squat Snatch']},
+  {name:'Hang Power Snatch',cat:'barbell',tier:3,alts:['Power Snatch','DB Snatch','Overhead Squat','Hang Squat Snatch']},
   {name:'Split Jerk',cat:'barbell',tier:4,alts:['Push Jerk','Push Press','Power Jerk','DB Push Jerk']},
   {name:'Snatch Balance',cat:'barbell',tier:4,alts:['Overhead Squat','Drop Snatch','Sotts Press','Hang Power Snatch']},
   {name:'Ring Muscle-Up',cat:'gymnastics',tier:4,alts:['Bar Muscle-Up','Ring Dip + Pull-Up','Jumping Ring MU','Banded Ring MU']},
@@ -528,7 +528,7 @@ var STR=[
   {name:'Pegboard',cat:'gymnastics',tier:4,alts:['Rope Climb','Bar Muscle-Up','Strict Pull-Up','Legless Rope Climb']},
   {name:'Freestanding HS Hold',cat:'gymnastics',tier:4,unit:'time',alts:['Wall Handstand Hold','Wall Walk','HS Hold 30s','Headstand Hold']},
   {name:'Legless Rope Climb',cat:'gymnastics',tier:4,alts:['Rope Climb','Bar Muscle-Up','3 Pull-Ups per Climb','Strict Pull-Up']},
-  {name:'Turkish Get-Up',cat:'kettlebell',tier:4,unit:'side',alts:['KB Windmill','DB TGU','Overhead Lunge','KB Press']},
+  {name:'Turkish Get-Up',cat:'kettlebell',tier:3,unit:'side',alts:['KB Windmill','DB TGU','Overhead Lunge','KB Press']},
   // ── NEW T1 · Barbell ──────────────────────────────────────
   {name:'Sumo Deadlift',cat:'barbell',tier:1,alts:['Deadlift','KB Deadlift','DB Deadlift','Wide-Stance RDL']},
   {name:'Floor Press',cat:'barbell',tier:1,alts:['Bench Press','DB Floor Press','Push-Up','Close-Grip Bench']},
@@ -641,7 +641,7 @@ function getScheme(type,lv){
 }
 function mkAmrap(time,lv,team,cfg){
   cfg=cfg||{};
-  var repPool={beginner:[8,10,12],intermediate:[10,12,15],advanced:[12,15,20],elite:[15,20,21]};
+  var repPool={beginner:[8,10,12],intermediate:[10,12,15],advanced:[12,15,20],elite:[15,20,25]};
   var exCnt=cfg.exCnt||ri(3,4);
   var cardioMode=cfg.withCardio;
   var amrapSch=cfg.amrapScheme&&AMRAP_SCHEMES[cfg.amrapScheme]?AMRAP_SCHEMES[cfg.amrapScheme]:null;
@@ -728,7 +728,7 @@ function mkChipper(time,lv,team,cfg){
   var exCnt=cfg.exCnt||ri(5,8);
   var catReps={
     gymnastics:{beginner:10,intermediate:15,advanced:20,elite:25},
-    barbell:    {beginner:15,intermediate:21,advanced:28,elite:35},
+    barbell:    {beginner:15,intermediate:21,advanced:30,elite:35},
     kettlebell: {beginner:20,intermediate:25,advanced:35,elite:45},
     dumbbell:   {beginner:20,intermediate:25,advanced:35,elite:45}
   };
@@ -806,7 +806,7 @@ function mkLadder(time,lv,team,cfg){
   cfg=cfg||{};
   var dir=cfg.direction||pk(['ascending','descending','pyramid']);
   var stepMap={beginner:1,intermediate:1,advanced:2,elite:2};
-  var maxMap={beginner:8,intermediate:10,advanced:10,elite:12};
+  var maxMap={beginner:8,intermediate:10,advanced:12,elite:12};
   var step=cfg.dynStep||cfg.step||stepMap[lv]||1;
   var reps=[];
   if(cfg.customReps&&cfg.customReps.length){
@@ -827,14 +827,14 @@ function mkLadder(time,lv,team,cfg){
     var maxRep=maxMap[lv]||10;
     if(dir==='ascending'){for(var i=step;i<=maxRep;i+=step)reps.push(i);}
     else if(dir==='descending'){for(var i=maxRep;i>=step;i-=step)reps.push(i);}
-    else{var pN=Math.min(12,Math.floor(maxRep/step)*2-1);var half=Math.ceil(pN/2);for(var i=0;i<half;i++)reps.push((i+1)*step);for(var j=pN-half-1;j>=0;j--)reps.push((j+1)*step);}
+    else{var pyrCap={beginner:9,intermediate:11,advanced:11,elite:11}[lv]||11;var pN=Math.min(pyrCap,Math.floor(maxRep/step)*2-1);if(pN%2===0)pN--;var half=Math.ceil(pN/2);for(var i=0;i<half;i++)reps.push((i+1)*step);for(var j=pN-half-1;j>=0;j--)reps.push((j+1)*step);}
   }
   // safety net: if reps ended up empty, fall back to level defaults
   if(!reps.length){
     var maxRep=maxMap[lv]||10;
     if(dir==='ascending'){for(var i=step;i<=maxRep;i+=step)reps.push(i);}
     else if(dir==='descending'){for(var i=maxRep;i>=step;i-=step)reps.push(i);}
-    else{var pN=Math.min(12,Math.floor(maxRep/step)*2-1);var half=Math.ceil(pN/2);for(var i=0;i<half;i++)reps.push((i+1)*step);for(var j=pN-half-1;j>=0;j--)reps.push((j+1)*step);}
+    else{var pyrCap={beginner:9,intermediate:11,advanced:11,elite:11}[lv]||11;var pN=Math.min(pyrCap,Math.floor(maxRep/step)*2-1);if(pN%2===0)pN--;var half=Math.ceil(pN/2);for(var i=0;i<half;i++)reps.push((i+1)*step);for(var j=pN-half-1;j>=0;j--)reps.push((j+1)*step);}
   }
   var exCnt=cfg.exCnt||ri(2,3);
   var chosen=pkN(getPool(lv),exCnt);
@@ -955,14 +955,28 @@ function mkYGIG(time,lv,team,cfg){
   if(mode==='split'){
     // SPLIT: 1 massive round — partners share reps on each exercise
     var hasScheme=cfg.schemeKey&&SCHEMES[cfg.schemeKey]&&!SCHEMES[cfg.schemeKey].dynamic;
-    var schReps=hasScheme?SCHEMES[cfg.schemeKey].reps:[100,80,60,40,20];
-    var exCnt=hasScheme?schReps.length:(cfg.exCnt||ri(4,6));
-    var manualReps=cfg.splitReps;
+    var schReps,exCnt,manualReps;
+    if(hasScheme){
+      schReps=SCHEMES[cfg.schemeKey].reps;exCnt=schReps.length;manualReps=null;
+    } else if(cfg.splitReps){
+      // manual uniform rep chosen from settings
+      manualReps=cfg.splitReps;exCnt=cfg.exCnt||pk([4,5,6,7,8]);schReps=null;
+    } else {
+      // auto: 50% descending 100-80-60-40-20, 50% uniform even rep
+      manualReps=null;
+      if(cfg.exCnt===5||(!cfg.exCnt&&Math.random()>0.5)){
+        schReps=[100,80,60,40,20];exCnt=5;
+      } else {
+        var uRep=pk([20,40,50,60,70,80,100]);
+        exCnt=cfg.exCnt||pk([4,5,6,7,8]);
+        schReps=[];for(var _i=0;_i<exCnt;_i++)schReps.push(uRep);
+      }
+    }
     var chosen=pkN(getPool(lv),exCnt);
     var doCardio=cardioMode===true||(cardioMode===undefined&&Math.random()>.5);
     var items=[{kind:'sep',label:'── 1 ROUND ──'}];
     chosen.forEach(function(ex,i){
-      var rep=manualReps?manualReps:schReps[i%schReps.length];
+      var rep=manualReps?manualReps:schReps[i];
       items.push({kind:'str',ex:ex,detail:rep+' reps (shared)',wt:wgt(lv,ex.cat)});
     });
     if(doCardio)items.push({kind:'cardio',ex:pk(CARDIO)});
@@ -2213,9 +2227,21 @@ function regenYgig(si){
   var el=document.getElementById('sec-'+si);if(el)el.outerHTML=renderSec(S.wod.sections[si],si);
 }
 function randomYgig(si){
-  if(!S.cfgStore)S.cfgStore={};S.cfgStore['ygig']={};
   var mode=Math.random()>0.5?'alternate':'split';
-  var newSecs=mkYGIG(S.wod.cfg.time,S.level,S.teamSize,{ygMode:mode});S.wod.sections[si]=newSecs[0];
+  var overrides={ygMode:mode};
+  if(mode==='split'){
+    overrides.schemeKey=null;
+    if(Math.random()>0.5){
+      // Option 1: classic descending 100-80-60-40-20 (5 exercises)
+      overrides.exCnt=5;
+    } else {
+      // Option 2: uniform even rep + random exercise count
+      overrides.splitReps=pk([20,40,50,60,70,80,100]);
+      overrides.exCnt=pk([4,5,6,7,8]);
+    }
+  }
+  var newSecs=mkYGIG(S.wod.cfg.time,S.level,S.teamSize,overrides);
+  S.wod.sections[si]=newSecs[0];
   var el=document.getElementById('sec-'+si);if(el)el.outerHTML=renderSec(S.wod.sections[si],si);
 }
 function renderYgigCfg(sec,si){
@@ -2236,7 +2262,7 @@ function renderYgigCfg(sec,si){
       var isSel=movLocked?(n===schemeLen):(cfg.exCnt===n);
       return'<button '+(movLocked?'disabled ':'')+'onclick="setYgigVal('+si+',\'exCnt\','+n+',this)" style="'+(isSel?S_sel:S_btn)+';'+(movLocked&&!isSel?'opacity:0.35;':'')+'">'+n+'</button>';
     }).join('');
-    var repPresets=[20,30,40,50,75,100];
+    var repPresets=[20,40,60,80,100];
     var splitRepBtns=repPresets.map(function(n){return'<button '+(hasScheme?'disabled ':'')+'onclick="setYgigSplitReps('+si+','+n+',this)" style="'+(cfg.splitReps===n&&!hasScheme?S_sel:S_btn)+';'+(hasScheme?'opacity:0.35;':'')+'">'+n+'</button>';}).join('')
     +'<input type="number" min="1" max="500" placeholder="'+t('chip_custom')+'" value="'+(cfg.splitReps&&repPresets.indexOf(cfg.splitReps)===-1&&!hasScheme?cfg.splitReps:'')+'" oninput="setYgigSplitRepsCustom('+si+',this.value)" '+(hasScheme?'disabled ':'')+'style="width:90px;background:var(--bg2);border:0.5px solid var(--bdr);border-radius:7px;padding:5px 8px;font-size:13px;color:var(--txt2);outline:none;min-height:30px;text-align:center;font-family:inherit;'+(hasScheme?'opacity:0.35;':'')+(CFG.lang==='ar'?'direction:ltr;':'')+'"">';
     body+='<div style="font-size:13px;font-weight:600;color:var(--txt2);letter-spacing:0.5px;text-transform:uppercase;margin-bottom:6px">'+t('yg_mov')+'</div>'
