@@ -200,7 +200,7 @@ var T={
     tab_mov:'Movements',
     db_mode:'Mode',db_single:'Single',db_double:'Double',db_start:'Starting Reps',db_inc:'Increment',db_fixed:'Fixed Reps (2nd exercise)',db_fixed_ph:'e.g. 5',
     lad_dir:'Direction',lad_asc:'Ascending',lad_desc:'Descending',lad_pyr:'Pyramid',lad_mov:'Movements',lad_step:'Step',lad_cardio:'Cardio',lad_rounds_lbl:'Total Rounds',
-    bi_rounds:'Rounds',bi_reps:'Reps',bi_mov:'Movements',bi_mode:'Mode',bi_both:'Both',bi_buyin:'Buy-In Only',bi_cashout:'Cash-Out Only',bi_exin:'Buy-In Exercise',bi_exout:'Cash-Out Exercise',
+    bi_rounds:'Rounds',bi_reps:'Reps',bi_mov:'Movements',bi_mode:'Mode',bi_both:'Both',bi_buyin:'Buy-In Only',bi_cashout:'Cash-Out Only',bi_exin:'Buy-In Exercise',bi_exout:'Cash-Out Exercise',gab_time:'Block Time',
     yg_rounds:'Rounds',yg_mov:'Movements',yg_reps:'Reps',yg_cardio:'Cardio',yg_mode:'Mode',yg_alternate:'Alternate Rounds',yg_split:'Split Round',yg_scheme:'Rep Scheme',int_auto:'auto',
     cp_dir:'Pattern',cp_desc:'Descending',cp_asc:'Ascending',cp_pyr:'Pyramid',cp_fix:'Fixed',
     dyn_start:'Start',dyn_step_up:'Step ↑',dyn_step_dn:'Step ↓',dyn_peak:'Peak',scheme_sel:'— Select Scheme —',lad_type:'Ladder Type',
@@ -264,7 +264,7 @@ var T={
     tab_mov:'الحركات',
     db_mode:'النوع',db_single:'منفرد',db_double:'مزدوج',db_start:'البداية',db_inc:'الزيادة',db_fixed:'تكرارات ثابتة (تمرين ٢)',db_fixed_ph:'مثال: ٥',
     lad_dir:'الاتجاه',lad_asc:'تصاعدي',lad_desc:'تنازلي',lad_pyr:'هرمي',lad_mov:'الحركات',lad_step:'الخطوة',lad_cardio:'كارديو',lad_rounds_lbl:'عدد الجولات',
-    bi_rounds:'الجولات',bi_reps:'التكرارات',bi_mov:'الحركات',bi_mode:'النوع',bi_both:'الاثنين',bi_buyin:'باي-إن فقط',bi_cashout:'كاش-أوت فقط',bi_exin:'تمرين البداية',bi_exout:'تمرين النهاية',
+    bi_rounds:'الجولات',bi_reps:'التكرارات',bi_mov:'الحركات',bi_mode:'النوع',bi_both:'الاثنين',bi_buyin:'باي-إن فقط',bi_cashout:'كاش-أوت فقط',bi_exin:'تمرين البداية',bi_exout:'تمرين النهاية',gab_time:'وقت البلوك',
     yg_rounds:'الجولات',yg_mov:'الحركات',yg_reps:'التكرارات',yg_cardio:'كارديو',yg_mode:'النوع',yg_alternate:'تبادل جولات',yg_split:'تقسيم جولة',yg_scheme:'نظام التكرارات',int_auto:'تلقائي',
     cp_dir:'النمط',cp_desc:'تنازلي',cp_asc:'تصاعدي',cp_pyr:'هرمي',cp_fix:'ثابت',
     dyn_start:'رقم البداية',dyn_step_up:'مقدار الزيادة',dyn_step_dn:'مقدار النقصان',dyn_peak:'قمة الهرم',scheme_sel:'— اختر نظام —',lad_type:'نوع السلم',
@@ -673,7 +673,13 @@ function mkAmrap(time,lv,team,cfg){
   chosen.forEach(function(ex){
     items.push({kind:'str',ex:ex,detail:getDetail(ex,baseReps),wt:wgt(lv,ex.cat)});
   });
-  if(addCardio)items.push({kind:'cardio',ex:pk(CARDIO)});
+  if(addCardio){
+    var _amrapCalAmts={beginner:8,intermediate:12,advanced:15,elite:20};
+    var _amrapCalAmt=cfg.cardioAmt||(_amrapCalAmts[lv]||12);
+    var _amrapCalPool=CARDIO.filter(function(c){return c.unit==='Cal';});
+    var _amrapEx=Object.assign({},pk(_amrapCalPool.length?_amrapCalPool:CARDIO),{amount:_amrapCalAmt,unit:'Cal'});
+    items.push({kind:'cardio',ex:_amrapEx});
+  }
   return[{type:'AMRAP',title:'AMRAP '+time+' Min',infoKey:'i_amrap',infoVars:{t:time},scoreKey:'sc_rounds',teamKey:team>1?'tm_one':null,teamVars:{n:team},items:items,amrapCfg:cfg}];
 }
 
@@ -1122,7 +1128,11 @@ function mkIntervalAmrap(time,lv,team,cfg){
   var chosen=pkN(getPool(lv),strCount);
   var items=[];
   chosen.forEach(function(ex){items.push({kind:'str',ex:ex,detail:getDetail(ex,baseReps),wt:wgt(lv,ex.cat)})});
-  items.push({kind:'cardio',ex:pk(CARDIO)});
+  var _intCalAmts={beginner:5,intermediate:10,advanced:15,elite:20};
+  var _intCalAmt=cfg.cardioAmt||(_intCalAmts[lv]||10);
+  var _intCalPool=CARDIO.filter(function(c){return c.unit==='Cal';});
+  var _intEx=Object.assign({},pk(_intCalPool.length?_intCalPool:CARDIO),{amount:_intCalAmt,unit:'Cal'});
+  items.push({kind:'cardio',ex:_intEx});
   return[{type:'Interval AMRAP',title:numIntervals+' × '+workTime+'-Min AMRAP',infoKey:'i_interval',infoVars:{n:numIntervals,w:workTime,rest:restTime},scoreKey:'sc_total',teamKey:team>1?'tm_simultaneous':null,items:items,intervalCfg:cfg,_numIntervals:numIntervals}];
 }
 function mkGroupAB(time,lv,team,cfg){
@@ -1370,7 +1380,7 @@ function renderChipperCfg(sec,si){
   +'<div style="display:flex;justify-content:flex-end;margin-bottom:10px"><button onclick="randomChipper('+si+')" style="background:rgba(99,102,241,0.12);border:0.5px solid #6366f1;border-radius:20px;padding:4px 12px;font-size:11px;color:#6366f1;cursor:pointer;font-weight:600">'+t('random')+'</button></div>'
   +'<div style="font-size:13px;font-weight:600;color:var(--txt2);margin-bottom:6px">'+t('rft_mov')+'</div>'
   +'<div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px;direction:'+(CFG.lang==='ar'?'rtl':'ltr')+'">'+movBtns+'</div>'
-  +'<div style="font-size:13px;font-weight:600;color:var(--txt2);margin-bottom:8px">نظام التكرارات</div>'
+  +'<div style="font-size:13px;font-weight:600;color:var(--txt2);margin-bottom:8px">'+t('rft_scheme')+'</div>'
   +'<div style="margin-bottom:14px">'+selectHtml+'</div>'
   +'<div style="font-size:13px;font-weight:600;color:var(--txt2);text-transform:uppercase;margin-bottom:6px">'+t('chip_cardio')+'</div>'
   +'<div style="display:flex;gap:6px;margin-bottom:14px;direction:'+(CFG.lang==='ar'?'rtl':'ltr')+'"><button id="chipper-cardio-'+si+'" onclick="toggleChipperCardio('+si+')" style="'+(cv===true?S_sel:S_btn)+'">'+(cv===true?'ON':cv===false?'OFF':'–')+'</button></div>'
@@ -3157,6 +3167,8 @@ function renderGroupAbCfg(sec,si){
   +'<input type="number" min="1" max="100" placeholder="'+t('chip_custom')+'" value="'+(cfg.baseReps&&repsPreset.indexOf(cfg.baseReps)===-1?cfg.baseReps:'')+'" oninput="setGroupAbManualReps('+si+',this.value)" style="width:90px;background:var(--bg2);border:0.5px solid var(--bdr);border-radius:7px;padding:5px 8px;font-size:13px;color:var(--txt2);outline:none;min-height:30px;text-align:center;font-family:inherit">';
   return'<div id="groupab-cfg-'+si+'" style="display:none;background:var(--bg3);border:0.5px solid var(--bdr);border-radius:10px;padding:12px;margin-top:6px">'
   +'<div style="display:flex;justify-content:flex-end;margin-bottom:12px"><button onclick="randomGroupAb('+si+')" style="background:rgba(99,102,241,0.12);border:0.5px solid #6366f1;border-radius:20px;padding:4px 12px;font-size:11px;color:#6366f1;cursor:pointer;font-weight:600">'+t('random')+'</button></div>'
+  +'<div style="font-size:13px;font-weight:600;color:var(--txt2);letter-spacing:0.5px;text-transform:uppercase;margin-bottom:6px">'+t('gab_time')+'</div>'
+  +'<div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px;direction:'+(CFG.lang==='ar'?'rtl':'ltr')+'">'+timeBtns+'</div>'
   +'<div style="font-size:13px;font-weight:600;color:var(--txt2);letter-spacing:0.5px;text-transform:uppercase;margin-bottom:6px">'+t('bi_mov')+'</div>'
   +'<div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px;direction:'+(CFG.lang==='ar'?'rtl':'ltr')+'">'+movBtns+'</div>'
   +'<div style="font-size:13px;font-weight:600;color:var(--txt2);letter-spacing:0.5px;text-transform:uppercase;margin-bottom:6px">'+t('bi_rounds')+'</div>'
