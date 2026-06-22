@@ -191,21 +191,21 @@ var T={
     granted:'Access granted!',save_pw:"Save your password — you'll find it<br>in your purchase email",your_pw:'Your password',
     copy_pw:'📋 Copy Password',start:'Start Training',checking:'Checking...',invalid:'Invalid email or password ❌',
     tnc_back:'← Back',
-    chip_mov:'Movements',chip_reps:'Reps',chip_cardio:'Cardio',chip_regen:'Regenerate',chip_custom:'Custom',
-    am_mov:'Movements',am_reps:'Reps',
-    rft_rounds:'Rounds',custom:'Custom',rft_mov:'Movements',rft_reps:'Reps',rft_scheme:'Rep scheme',random:'Random',rounds:'Rounds',
-    em_mov:'Movements',em_reps:'Reps',em_cardio:'Cardio',
-    int_intervals:'Intervals',int_work:'Work (min)',int_rest:'Rest (min)',int_mov:'Movements',int_reps:'Reps',int_cardio:'Cardio',
-    e2_reps:'Reps',e3_reps:'Reps',e3_cardio:'Cardio',
+    chip_mov:'Movements',chip_reps:'Fixed Reps',chip_cardio:'Cardio',chip_regen:'Regenerate',chip_custom:'Custom',
+    am_mov:'Movements',am_reps:'Fixed Reps',
+    rft_rounds:'Rounds',custom:'Custom',rft_mov:'Movements',rft_reps:'Fixed Reps',rft_scheme:'Rep scheme',random:'Random',rounds:'Rounds',
+    em_mov:'Movements',em_reps:'Fixed Reps',em_cardio:'Cardio',
+    int_intervals:'Intervals',int_work:'Work (min)',int_rest:'Rest (min)',int_mov:'Movements',int_reps:'Fixed Reps',int_cardio:'Cardio',
+    e2_reps:'Fixed Reps',e3_reps:'Fixed Reps',e3_cardio:'Cardio',
     tab_mov:'Movements',
     db_mode:'Mode',db_single:'Single',db_double:'Double',db_start:'Starting Reps',db_inc:'Increment',db_fixed:'Fixed Reps (2nd exercise)',db_fixed_ph:'e.g. 5',
     lad_dir:'Direction',lad_asc:'Ascending',lad_desc:'Descending',lad_pyr:'Pyramid',lad_mov:'Movements',lad_step:'Step',lad_cardio:'Cardio',lad_rounds_lbl:'Total Rounds',
-    bi_rounds:'Rounds',bi_reps:'Reps',bi_mov:'Movements',bi_mode:'Mode',bi_both:'Both',bi_buyin:'Buy-In Only',bi_cashout:'Cash-Out Only',bi_exin:'Buy-In Exercise',bi_exout:'Cash-Out Exercise',gab_time:'Block Time',
-    yg_rounds:'Rounds',yg_mov:'Movements',yg_reps:'Reps',yg_cardio:'Cardio',yg_mode:'Mode',yg_alternate:'Alternate Rounds',yg_split:'Split Round',yg_scheme:'Rep Scheme',int_auto:'auto',
+    bi_rounds:'Rounds',bi_reps:'Fixed Reps',bi_mov:'Movements',bi_mode:'Mode',bi_both:'Both',bi_buyin:'Buy-In Only',bi_cashout:'Cash-Out Only',bi_exin:'Buy-In Exercise',bi_exout:'Cash-Out Exercise',gab_time:'Block Time',
+    yg_rounds:'Rounds',yg_mov:'Movements',yg_reps:'Fixed Reps',yg_cardio:'Cardio',yg_mode:'Mode',yg_alternate:'Alternate Rounds',yg_split:'Split Round',yg_scheme:'Rep Scheme',int_auto:'auto',
     cp_dir:'Pattern',cp_desc:'Descending',cp_asc:'Ascending',cp_pyr:'Pyramid',cp_fix:'Fixed',
     dyn_start:'Start',dyn_step_up:'Step ↑',dyn_step_dn:'Step ↓',dyn_peak:'Peak',scheme_sel:'— Select Scheme —',lad_type:'Ladder Type',
     tr_dir:'Pattern',
-    ga_repsa:'Reps',ga_repsb:'Reps',
+    ga_repsa:'Fixed Reps',ga_repsb:'Fixed Reps',
     i_amrap:'As Many Rounds As Possible in {t} minutes.',
     i_rft:'Complete {r} rounds AFAP. Time cap: {t} min.',
     i_emom:'Every Minute On the Minute. {n} movements = {s} full sets.',
@@ -229,13 +229,16 @@ var T={
     sc_sets:'Score = all sets completed',sc_tabata:'Score = lowest reps each round (Tabata score)',
     sc_deathby:'Score = last completed minute',sc_total:'Score = total rounds across all intervals',
     sc_ygig:'Score = total rounds / finish time',sc_score_rounds:'Score = rounds',
-    tm_shared:'Shared reps — split any way',tm_one:'Team of {n} — one works at a time',
-    tm_partition:'Partition reps any way',tm_own:'Each athlete owns their minute',
-    tm_alternate:'Alternate on the 2-min window',tm_3min:'All athletes work each 3-min window',
-    tm_simultaneous:'All athletes work simultaneously',tm_both:'Both complete before time ends',
-    tm_full:'Both complete full reps each',tm_free:'Partition reps freely',
-    tm_buyin:'All athletes do buy-in & cash-out together',
-    tm_halfA:'Half on A simultaneously',tm_ygig:'Team of {n}: rotate in order'},
+    tm_shared:'✂️ Partition reps freely (Move to next exercise only when current is done)',tm_one:'✂️ Partition reps freely (One works, one rests)',
+    tm_partition:'✂️ Partition reps freely to finish all rounds AFAP',tm_own:'🔁 Alternate minutes (Min 1: Athlete A / Min 2: Athlete B)',
+    tm_alternate:'⏱️ Smart transition inside the time window or work together',tm_3min:'⏱️ Smart transition inside the time window or work together',
+    tm_simultaneous:'💥 Work simultaneously (Both work at the same time and combine reps)',tm_both:'✂️ Partition ascending reps inside the minute window',
+    tm_full:'✂️ Partition reps freely (Follows AMRAP or For Time protocol)',tm_free:'✂️ Partition reps freely (Follows AMRAP or For Time protocol)',
+    tm_buyin:'🥪 Buy-In / Cash-Out: ✂️ Partition reps freely | Middle Rounds: ✂️ Partition round reps freely',
+    tm_ladder:'✂️ Partition ascending reps freely each round',
+    tm_ygig_amrap:'🔁 Alternate FULL rounds (Athlete A finishes a full round, then switch)',
+    tm_ygig_ft:'🔁 Alternate FULL rounds until each partner completes their target rounds',
+    tm_halfA:'🔄 Simultaneous station swap: Partner 1 starts on Station A & Partner 2 starts on Station B, swap at half-time',tm_ygig:'Team of {n}: rotate in order'},
   ar:{s:'الإعدادات',language:'اللغة',theme:'الثيم',dark:'داكن',light:'فاتح',
     wod:'WOD',title:'Workout<br>Generator',sub:'v1.0',
     gate_hint:'أدخل إيميلك وكلمة المرور',enter:'دخول ←',buy:'اشتري الوصول ↗',tnc:'الشروط والأحكام',
@@ -256,21 +259,21 @@ var T={
     granted:'تم الدخول!',save_pw:'احفظ كلمة مرورك — ستجدها<br>في إيميل الشراء',your_pw:'كلمة مرورك',
     copy_pw:'📋 نسخ كلمة المرور',start:'ابدأ التدريب',checking:'جار التحقق...',invalid:'إيميل أو كلمة مرور خاطئة ❌',
     tnc_back:'رجوع →',
-    chip_mov:'الحركات',chip_reps:'التكرارات',chip_cardio:'كارديو',chip_regen:'إعادة التوليد',chip_custom:'مخصص',
-    am_mov:'الحركات',am_reps:'التكرارات',
-    rft_rounds:'الجولات',rft_mov:'الحركات',rft_reps:'التكرارات',rft_scheme:'نظام التكرارات',random:'عشوائي',rounds:'جولات',custom:'أدخل',
-    em_mov:'عدد الحركات',em_reps:'تكرارات',em_cardio:'كارديو',
-    int_intervals:'عدد الفترات',int_work:'العمل (دقيقة)',int_rest:'الراحة (دقيقة)',int_mov:'الحركات',int_reps:'التكرارات',int_cardio:'كارديو',
-    e2_reps:'تكرارات',e3_reps:'تكرارات',e3_cardio:'كارديو',
+    chip_mov:'الحركات',chip_reps:'التكرارات الثابتة',chip_cardio:'كارديو',chip_regen:'إعادة التوليد',chip_custom:'مخصص',
+    am_mov:'الحركات',am_reps:'التكرارات الثابتة',
+    rft_rounds:'الجولات',rft_mov:'الحركات',rft_reps:'التكرارات الثابتة',rft_scheme:'نظام التكرارات',random:'عشوائي',rounds:'جولات',custom:'أدخل',
+    em_mov:'عدد الحركات',em_reps:'التكرارات الثابتة',em_cardio:'كارديو',
+    int_intervals:'عدد الفترات',int_work:'العمل (دقيقة)',int_rest:'الراحة (دقيقة)',int_mov:'الحركات',int_reps:'التكرارات الثابتة',int_cardio:'كارديو',
+    e2_reps:'التكرارات الثابتة',e3_reps:'التكرارات الثابتة',e3_cardio:'كارديو',
     tab_mov:'الحركات',
     db_mode:'النوع',db_single:'منفرد',db_double:'مزدوج',db_start:'البداية',db_inc:'الزيادة',db_fixed:'تكرارات ثابتة (تمرين ٢)',db_fixed_ph:'مثال: ٥',
     lad_dir:'الاتجاه',lad_asc:'تصاعدي',lad_desc:'تنازلي',lad_pyr:'هرمي',lad_mov:'الحركات',lad_step:'الخطوة',lad_cardio:'كارديو',lad_rounds_lbl:'عدد الجولات',
-    bi_rounds:'الجولات',bi_reps:'التكرارات',bi_mov:'الحركات',bi_mode:'النوع',bi_both:'الاثنين',bi_buyin:'باي-إن فقط',bi_cashout:'كاش-أوت فقط',bi_exin:'تمرين البداية',bi_exout:'تمرين النهاية',gab_time:'وقت البلوك',
-    yg_rounds:'الجولات',yg_mov:'الحركات',yg_reps:'التكرارات',yg_cardio:'كارديو',yg_mode:'النوع',yg_alternate:'تبادل جولات',yg_split:'تقسيم جولة',yg_scheme:'نظام التكرارات',int_auto:'تلقائي',
+    bi_rounds:'الجولات',bi_reps:'التكرارات الثابتة',bi_mov:'الحركات',bi_mode:'النوع',bi_both:'الاثنين',bi_buyin:'باي-إن فقط',bi_cashout:'كاش-أوت فقط',bi_exin:'تمرين البداية',bi_exout:'تمرين النهاية',gab_time:'وقت البلوك',
+    yg_rounds:'الجولات',yg_mov:'الحركات',yg_reps:'التكرارات الثابتة',yg_cardio:'كارديو',yg_mode:'النوع',yg_alternate:'تبادل جولات',yg_split:'تقسيم جولة',yg_scheme:'نظام التكرارات',int_auto:'تلقائي',
     cp_dir:'النمط',cp_desc:'تنازلي',cp_asc:'تصاعدي',cp_pyr:'هرمي',cp_fix:'ثابت',
     dyn_start:'رقم البداية',dyn_step_up:'مقدار الزيادة',dyn_step_dn:'مقدار النقصان',dyn_peak:'قمة الهرم',scheme_sel:'— اختر نظام —',lad_type:'نوع السلم',
     tr_dir:'النمط',
-    ga_repsa:'تكرارات',ga_repsb:'تكرارات',
+    ga_repsa:'التكرارات الثابتة',ga_repsb:'التكرارات الثابتة',
     i_amrap:'أكبر عدد جولات ممكن خلال {t} دقائق.',
     i_rft:'أكمل {r} جولات بأسرع وقت. الحد الزمني: {t} دقيقة.',
     i_emom:'حركة كل دقيقة. {n} حركات = {s} جولات.',
@@ -280,8 +283,8 @@ var T={
     i_tabata:'٢٠ ثانية عمل / ١٠ ثوان راحة × ٨ جولات لكل حركة = ٤ دقائق. المجموع: {tot} دقيقة.',
     i_deathby:'الدقيقة 1: {s} تكرارات. تضاف {inc} تكرارات كل دقيقة حتى الفشل. الحد: {t} دقيقة.',
     i_buyin:'أكمل البداية، ثم {r} جولات، ثم النهاية. الحد: {t} دقيقة.',
-    i_ygig:'أمراب {t} دقيقة — الشريكان يتبادلان الجولات الكاملة. التبادل بعد كل جولة مكتملة. يمكن تعديل الوزن لكل شريك. النتيجة = الجولات + التكرارات.',
-    i_ygig_ft:'كل شريك يكمل {r} جولات بالتناوب | المجموع: {r}×2 جولة | الحد الأقصى: {cap} دقيقة | النتيجة = وقت الإنهاء',
+    i_ygig:'{t} دقيقة AMRAP — الشريكان يتبادلان الجولات الكاملة | التبادل بعد كل جولة مكتملة | يمكن تعديل الوزن لكل شريك',
+    i_ygig_ft:'كل شريك يكمل {r} جولات بالتناوب | المجموع: {r}×2 جولة | الحد الأقصى: {cap} دقيقة',
     i_ygig_split:'تقسيم الجولة — الشريكان يقتسمان التكرارات على كل حركة بالتناوب بجرعات صغيرة. الحد: {t} دقيقة. يمكن تعديل الوزن لكل شريك حسب مستواه.',
     i_interval:'{n} فترات — كل فترة {w} دقائق تكرر فيها التمارين بأقصى جولات ممكنة، ثم {rest} دقيقة راحة. نفس الحركات في كل فترة.',
     i_groupA:'تتدرب المجموعتان بالتزامن لمدة {t} دقائق، ثم تتبادلان المحطات | يمكن تعديل الوزن حسب الحاجة لكل لاعب',
@@ -293,14 +296,17 @@ var T={
     sc_rounds_comp:'النتيجة = الجولات المكتملة',sc_load:'النتيجة = أثقل وزن / الجولات المكتملة',
     sc_sets:'النتيجة = اكتمال جميع الجولات',sc_tabata:'النتيجة = أقل تكرارات في كل جولة (نتيجة تاباتا)',
     sc_deathby:'النتيجة = آخر دقيقة مكتملة',sc_total:'النتيجة = مجموع الجولات عبر جميع الفترات',
-    sc_ygig:'النتيجة = مجموع الجولات / وقت الإنهاء',sc_score_rounds:'النتيجة = الجولات',
-    tm_shared:'تكرارات مشتركة — قسمها بأي طريقة',tm_one:'فريق من {n} — يعمل واحد في كل مرة',
-    tm_partition:'قسم التكرارات بأي طريقة',tm_own:'كل رياضي يملك دقيقته',
-    tm_alternate:'تبادل في نافذة الدقيقتين',tm_3min:'جميع الرياضيين يعملون في كل نافذة ٣ دقائق',
-    tm_simultaneous:'جميع الرياضيين يعملون في نفس الوقت',tm_both:'كلاهما يكمل قبل انتهاء الوقت',
-    tm_full:'كلاهما يكمل التكرارات الكاملة',tm_free:'قسم التكرارات بحرية',
-    tm_buyin:'جميع الرياضيين يؤدون البداية والنهاية معا',
-    tm_halfA:'النصف يعمل A في نفس الوقت',tm_ygig:'فريق من {n}: التناوب بالترتيب'}
+    sc_ygig:'النتيجة = مجموع الجولات + التكرارات الجزئية',sc_score_rounds:'النتيجة = الجولات',
+    tm_shared:'✂️ تقسيم التكرارات بحرية (لا ننتقل للتمرين التالي إلا بإنهاء الحالي)',tm_one:'✂️ تقسيم التكرارات بحرية (لاعب يعمل ولاعب يرتاح)',
+    tm_partition:'✂️ تقسيم التكرارات بحرية لإنهاء الجولات بأسرع وقت',tm_own:'🔁 تناوب بالدقائق (دقيقة كاملة للاعب A / دقيقة كاملة للاعب B)',
+    tm_alternate:'⏱️ تبادل ذكي داخل نافذة الوقت أو العمل معاً',tm_3min:'⏱️ تبادل ذكي داخل نافذة الوقت أو العمل معاً',
+    tm_simultaneous:'💥 عمل متزامن (كلاهما يعمل في نفس الوقت ويجمعان العدات)',tm_both:'✂️ تقسيم التكرارات المتصاعدة المشتركة داخل الدقيقة',
+    tm_full:'✂️ تقسيم التكرارات بحرية (تتبع نظام AMRAP أو For Time)',tm_free:'✂️ تقسيم التكرارات بحرية (تتبع نظام AMRAP أو For Time)',
+    tm_buyin:'🥪 البداية والنهاية: ✂️ تقسيم العدات بحرية | جولات المنتصف: ✂️ تقسيم تكرارات الجولة بحرية',
+    tm_ladder:'✂️ تقسيم التكرارات المتصاعدة بحرية في كل جولة',
+    tm_ygig_amrap:'🔁 تناوب جولات كاملة (لاعب ينهي جولة كاملة ثم يتبادلان)',
+    tm_ygig_ft:'🔁 تناوب جولات كاملة حتى يكمل كل لاعب حصته المحددة',
+    tm_halfA:'🔄 تبادل محطات متزامن: اللاعب الأول يبدأ في محطة (A) والثاني في محطة (B) ويعملان معاً، ثم يتبادلان المواقع عند منتصف الوقت',tm_ygig:'فريق من {n}: التناوب بالترتيب'}
 };
 var WOD_DESC={
   'AMRAP':{
@@ -628,6 +634,7 @@ var TABATA_CARDIO=[
 function fmtCa(ex){var u=ex.unit||'';return ex.amount+(u==='m'||u==='s'?u:' '+u);}
 function ri(a,b){return Math.floor(Math.random()*(b-a+1))+a}
 function pk(a){return a[Math.floor(Math.random()*a.length)]}
+function evenRep(n){return Math.round(n/2)*2||2;}
 function pkN(a,n){return a.slice().sort(function(){return Math.random()-.5}).slice(0,n)}
 function wgt(lv,cat){
   var b=cat==='barbell'?{beginner:35,intermediate:50,advanced:65,elite:82}[lv]||50:cat==='kettlebell'?{beginner:16,intermediate:20,advanced:24,elite:28}[lv]||20:0;
@@ -668,7 +675,7 @@ function mkAmrap(time,lv,team,cfg){
   var exCnt=cfg.exCnt||(_exCntMap[lv]||ri(2,3));
   var cardioMode=cfg.withCardio;
   var addCardio=cardioMode===true||(cardioMode===undefined&&Math.random()>.5);
-  var baseReps=cfg.baseReps||pk(repPool[lv]||[12]);
+  var baseReps=cfg.baseReps||(team===2?evenRep(pk(repPool[lv]||[12])):pk(repPool[lv]||[12]));
   var strCount=addCardio?Math.max(1,exCnt-1):exCnt;
   var chosen=pkN(getPool(lv),strCount);
   var items=[];
@@ -677,7 +684,7 @@ function mkAmrap(time,lv,team,cfg){
   });
   if(addCardio){
     var _amrapCalAmts={beginner:8,intermediate:12,advanced:15,elite:20};
-    var _amrapCalAmt=cfg.cardioAmt||(_amrapCalAmts[lv]||12);
+    var _amrapCalAmt=cfg.cardioAmt||(team===2?evenRep(_amrapCalAmts[lv]||12):(_amrapCalAmts[lv]||12));
     var _amrapCalPool=CARDIO.filter(function(c){return c.unit==='Cal';});
     var _amrapEx=Object.assign({},pk(_amrapCalPool.length?_amrapCalPool:CARDIO),{amount:_amrapCalAmt,unit:'Cal'});
     items.push({kind:'cardio',ex:_amrapEx});
@@ -735,9 +742,10 @@ function mkRFT(time,lv,team,cfg){
       }else{
         _pool={beginner:[8,10,12],intermediate:[10,12,15],advanced:[12,15,21]}[lv]||[10,12];
       }
-      baseReps=pk(_pool);
+      baseReps=team===2?evenRep(pk(_pool)):pk(_pool);
     }
   }
+  if(team===2&&schemeReps&&!cfg.schemeKey&&!cfg.customReps&&!cfg.pyramidP)schemeReps=schemeReps.map(evenRep);
 
   // ── Step 4: Build items ──
   var chosen=pkN(getPool(lv),strCount);
@@ -824,6 +832,7 @@ function mkChipper(time,lv,team,cfg){
   var chipLvRep={beginner:{min:10,step:5},intermediate:{min:10,step:10},advanced:{min:20,step:10},elite:{min:20,step:20}};
   var lvRep=chipLvRep[cfg.repsKey||lv]||chipLvRep.intermediate;
   var repsArr=[];for(var _ci=0;_ci<exCnt;_ci++)repsArr.push(lvRep.min+(exCnt-1-_ci)*lvRep.step);
+  if(team===2&&!cfg.repsKey)repsArr=repsArr.map(evenRep);
   // Cardio optional — replaces one slot
   var cardioMode=cfg.withCardio;
   var addCardio=cardioMode===true||(cardioMode===undefined&&Math.random()>.5);
@@ -875,8 +884,8 @@ function mkDeathBy(time,lv,team,cfg){
   var ex1=pk(getPool(lv));
   var ex2=useDouble?pk(getPool(lv).filter(function(e){return e.name!==ex1.name})):null;
   var _dbStartPool={beginner:1,intermediate:1,advanced:2,elite:2};
-  var start=cfg.startVal||(_dbStartPool[lv]||1);
-  var increment=cfg.increment||ri(1,3);
+  var start=cfg.startVal||(team===2?evenRep(_dbStartPool[lv]||2):(_dbStartPool[lv]||1));
+  var increment=cfg.increment||(team===2?evenRep(ri(1,3)):ri(1,3));
   cfg._genStart=start;cfg._genInc=increment;cfg._genDouble=useDouble;
   if(cfg.startVal===undefined)cfg.startVal=undefined;
   if(cfg.increment===undefined)cfg.increment=undefined;
@@ -909,7 +918,7 @@ function mkLadder(time,lv,team,cfg){
   var dir=cfg.direction||pk(['ascending','descending']);
   var stepMap={beginner:1,intermediate:2,advanced:3,elite:5};
   var maxMap={beginner:8,intermediate:10,advanced:15,elite:25};
-  var step=cfg.dynStep||cfg.step||stepMap[lv]||1;
+  var step=cfg.dynStep||cfg.step||(team===2?evenRep(stepMap[lv]||2):(stepMap[lv]||1));
   var reps=[];
   if(cfg.customReps&&cfg.customReps.length){
     reps=cfg.customReps;
@@ -964,7 +973,7 @@ function mkLadder(time,lv,team,cfg){
       items.push({kind:'str',ex:ex,detail:_lbl,wt:wgt(lv,ex.cat),noPencil:true});
     });
   }
-  return[{type:'Ladder',title:'Ladder',infoKey:infoK,infoVars:infoV,scoreKey:'sc_time',teamKey:team>1?'tm_partition':null,items:items,scheme:reps,chosen:chosen,ladderCfg:cfg}];
+  return[{type:'Ladder',title:'Ladder',infoKey:infoK,infoVars:infoV,scoreKey:'sc_time',teamKey:team>1?'tm_ladder':null,items:items,scheme:reps,chosen:chosen,ladderCfg:cfg}];
 }
 
 function buildSchemeForRounds(dir,rounds,lv){
@@ -1003,6 +1012,7 @@ function mkCouplet(time,lv,team,cfg){
     var _lvSchemeCouplet={beginner:[10,10,10],intermediate:[21,15,9],advanced:[27,21,15,9],elite:[21,13,8,5,3,2,1]};
     reps=_lvSchemeCouplet[lv]||[21,15,9];
   }
+  if(team===2&&!_csk&&!cfg.customScheme&&!cfg.baseReps&&!cfg.rounds)reps=reps.map(evenRep);
   var cardioMode=cfg.withCardio;
   var addCardio=cardioMode===true||(cardioMode===undefined&&!_csk&&Math.random()>.7);
   var ex1,ex2,items;
@@ -1046,6 +1056,7 @@ function mkTriplet(time,lv,team,cfg){
     var _lvSchemeTriplet={beginner:[10,10,10],intermediate:[21,15,9],advanced:[27,21,15,9],elite:[50,40,30,20,10]};
     reps=_lvSchemeTriplet[lv]||[21,15,9];
   }
+  if(team===2&&!_tsk&&!cfg.customScheme&&!cfg.baseReps&&!cfg.rounds)reps=reps.map(evenRep);
   // Fixed structure: 1 barbell (W) + 1 gymnastics (G) + 1 cardio (M) — mandatory
   var barbell=pk(getPool(lv,'barbell'));
   var gym=pk(getPool(lv,'gymnastics'));
@@ -1082,6 +1093,7 @@ function mkBuyInOut(time,lv,team,cfg){
     while(reps.length<rounds)reps.push(reps[reps.length-1]||10);
     reps=reps.slice(0,rounds);
   }
+  if(team===2&&!cfg.baseReps)reps=reps.map(evenRep);
   var chosen=pkN(getPool(lv),exCnt);
   var bIn=cfg.buyInName?(CARDIO.find(function(c){return c.name===cfg.buyInName;})||pk(CARDIO)):pk(CARDIO);
   var bOut=cfg.cashOutName?(CARDIO.find(function(c){return c.name===cfg.cashOutName;})||pk(CARDIO.filter(function(c){return c!==bIn;}))):pk(CARDIO.filter(function(c){return c!==bIn;}));
@@ -1101,7 +1113,7 @@ function mkBuyInOut(time,lv,team,cfg){
 function mkYGIG(time,lv,team,cfg){
   cfg=cfg||{};
   var eff=Math.max(team,2);
-  var fmt=cfg.format||'amrap';
+  var fmt=cfg.format||(Math.random()>0.5?'amrap':'for-time');
   var doCardio=cfg.withCardio===true||(cfg.withCardio===undefined&&Math.random()>.4);
   // Per-level defaults
   var DEF={
@@ -1130,13 +1142,13 @@ function mkYGIG(time,lv,team,cfg){
     var items=[{kind:'sep',label:'── '+roundsEach+' ROUNDS EACH ──'}];
     chosen.forEach(function(ex){items.push({kind:'str',ex:ex,detail:getDetail(ex,baseReps),baseRep:baseReps,wt:wgt(lv,ex.cat)});});
     if(doCardio)items.push({kind:'cardio',ex:pk(CARDIO)});
-    return[{type:'YGIG / Partner WOD',title:'YGIG — For Time',infoKey:'i_ygig_ft',infoVars:{r:roundsEach,cap:timeCap},scoreKey:'sc_time',teamKey:eff>2?'tm_ygig':null,teamVars:{n:eff},items:items,chosen:chosen,ygigCfg:cfg,noLongForm:true}];
+    return[{type:'YGIG / Partner WOD',title:'YGIG — For Time',infoKey:'i_ygig_ft',infoVars:{r:roundsEach,cap:timeCap},scoreKey:'sc_time',teamKey:'tm_ygig_ft',teamVars:{n:eff},items:items,chosen:chosen,ygigCfg:cfg,noLongForm:true}];
   }
   // AMRAP
   var items=[];
   chosen.forEach(function(ex){items.push({kind:'str',ex:ex,detail:getDetail(ex,baseReps),baseRep:baseReps,wt:wgt(lv,ex.cat)});});
   if(doCardio)items.push({kind:'cardio',ex:pk(CARDIO)});
-  return[{type:'YGIG / Partner WOD',title:'YGIG — AMRAP',infoKey:'i_ygig',infoVars:{t:time},scoreKey:'sc_ygig',teamKey:eff>2?'tm_ygig':null,teamVars:{n:eff},items:items,chosen:chosen,ygigCfg:cfg,noLongForm:true}];
+  return[{type:'YGIG / Partner WOD',title:'YGIG — AMRAP',infoKey:'i_ygig',infoVars:{t:time},scoreKey:'sc_ygig',teamKey:'tm_ygig_amrap',teamVars:{n:eff},items:items,chosen:chosen,ygigCfg:cfg,noLongForm:true}];
 }
 
 function mkIntervalAmrap(time,lv,team,cfg){
@@ -1498,8 +1510,8 @@ function renderSec(sec,si){
       +'<div class="st" style="display:flex;align-items:center;justify-content:space-between">'+gabInner+'</div>'
       +'<div class="stt">Group A/B — AMRAP</div>'
       +renderSecInfo(sec,si,infoTxt)
-      +(scoreTxt?'<div class="si sc">🏆 '+scoreTxt+'</div>':'')
       +(teamTxt?'<div class="si team">👥 '+teamTxt+'</div>':'')
+      +(scoreTxt?'<div class="si sc">🏆 '+scoreTxt+'</div>':'')
       +'<div class="rsep">── '+sec.title+' ──</div>'+_renderIt(sec,si)
       +'</div>';
   }
@@ -1511,8 +1523,8 @@ function renderSec(sec,si){
   var stInner=sec.type+(hasDesc?'<button class="wdi-btn" onclick="showWodDesc(\''+sec.type+'\')">ⓘ</button>':'');
   return'<div class="ws ani" id="sec-'+si+'"><div class="st" style="display:flex;align-items:center;justify-content:space-between">'+stInner+'</div><div class="stt">'+sec.title+'</div>'+roundsBadge
   +renderSecInfo(sec,si,infoTxt)
-  +(scoreTxt?'<div class="si sc">🏆 '+scoreTxt+'</div>':'')
   +(teamTxt?'<div class="si team">👥 '+teamTxt+'</div>':'')
+  +(scoreTxt?'<div class="si sc">🏆 '+scoreTxt+'</div>':'')
   +(sec.scheme&&sec.scheme.length&&sec.type!=='Ladder'&&!sec.noLongForm?'<div style="display:flex;justify-content:flex-end;margin:2px 0 6px"><button onclick="toggleLongForm('+si+')" style="background:rgba(255,120,0,'+(sec.longForm?'0.15':'0.06')+');border:1px solid var(--or);border-radius:20px;padding:3px 12px;font-size:11px;color:var(--or);font-weight:700;cursor:pointer">'+(sec.longForm?'Short':'Long')+'</button></div>':'')+'<div>'+(sec.scheme&&sec.scheme.length&&!sec.noLongForm?(sec.longForm?renderItemsByRound(sec,si):renderItems(sec.items,si)):renderItems(sec.items,si))+'</div></div>';
 }
 function getRoundRep(detail,r){
@@ -2407,8 +2419,8 @@ function renderEmomCfg(sec,si){
   var S_btn='background:var(--bg2);border:0.5px solid var(--bdr);border-radius:7px;padding:5px 10px;font-size:13px;color:var(--txt2);cursor:pointer;font-weight:600;min-height:30px';
   var S_sel='background:var(--or);border:0.5px solid var(--or);border-radius:7px;padding:5px 10px;font-size:13px;color:#000;cursor:pointer;font-weight:600;min-height:30px';
   var movBtns=[1,2,3,4,5,6].map(function(n){return'<button onclick="setEmomVal('+si+',\'numMov\','+n+',this)" style="'+(cfg.numMov===n?S_sel:S_btn)+'">'+n+'</button>';}).join('');
-  var repBtns=[5,8,10,12,15,20,40].map(function(n){return'<button onclick="setEmomVal('+si+',\'baseReps\','+n+',this)" style="'+(cfg.baseReps===n?S_sel:S_btn)+'">'+n+'</button>';}).join('')
-  +'<input type="number" min="1" max="40" placeholder="'+t('chip_custom')+'" value="'+(cfg.baseReps&&[5,8,10,12,15,20,40].indexOf(cfg.baseReps)===-1?cfg.baseReps:'')+'" oninput="setEmomManualReps('+si+',this.value)" style="width:90px;background:var(--bg2);border:0.5px solid var(--bdr);border-radius:7px;padding:5px 8px;font-size:13px;color:var(--txt2);outline:none;min-height:30px;text-align:center;font-family:inherit">';
+  var repBtns=[5,10,15,20,25].map(function(n){return'<button onclick="setEmomVal('+si+',\'baseReps\','+n+',this)" style="'+(cfg.baseReps===n?S_sel:S_btn)+'">'+n+'</button>';}).join('')
+  +'<input type="number" min="1" max="40" placeholder="'+t('chip_custom')+'" value="'+(cfg.baseReps&&[5,10,15,20,25].indexOf(cfg.baseReps)===-1?cfg.baseReps:'')+'" oninput="setEmomManualReps('+si+',this.value)" style="width:90px;background:var(--bg2);border:0.5px solid var(--bdr);border-radius:7px;padding:5px 8px;font-size:13px;color:var(--txt2);outline:none;min-height:30px;text-align:center;font-family:inherit">';
   var cv=cfg.withCardio;
   return'<div id="emom-cfg-'+si+'" style="display:none;background:var(--bg3);border:0.5px solid var(--bdr);border-radius:10px;padding:12px;margin-top:6px">'
   +'<div style="display:flex;justify-content:flex-end;margin-bottom:10px"><button onclick="randomEmom('+si+')" style="background:rgba(99,102,241,0.12);border:0.5px solid #6366f1;border-radius:20px;padding:4px 12px;font-size:11px;color:#6366f1;cursor:pointer;font-weight:600">'+t('random')+'</button></div>'
@@ -2500,7 +2512,7 @@ function renderIntervalCfg(sec,si){
   var w=cfg.workTime,rt=cfg.restTime,tot=S.wod.cfg.time;
   var calcR=(w&&rt)?Math.floor((tot+rt)/(w+rt)):null;
   var movBtns=[1,2,3,4].map(function(n){return'<button onclick="setIntervalVal('+si+',\'exCnt\','+n+',this)" style="'+(cfg.exCnt===n?S_sel:S_btn)+'">'+n+'</button>';}).join('');
-  var _repPresets=[5,8,10,15,20,30,50];
+  var _repPresets=[5,10,15,20,25];
   var repBtns=_repPresets.map(function(n){return'<button onclick="setIntervalVal('+si+',\'baseReps\','+n+',this)" style="'+(cfg.baseReps===n?S_sel:S_btn)+'">'+n+'</button>';}).join('')
   +'<input type="number" min="1" max="50" placeholder="'+t('chip_custom')+'" value="'+(cfg.baseReps&&_repPresets.indexOf(cfg.baseReps)===-1?cfg.baseReps:'')+'" oninput="setIntervalManualReps('+si+',this.value)" style="width:70px;background:var(--bg2);border:0.5px solid var(--bdr);border-radius:7px;padding:5px 8px;font-size:13px;color:var(--txt2);outline:none;min-height:30px;text-align:center;font-family:inherit">';
   var S_lbl='font-size:13px;font-weight:600;color:var(--txt2);letter-spacing:0.5px;text-transform:uppercase;margin-bottom:6px';
@@ -2544,8 +2556,8 @@ function renderE2momCfg(sec,si){
   var S_btn='background:var(--bg2);border:0.5px solid var(--bdr);border-radius:7px;padding:5px 10px;font-size:13px;color:var(--txt2);cursor:pointer;font-weight:600;min-height:30px';
   var S_sel='background:var(--or);border:0.5px solid var(--or);border-radius:7px;padding:5px 10px;font-size:13px;color:#000;cursor:pointer;font-weight:600;min-height:30px';
   var movBtns=[1,2,3].map(function(n){return'<button onclick="setE2momVal('+si+',\'exCnt\','+n+',this)" style="'+(cfg.exCnt===n?S_sel:S_btn)+'">'+n+'</button>';}).join('');
-  var repBtns=[1,2,3,4,5,6,8,10].map(function(n){return'<button onclick="setE2momVal('+si+',\'baseReps\','+n+',this)" style="'+(cfg.baseReps===n?S_sel:S_btn)+'">'+n+'</button>';}).join('')
-  +'<input type="number" min="1" max="10" placeholder="'+t('chip_custom')+'" value="'+(cfg.baseReps&&[1,2,3,4,5,6,8,10].indexOf(cfg.baseReps)===-1?cfg.baseReps:'')+'" oninput="setE2momManualReps('+si+',this.value)" style="width:90px;background:var(--bg2);border:0.5px solid var(--bdr);border-radius:7px;padding:5px 8px;font-size:13px;color:var(--txt2);outline:none;min-height:30px;text-align:center;font-family:inherit">';
+  var repBtns=[5,10,15,20,25].map(function(n){return'<button onclick="setE2momVal('+si+',\'baseReps\','+n+',this)" style="'+(cfg.baseReps===n?S_sel:S_btn)+'">'+n+'</button>';}).join('')
+  +'<input type="number" min="1" max="200" placeholder="'+t('chip_custom')+'" value="'+(cfg.baseReps&&[5,10,15,20,25].indexOf(cfg.baseReps)===-1?cfg.baseReps:'')+'" oninput="setE2momManualReps('+si+',this.value)" style="width:90px;background:var(--bg2);border:0.5px solid var(--bdr);border-radius:7px;padding:5px 8px;font-size:13px;color:var(--txt2);outline:none;min-height:30px;text-align:center;font-family:inherit">';
   return'<div id="e2mom-cfg-'+si+'" style="display:none;background:var(--bg3);border:0.5px solid var(--bdr);border-radius:10px;padding:12px;margin-top:6px">'
   +'<div style="display:flex;justify-content:flex-end;margin-bottom:10px"><button onclick="randomE2mom('+si+')" style="background:rgba(99,102,241,0.12);border:0.5px solid #6366f1;border-radius:20px;padding:4px 12px;font-size:11px;color:#6366f1;cursor:pointer;font-weight:600">'+t('random')+'</button></div>'
   +'<div style="font-size:13px;font-weight:600;color:var(--txt2);letter-spacing:0.5px;text-transform:uppercase;margin-bottom:6px">'+t('rft_mov')+'</div>'
@@ -2595,8 +2607,8 @@ function renderE3momCfg(sec,si){
   var S_btn='background:var(--bg2);border:0.5px solid var(--bdr);border-radius:7px;padding:5px 10px;font-size:13px;color:var(--txt2);cursor:pointer;font-weight:600;min-height:30px';
   var S_sel='background:var(--or);border:0.5px solid var(--or);border-radius:7px;padding:5px 10px;font-size:13px;color:#000;cursor:pointer;font-weight:600;min-height:30px';
   var movBtns3=[2,3,4,5].map(function(n){return'<button onclick="setE3momVal('+si+',\'exCnt\','+n+',this)" style="'+(cfg.exCnt===n?S_sel:S_btn)+'">'+n+'</button>';}).join('');
-  var repBtns=[5,10,12,15,20,30].map(function(n){return'<button onclick="setE3momVal('+si+',\'baseReps\','+n+',this)" style="'+(cfg.baseReps===n?S_sel:S_btn)+'">'+n+'</button>';}).join('')
-  +'<input type="number" min="1" max="30" placeholder="'+t('chip_custom')+'" value="'+(cfg.baseReps&&[5,10,12,15,20,30].indexOf(cfg.baseReps)===-1?cfg.baseReps:'')+'" oninput="setE3momManualReps('+si+',this.value)" style="width:90px;background:var(--bg2);border:0.5px solid var(--bdr);border-radius:7px;padding:5px 8px;font-size:13px;color:var(--txt2);outline:none;min-height:30px;text-align:center;font-family:inherit">';
+  var repBtns=[5,10,15,20,25].map(function(n){return'<button onclick="setE3momVal('+si+',\'baseReps\','+n+',this)" style="'+(cfg.baseReps===n?S_sel:S_btn)+'">'+n+'</button>';}).join('')
+  +'<input type="number" min="1" max="200" placeholder="'+t('chip_custom')+'" value="'+(cfg.baseReps&&[5,10,15,20,25].indexOf(cfg.baseReps)===-1?cfg.baseReps:'')+'" oninput="setE3momManualReps('+si+',this.value)" style="width:90px;background:var(--bg2);border:0.5px solid var(--bdr);border-radius:7px;padding:5px 8px;font-size:13px;color:var(--txt2);outline:none;min-height:30px;text-align:center;font-family:inherit">';
   return'<div id="e3mom-cfg-'+si+'" style="display:none;background:var(--bg3);border:0.5px solid var(--bdr);border-radius:10px;padding:12px;margin-top:6px">'
   +'<div style="display:flex;justify-content:flex-end;margin-bottom:10px"><button onclick="randomE3mom('+si+')" style="background:rgba(99,102,241,0.12);border:0.5px solid #6366f1;border-radius:20px;padding:4px 12px;font-size:11px;color:#6366f1;cursor:pointer;font-weight:600">'+t('random')+'</button></div>'
   +'<div style="font-size:13px;font-weight:600;color:var(--txt2);letter-spacing:0.5px;text-transform:uppercase;margin-bottom:6px">'+t('rft_mov')+'</div>'
@@ -2952,14 +2964,18 @@ function regenYgig(si){
   var el=document.getElementById('sec-'+si);if(el)el.outerHTML=renderSec(S.wod.sections[si],si);
 }
 function randomYgig(si){
-  var fmt=Math.random()>0.5?'amrap':'for-time';
-  var newSecs=mkYGIG(S.wod.cfg.time,S.level,S.teamSize,{format:fmt});
+  var sec=S.wod.sections[si];
+  var cfg=Object.assign({},sec.ygigCfg||{});
+  delete cfg.format;
+  var newSecs=mkYGIG(S.wod.cfg.time,S.level,S.teamSize,cfg);
+  newSecs[0].ygigCfg=cfg;
   S.wod.sections[si]=newSecs[0];
   var el=document.getElementById('sec-'+si);if(el)el.outerHTML=renderSec(S.wod.sections[si],si);
+  var el2=document.getElementById('ygig-cfg-'+si);if(el2)el2.style.display='block';
 }
 function renderYgigCfg(sec,si){
   var cfg=sec.ygigCfg||{};
-  var fmt=cfg.format||'amrap';
+  var fmt=cfg.format||null;
   var S_btn='background:var(--bg2);border:0.5px solid var(--bdr);border-radius:7px;padding:5px 10px;font-size:13px;color:var(--txt2);cursor:pointer;font-weight:600;min-height:30px';
   var S_sel='background:var(--or);border:0.5px solid var(--or);border-radius:7px;padding:5px 10px;font-size:13px;color:#000;cursor:pointer;font-weight:600;min-height:30px';
   var lbl=function(txt){return'<div style="font-size:11px;font-weight:700;color:var(--txt3);letter-spacing:1px;text-transform:uppercase;margin-bottom:6px">'+txt+'</div>';};
@@ -2970,17 +2986,18 @@ function renderYgigCfg(sec,si){
     +'<button onclick="setYgigMode('+si+',\'amrap\')" style="'+(fmt==='amrap'?S_sel:S_btn)+'">AMRAP</button>'
     +'<button onclick="setYgigMode('+si+',\'for-time\')" style="'+(fmt==='for-time'?S_sel:S_btn)+'">For Time</button>'
     +'</div>';
+  var displayFmt=fmt||'amrap';
   var movBtns=[1,2,3].map(function(n){return'<button onclick="setYgigVal('+si+',\'exCnt\','+n+',this)" style="'+(cfg.exCnt===n?S_sel:S_btn)+'">'+n+'</button>';}).join('');
   var body='';
-  if(fmt==='for-time'){
+  if(displayFmt==='for-time'){
     var rndPresets=[3,4,5,6,7,8];
     var rndBtns=rndPresets.map(function(n){return'<button onclick="setYgigVal('+si+',\'roundsEach\','+n+',this)" style="'+(cfg.roundsEach===n?S_sel:S_btn)+'">'+n+'</button>';}).join('');
-    var repPresets=[6,8,10,12,15,20];
+    var repPresets=[5,10,15,20,25];
     var repBtns=repPresets.map(function(n){return'<button onclick="setYgigVal('+si+',\'baseReps\','+n+',this)" style="'+(cfg.baseReps===n?S_sel:S_btn)+'">'+n+'</button>';}).join('')
       +'<input type="number" min="1" max="200" placeholder="'+t('chip_custom')+'" value="'+(cfg.baseReps&&repPresets.indexOf(cfg.baseReps)===-1?cfg.baseReps:'')+'" oninput="setYgigManualReps('+si+',this.value)" style="width:70px;background:var(--bg2);border:0.5px solid var(--bdr);border-radius:7px;padding:5px 8px;font-size:13px;color:var(--txt2);outline:none;min-height:30px;text-align:center;font-family:inherit">';
     var capPresets=[10,12,15,18,20,22];
     var capBtns=capPresets.map(function(n){return'<button onclick="setYgigVal('+si+',\'timeCap\','+n+',this)" style="'+(cfg.timeCap===n?S_sel:S_btn)+'">'+n+'</button>';}).join('');
-    body+=lbl(t('yg_rounds')+' (each partner)')
+    body+=lbl(t('yg_rounds')+' ('+(CFG.lang==='ar'?'لكل شريك':'each partner')+')')
       +row(rndBtns)
       +lbl(t('yg_mov'))
       +row(movBtns)
@@ -2989,7 +3006,7 @@ function renderYgigCfg(sec,si){
       +lbl(t('yg_cardio'))
       +row(cardioBtn,14);
   } else {
-    var repPresets=[5,8,10,12,15,20];
+    var repPresets=[5,10,15,20,25];
     var repBtns=repPresets.map(function(n){return'<button onclick="setYgigVal('+si+',\'baseReps\','+n+',this)" style="'+(cfg.baseReps===n?S_sel:S_btn)+'">'+n+'</button>';}).join('')
       +'<input type="number" min="1" max="200" placeholder="'+t('chip_custom')+'" value="'+(cfg.baseReps&&repPresets.indexOf(cfg.baseReps)===-1?cfg.baseReps:'')+'" oninput="setYgigManualReps('+si+',this.value)" style="width:70px;background:var(--bg2);border:0.5px solid var(--bdr);border-radius:7px;padding:5px 8px;font-size:13px;color:var(--txt2);outline:none;min-height:30px;text-align:center;font-family:inherit">';
     body+=lbl(t('yg_mov'))
@@ -3355,7 +3372,7 @@ function renderGroupAbCfg(sec,si){
   var togStyle='background:'+(cv===true?'var(--or)':'var(--bg2)')+';border:0.5px solid '+(cv===true?'var(--or)':'var(--bdr)')+';border-radius:20px;padding:5px 16px;font-size:12px;color:'+(cv===true?'#000':cv===false?'var(--txt2)':'var(--txt3)')+';cursor:pointer;font-weight:700;min-height:30px';
   var movBtns=[1,2,3,4,5].map(function(n){return'<button onclick="setGroupAbVal('+si+',\'exCnt\','+n+',this)" style="'+(cfg.exCnt===n?S_sel:S_btn)+'">'+n+'</button>';}).join('');
   var roundBtns=[1,2,3,4,5,6,7,8,9,10].map(function(n){return'<button onclick="setGroupAbVal('+si+',\'rounds\','+n+',this)" style="'+(cfg.rounds===n?S_sel:S_btn)+'">'+n+'</button>';}).join('');
-  var repsPreset=[5,10,15,20,25,30];
+  var repsPreset=[5,10,15,20,25];
   var repBtns=repsPreset.map(function(n){return'<button onclick="setGroupAbVal('+si+',\'baseReps\','+n+',this)" style="'+(cfg.baseReps===n?S_sel:S_btn)+'">'+n+'</button>';}).join('')
   +'<input type="number" min="1" max="100" placeholder="'+t('chip_custom')+'" value="'+(cfg.baseReps&&repsPreset.indexOf(cfg.baseReps)===-1?cfg.baseReps:'')+'" oninput="setGroupAbManualReps('+si+',this.value)" style="width:90px;background:var(--bg2);border:0.5px solid var(--bdr);border-radius:7px;padding:5px 8px;font-size:13px;color:var(--txt2);outline:none;min-height:30px;text-align:center;font-family:inherit">';
   return'<div id="groupab-cfg-'+si+'" style="display:none;background:var(--bg3);border:0.5px solid var(--bdr);border-radius:10px;padding:12px;margin-top:6px">'
