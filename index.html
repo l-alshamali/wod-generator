@@ -617,34 +617,35 @@ function pk(a){return a[Math.floor(Math.random()*a.length)]}
 function evenRep(n){return Math.round(n/2)*2||2;}
 function _snapFlat(r){if(r<=20)return Math.max(2,Math.round(r/2)*2);return Math.max(25,Math.round(r/5)*5);}
 function _snapTeam(r){if(r<=20)return Math.max(2,Math.round(r/2)*2);return Math.max(10,Math.round(r/10)*10);}
-function getSecondsPerRep(ex){
-  // Effective sec/rep at sustainable pace (fatigue already baked in — no separate multiplier)
+function getSecondsPerRep(ex,lv,team){
+  // Speed factor: المستوى فقط — الإيليت أسرع → fill guarantee يعطيه رب أكثر تلقائياً
+  var spd=({beginner:1.00,intermediate:0.85,advanced:0.70,elite:0.55}[lv||'intermediate']||0.85)*(team===2?0.75:1);
   var t=ex.tier||1;
+  var base;
   if(ex.cat==='gymnastics'){
-    if(t===1)return 3.0;
-    if(t===2)return 4.5;
-    if(t===3)return 7.0;
-    return 9.0; // T4
+    if(t===1)base=3.0;
+    else if(t===2)base=4.5;
+    else if(t===3)base=7.0;
+    else base=9.0;
+  } else if(ex.cat==='barbell'){
+    if(t===1)base=5.0;
+    else if(t===2)base=6.0;
+    else if(t===3)base=7.5;
+    else base=9.5;
+  } else if(ex.cat==='kettlebell'){
+    if(t===1)base=4.0;
+    else if(t===2)base=5.5;
+    else if(t===3)base=7.0;
+    else base=8.5;
+  } else if(ex.cat==='dumbbell'){
+    if(t===1)base=4.0;
+    else if(t===2)base=5.5;
+    else if(t===3)base=7.0;
+    else base=8.5;
+  } else {
+    base=5.0;
   }
-  if(ex.cat==='barbell'){
-    if(t===1)return 5.0;
-    if(t===2)return 6.0;
-    if(t===3)return 7.5;
-    return 9.5; // T4
-  }
-  if(ex.cat==='kettlebell'){
-    if(t===1)return 4.0;
-    if(t===2)return 5.5;
-    if(t===3)return 7.0;
-    return 8.5; // T4
-  }
-  if(ex.cat==='dumbbell'){
-    if(t===1)return 4.0;
-    if(t===2)return 5.5;
-    if(t===3)return 7.0;
-    return 8.5; // T4
-  }
-  return 5.0; // fallback
+  return base*spd;
 }
 // ── Auto-Scale Shared Helpers ──────────────────────────────────────────────
 function _wodEstTime(repsArr,chosen,cardioEx,numItems,team,lv){
@@ -652,7 +653,7 @@ function _wodEstTime(repsArr,chosen,cardioEx,numItems,team,lv){
   var lvl=lv||S.level||'intermediate';
   var tTime=team===2?30:({beginner:45,intermediate:30,advanced:20,elite:15}[lvl]||20);
   var t=0;
-  for(var i=0;i<Math.min(repsArr.length,chosen.length);i++)t+=repsArr[i]*getSecondsPerRep(chosen[i]);
+  for(var i=0;i<Math.min(repsArr.length,chosen.length);i++)t+=repsArr[i]*getSecondsPerRep(chosen[i],lvl,team);
   if(cardioEx&&cardioEx.amount){
     if(cardioEx.unit==='Cal')t+=cardioEx.amount*5.5;
     else if(cardioEx.unit==='m')t+=(cardioEx.amount/10)*3.0;
@@ -669,6 +670,12 @@ function _roundCal(v,team){
   return Math.min(8,Math.max(2,Math.round(v/2)*2));
 }
 function _roundMtr(v){return Math.max(100,Math.round(v/100)*100);}
+// ── Cardio Limits Matrix (النهائية المعتمدة) ──
+function _cardioLimits(team,shared){
+  // Solo & Team Split → نفس الحدود | Team Shared فقط → calMax=200
+  if(!shared||team!==2)return{calMin:10,calMax:50,calStep:10,mtrMin:100,mtrMax:1000,mtrStep:100};
+  return{calMin:20,calMax:100,calStep:20,mtrMin:200,mtrMax:2000,mtrStep:200};
+}
 function _scaleCardio(cx,sf,team){
   if(!cx||!cx.amount)return cx;
   var s=cx.amount*sf;
@@ -679,15 +686,13 @@ function _scaleCardio(cx,sf,team){
   return Object.assign({},cx,{amount:a});
 }
 // ── Cardio Balance: يوازن الكارديو نسبة للتكرارات (25% من وقت الجولة) ──
-function _balanceCardio(cEx,strPerRoundSec,team,lv,cfg){
+function _balanceCardio(cEx,strPerRoundSec,team,lv,cfg,shared){
   if(!cEx||cfg.cardioAmt)return cEx;
-  var targetSec=strPerRoundSec/3; // كارديو = ~25% من مجموع الجولة
-  var maxCal={beginner:20,intermediate:30,advanced:40,elite:50}[lv]||30;
-  var maxMtr={beginner:400,intermediate:600,advanced:800,elite:1000}[lv]||600;
-  if(team===2){maxCal=Math.round(maxCal*1.5/10)*10;}
+  var CL=_cardioLimits(team,shared);
+  var targetSec=strPerRoundSec/3;
   var amt;
-  if(cEx.unit==='Cal'){amt=Math.max(10,Math.min(maxCal,_roundCal(targetSec/5.5,team)));}
-  else if(cEx.unit==='m'){amt=Math.max(100,Math.min(maxMtr,_roundMtr(targetSec*10/3)));}
+  if(cEx.unit==='Cal'){amt=Math.max(CL.calMin,Math.min(CL.calMax,Math.round((targetSec/5.5)/CL.calStep)*CL.calStep));}
+  else if(cEx.unit==='m'){amt=Math.max(CL.mtrMin,Math.min(CL.mtrMax,Math.round((targetSec*10/3)/CL.mtrStep)*CL.mtrStep));}
   else return cEx;
   return Object.assign({},cEx,{amount:amt});
 }
@@ -750,145 +755,131 @@ function getScheme(type,lv){
 function mkAmrap(time,lv,team,cfg){
   cfg=cfg||{};
   // ── Time-driven exCnt: SHORT=2-3, MED=3-4, LONG=4-5 (capped by level) ──
-  var _amrTC=time<=15?{min:2,max:3}:time<=30?{min:3,max:4}:{min:4,max:5};
-  var _amrLvMax={beginner:time<=30?3:4,intermediate:4,advanced:5,elite:5}[lv]||4;
+  var _amrTC=team===2?(time<30?{min:3,max:4}:time<60?{min:4,max:5}:{min:5,max:5}):(time<20?{min:2,max:3}:time<40?{min:3,max:4}:time<60?{min:4,max:5}:{min:5,max:5});
+  var _amrLvMax=team===2?(time<20?4:time<40?5:5):(time<20?3:time<40?4:5);
   var exCnt=cfg.exCnt||ri(Math.min(_amrTC.min,_amrLvMax),Math.min(_amrTC.max,_amrLvMax));
   var cardioMode=cfg.withCardio;
   var addCardio=cardioMode===true||(cardioMode===undefined&&Math.random()>.5);
-  // ── Sweet-Spot: الفئة × التيم × عدد الحركات ──
-  // القاعدة: حركات أكثر → تكرارات أقل | تيم → تكرارات أعلى (يتقاسمون)
-  var _amrSS={
-    solo:{
-      beginner:    {strength:[6,10],  gymnastics:[8,12]},
-      intermediate:{strength:[10,15], gymnastics:[12,18]},
-      advanced:    {strength:[12,18], gymnastics:[15,21]},
-      elite:       {strength:[15,20], gymnastics:[18,25]}
-    },
-    team:{
-      beginner:    {strength:[12,18], gymnastics:[14,20]},
-      intermediate:{strength:[18,26], gymnastics:[20,30]},
-      advanced:    {strength:[22,32], gymnastics:[26,36]},
-      elite:       {strength:[28,38], gymnastics:[32,44]}
-    }
-  };
-  var _amrMode=team===2?'team':'solo';
-  var _amrTable=_amrSS[_amrMode][lv]||_amrSS[_amrMode]['intermediate'];
-  // t=0 (2 حركات) → hi reps | t=1 (5 حركات) → lo reps
-  var _amrT=Math.min(1,Math.max(0,(exCnt-2)/3));
-  var _amrBaseReps=function(cat){
-    var lo=_amrTable[cat==='gymnastics'?'gymnastics':'strength'][0];
-    var hi=_amrTable[cat==='gymnastics'?'gymnastics':'strength'][1];
-    var raw=Math.round(hi-_amrT*(hi-lo));
-    return team===2?evenRep(raw):raw;
-  };
+  // ── Base reps — نقطة بداية للـ auto-scaler ──
+  var _amrBaseReps=function(){return team===2?20:10;};
   var baseReps=cfg.baseReps?(team===2?evenRep(cfg.baseReps):cfg.baseReps):10;
   var strCount=exCnt; // الكارديو محطة منفصلة — لا يُخصم من عدد الحركات
   var chosen=pkN(getPool(lv),strCount);
   // ── Cardio setup before auto-scale (included in estimate) ──
-  var _amrapCalAmts={beginner:10,intermediate:10,advanced:20,elite:20};
-  var _amrapCalAmt=cfg.cardioAmt||(_amrapCalAmts[lv]||12);
+  var _amrCL=_cardioLimits(team,true);
+  var _amrapCalAmt=cfg.cardioAmt||_amrCL.calMin;
   var _amrapCalPool=CARDIO.filter(function(c){return c.unit==='Cal';});
   var _amrapEx=addCardio?Object.assign({},pk(_amrapCalPool.length?_amrapCalPool:CARDIO),{amount:_amrapCalAmt,unit:'Cal'}):null;
   // Team of 2: أرقام زوجية للكارديو
   if(team===2&&_amrapEx&&_amrapEx.amount%2!==0)_amrapEx=Object.assign({},_amrapEx,{amount:_amrapEx.amount+1});
   // ── Auto-Scale: 3-step priority → reps → exCnt → cardio ──
   var _amrapNItems=chosen.length+(addCardio&&_amrapEx?1:0);
-  var _amrapTarget={
-    beginner:    team===2?(time<=15?120:time<=30?180:240):(time<=15?80:time<=30?100:120),
-    intermediate:time<=15?180:time<=30?240:360,
-    advanced:    time<=15?150:time<=30?210:300,
-    elite:       time<=15?150:time<=30?210:300
-  }[lv]||(time<=15?180:time<=30?240:360);
-  var _rArr=chosen.map(function(e){return _amrBaseReps(e.cat);}); // sweet-spot initial
+  // ── Target round time (بالثواني) — Solo / Team منفصلين ──
+  var _amrapTgtMap={10:150,15:180,20:210,25:240,30:270,35:300,40:330,45:360,50:390,55:420,60:450};
+  var _amrapTarget=_amrapTgtMap[time]||210;
+  var _rArr=chosen.map(function(){return team===2?10:5;}); // base منخفض — النمط يحدد القيمة النهائية
   baseReps=_rArr[0]||10;
-  if(!cfg.baseReps&&chosen.length){
-    var _amrMaxR=chosen.reduce(function(m,e){return Math.min(m,_repCeil(lv,team,e.cat));},Infinity);if(!isFinite(_amrMaxR))_amrMaxR=_repCeil(lv,team,'strength');
-    var _est=_wodEstTime(_rArr,chosen,_amrapEx,_amrapNItems,team,lv);
-    var _sf=_amrapTarget/_est;
-    if(_sf<0.95||_sf>1.05){
-      // STEP 1: Scale reps (bidirectional) — مع احترام الفوارق بين الحركات
-      _rArr=_rArr.map(function(r){return _scaleRep(r,_sf,team,_amrMaxR);});
-      baseReps=_rArr[0]||10;
-    }
-    // STEP 2 (scale-up): add movement if reps hit ceiling and exCnt can grow
-    if(_sf>1.1&&baseReps>=_amrMaxR&&exCnt<_amrLvMax&&!cfg.exCnt){
-      var _amrXPool=getPool(lv).filter(function(e){return!chosen.some(function(c){return c.name===e.name;});});
-      if(_amrXPool.length){chosen.push(pk(_amrXPool));strCount++;exCnt++;_amrapNItems++;}
-    }
-    // STEP 3 (scale-up): scale cardio if still under target
-    if(_sf>1.1&&_amrapEx&&!cfg.cardioAmt){
-      var _est3=_wodEstTime(_rArr,chosen,_amrapEx,_amrapNItems,team,lv);
-      var _sf3=_amrapTarget/_est3;
-      if(_sf3>1.1){_amrapEx=_scaleCardio(_amrapEx,_sf3,team);}
-    }
-  }
-  // ── Pattern: 6 خيارات (سلم زوجي ↑↓ | سلم مضاعفات10 ↑↓ | فلات زوجي | فلات مضاعفات5) ──
-  if(!cfg.baseReps&&_rArr.length>1){
-    var _pPick=Math.floor(Math.random()*6);
-    var _pBase=Math.round(_rArr.reduce(function(s,r){return s+r;},0)/_rArr.length);
-    var _evenBase=Math.round(_pBase/2)*2;
-    var _m10Base=Math.max(10,Math.round(_pBase/10)*10);
-    var _amrMinR=team===2?10:4;
+  // ── Hard limits (Solo/Split: min=8 | Shared: min=10) ──
+  var _amrHardMin=team===2?10:8;
+  var _amrHardMax=team===2?200:100;
+  // ── Pattern: 3 فلات — زوجي(8-20/10-20) + ×10(10-100/10-200) + ×20(20-100/20-200) ──
+  var _patternMax=_amrHardMax; // يُحدَّث داخل بلوك النمط
+  if(!cfg.baseReps&&_rArr.length>=1){
+    var _pPick=Math.floor(Math.random()*3);
+    var _flatVal;
+    // ── نطاقات الرب حسب المستوى ──
+    var _lvR={
+      beginner:    {eMin:_amrHardMin,eMax:10, t10Min:10, t10Max:20,  t20Min:20,t20Max:40 },
+      intermediate:{eMin:10,         eMax:14, t10Min:20, t10Max:40,  t20Min:40,t20Max:60 },
+      advanced:    {eMin:14,         eMax:18, t10Min:30, t10Max:60,  t20Min:60,t20Max:100},
+      elite:       {eMin:16,         eMax:20, t10Min:40, t10Max:80,  t20Min:60,t20Max:100}
+    }[lv]||{eMin:_amrHardMin,eMax:12,t10Min:10,t10Max:30,t20Min:20,t20Max:40};
+    // Team×2 للنطاق
+    var _tmX=team===2?2:1;
     if(_pPick===0){
-      // سلم صاعد زوجي (step 2)
-      var _half=Math.floor(_rArr.length/2);var _start=_evenBase-_half*2;
-      _rArr=_rArr.map(function(r,i){return Math.max(_amrMinR,_start+i*2);});
+      // فلات زوجي — نطاق حسب المستوى
+      var _eMin2=Math.max(_amrHardMin,_lvR.eMin),_eMax2=Math.min(20,_lvR.eMax),_eOpts=[];
+      for(var _ei=_eMin2;_ei<=_eMax2;_ei+=2)_eOpts.push(_ei);
+      _flatVal=pk(_eOpts.length?_eOpts:[_eMin2]);
+      _patternMax=20;
     } else if(_pPick===1){
-      // سلم نازل زوجي (step 2)
-      var _half=Math.floor(_rArr.length/2);var _start=_evenBase-_half*2;
-      var _seq=_rArr.map(function(r,i){return Math.max(_amrMinR,_start+i*2);});
-      _rArr=_seq.slice().reverse();
-    } else if(_pPick===2){
-      // سلم صاعد مضاعفات 10
-      var _half=Math.floor(_rArr.length/2);var _start=Math.max(10,_m10Base-_half*10);
-      _rArr=_rArr.map(function(r,i){return _start+i*10;});
-    } else if(_pPick===3){
-      // سلم نازل مضاعفات 10
-      var _half=Math.floor(_rArr.length/2);var _start=Math.max(10,_m10Base-_half*10);
-      var _seq=_rArr.map(function(r,i){return _start+i*10;});
-      _rArr=_seq.slice().reverse();
-    } else if(_pPick===4){
-      // فلات زوجي
-      var _flatE=Math.max(_amrMinR,Math.round(_evenBase/2)*2);
-      _rArr=_rArr.map(function(){return _flatE;});
+      // فلات ×10 — نطاق حسب المستوى × Team
+      var _t10Max=team===2?200:100,_t10Lo=_lvR.t10Min*_tmX,_t10Hi=Math.min(_t10Max,_lvR.t10Max*_tmX),_t10Opts=[];
+      for(var _ti=_t10Lo;_ti<=_t10Hi;_ti+=10)_t10Opts.push(_ti);
+      _flatVal=pk(_t10Opts.length?_t10Opts:[_t10Lo]);_patternMax=_t10Max;
     } else {
-      // فلات مضاعفات 5
-      var _flatM5=team===2?Math.max(10,Math.round(_m10Base/10)*10):Math.max(5,_snapFlat(_pBase));
-      _rArr=_rArr.map(function(){return _flatM5;});
+      // فلات ×20 — نطاق حسب المستوى × Team
+      var _t20Max=team===2?200:100,_t20Lo=_lvR.t20Min*_tmX,_t20Hi=Math.min(_t20Max,_lvR.t20Max*_tmX),_t20Opts=[];
+      for(var _ti=_t20Lo;_ti<=_t20Hi;_ti+=20)_t20Opts.push(_ti);
+      _flatVal=pk(_t20Opts.length?_t20Opts:[_t20Lo]);_patternMax=_t20Max;
     }
-    if(team!==2)_rArr=_rArr.map(function(r){return Math.min(100,r);});
-    baseReps=_rArr[0]||10;
+    _flatVal=Math.max(_amrHardMin,Math.min(_patternMax,_flatVal));
+    _rArr=_rArr.map(function(){return _flatVal;});
+    baseReps=_flatVal;
+    // Safety: أعد حساب _rArr للحركات المضافة (إن وُجدت)
+    while(_rArr.length<chosen.length)_rArr.push(_flatVal);
   }
   // Balance cardio vs reps
   if(addCardio&&_amrapEx&&!cfg.cardioAmt){
     var _amrStrRd=_wodEstTime(_rArr,chosen,null,chosen.length,team,lv);
-    _amrapEx=_balanceCardio(_amrapEx,_amrStrRd,team,lv,cfg);
+    _amrapEx=_balanceCardio(_amrapEx,_amrStrRd,team,lv,cfg,true);
   }
-  // ── Fill guarantee: pure work per round ∈ [70%, 90%] of target round time ──
+  // ── Fill guarantee: pure work ∈ [70%,90%] of target ──
+  // زايد → قلل رب | ناقص → كارديو أو حركة (لا ترفع الرب فوق _patternMax)
   if(!cfg.baseReps&&chosen.length){
     var _amrRndMin=Math.round(_amrapTarget/60);
     var _amrTargetSec=_amrRndMin*60;
-    // Pure work = str + cardio only (no transitions) — matches chip formula
-    var _amrPW=_rArr.reduce(function(s,r,i){return s+(i<chosen.length?r*getSecondsPerRep(chosen[i]):0);},0);
-    if(_amrapEx&&_amrapEx.amount){
-      if(_amrapEx.unit==='Cal')_amrPW+=_amrapEx.amount*5.5;
-      else if(_amrapEx.unit==='m')_amrPW+=(_amrapEx.amount/10)*3.0;
-    }
+    var _calcAmrPW=function(){
+      var pw=_rArr.reduce(function(s,r,i){return s+(i<chosen.length?r*getSecondsPerRep(chosen[i],lv,team):0);},0);
+      if(_amrapEx&&_amrapEx.amount){if(_amrapEx.unit==='Cal')pw+=_amrapEx.amount*5.5;else if(_amrapEx.unit==='m')pw+=(_amrapEx.amount/10)*3.0;}
+      return pw;
+    };
+    var _amrPW=_calcAmrPW();
+    // زايد: قلل الرب (لا تنزل عن _amrHardMin)
     if(_amrPW>_amrTargetSec*0.90){
       var _amrClampSf=(_amrTargetSec*0.85)/_amrPW;
-      var _amrMin=team===2?10:4;
-      _rArr=_rArr.map(function(r){var _nr=Math.round(r*_amrClampSf);return team===2?Math.max(_amrMin,evenRep(_nr)):Math.max(_amrMin,Math.floor(_nr/2)*2||_amrMin);});
-      if(_amrapEx&&!cfg.cardioAmt)_amrapEx=_scaleCardio(_amrapEx,_amrClampSf,team);
-    } else if(_amrPW<_amrTargetSec*0.70){
-      var _amrBoostSf=(_amrTargetSec*0.80)/_amrPW;
-      _rArr=_rArr.map(function(r){var _nr=_scaleRep(r,_amrBoostSf,team,_amrMaxR);return team===2?_nr:Math.ceil(_nr/2)*2;});
-      if(_amrapEx&&!cfg.cardioAmt)_amrapEx=_scaleCardio(_amrapEx,_amrBoostSf,team);
+      _rArr=_rArr.map(function(r){
+        var _raw=r*_amrClampSf;
+        var _nr;
+        if(r>20){_nr=Math.max(_amrHardMin,Math.round(_raw/10)*10||_amrHardMin);}
+        else{_nr=Math.max(_amrHardMin,Math.floor(Math.round(_raw)/2)*2||_amrHardMin);}
+        return Math.min(_patternMax,_nr);
+      });
+      if(_amrapEx&&!cfg.cardioAmt){_amrapEx=_scaleCardio(_amrapEx,_amrClampSf,team);if(_amrapEx.unit==='Cal'&&_amrapEx.amount<_amrCL.calMin)_amrapEx=Object.assign({},_amrapEx,{amount:_amrCL.calMin});}
+      _amrPW=_calcAmrPW();
     }
-    baseReps=_rArr[0]||10;
+    // ناقص: Step1 أضف كارديو | Step2 زيد كارديو | Step3 أضف حركة
+    if(_amrPW<_amrTargetSec*0.70){
+      // Step 1: أضف كارديو لو ما فيه
+      if(!addCardio&&!_amrapEx&&!cfg.withCardio){
+        var _fcPool=CARDIO.filter(function(c){return c.unit==='Cal';});
+        if(_fcPool.length){addCardio=true;_amrapEx=Object.assign({},pk(_fcPool),{amount:team===2?Math.max(20,_amrCL.calMin):_amrCL.calMin,unit:'Cal'});_amrapNItems++;_amrPW=_calcAmrPW();}
+      }
+      // Step 2: زيد كارديو لحد calMax
+      if(_amrPW<_amrTargetSec*0.70&&_amrapEx&&!cfg.cardioAmt){
+        var _sfC=(_amrTargetSec*0.80)/_amrPW;
+        _amrapEx=_scaleCardio(_amrapEx,_sfC,team);
+        if(_amrapEx.unit==='Cal'&&_amrapEx.amount>_amrCL.calMax)_amrapEx=Object.assign({},_amrapEx,{amount:team===2?Math.round(_amrCL.calMax/2)*2:_amrCL.calMax});
+        _amrPW=_calcAmrPW();
+      }
+      // Step 3: أضف حركة لو لا زال ناقص
+      if(_amrPW<_amrTargetSec*0.70&&chosen.length<_amrLvMax&&!cfg.exCnt){
+        var _addPool=getPool(lv).filter(function(e){return!chosen.some(function(c){return c.name===e.name;});});
+        if(_addPool.length){chosen.push(pk(_addPool));strCount++;exCnt++;_amrapNItems++;_rArr.push(baseReps);}
+      }
+    }
+    baseReps=_rArr[0]||_amrHardMin;
   }
+  // ── حارس نهائي: ما في رب يتجاوز _patternMax أبداً ──
+  _rArr=_rArr.map(function(r){
+    var _v=r||_amrHardMin;
+    if(_v>20&&_v%10!==0)_v=Math.round(_v/10)*10; // فوق 20 → مضاعف ×10
+    return Math.max(_amrHardMin,Math.min(_patternMax,_v));
+  });
+  while(_rArr.length<chosen.length)_rArr.push(baseReps||_amrHardMin);
   var items=[];
   chosen.forEach(function(ex,i){
-    var r=(_rArr&&_rArr[i])||baseReps;
+    var r=_rArr[i]||baseReps;
     items.push({kind:'str',ex:ex,detail:getDetail(ex,r),baseRep:r,wt:wgt(lv,ex.cat)});
   });
   if(addCardio&&_amrapEx){
@@ -1009,9 +1000,9 @@ function mkRFT(time,lv,team,cfg){
 
   // ── Step 4: chosen + cardio setup (before scaler) ──
   var chosen=pkN(getPool(lv),strCount);
-  var _lvCaAmt={m:{beginner:200,intermediate:400,advanced:400,elite:800},Cal:{beginner:10,intermediate:10,advanced:20,elite:20},reps:{beginner:30,intermediate:50,advanced:50,elite:50}};
+  var _rftCL=_cardioLimits(team,true);
   var _cExRaw=addCardio?pk(CARDIO):null;
-  var _cEx=_cExRaw?Object.assign({},_cExRaw,{amount:(_lvCaAmt[_cExRaw.unit]&&_lvCaAmt[_cExRaw.unit][lv])||_cExRaw.amount}):null;
+  var _cEx=_cExRaw?Object.assign({},_cExRaw,{amount:_cExRaw.unit==='Cal'?_rftCL.calMin:_cExRaw.unit==='m'?_rftCL.mtrMin:(_cExRaw.amount||30)}):null;
   // تقريب الكارديو: Cal مضاعفات 10 / m مضاعفات 100
   if(_cEx){
     if(_cEx.unit==='Cal')_cEx=Object.assign({},_cEx,{amount:_roundCal(_cEx.amount,team)});
@@ -1099,7 +1090,7 @@ function mkRFT(time,lv,team,cfg){
     // Balance cardio vs reps (per round)
     if(_cEx&&!cfg.cardioAmt){
       var _rftStrRd=_wodEstTime(_perExReps,chosen,null,chosen.length,team);
-      _cEx=_balanceCardio(_cEx,_rftStrRd,team,lv,cfg);
+      _cEx=_balanceCardio(_cEx,_rftStrRd,team,lv,cfg,true);
     }
   } else if(_rftAuto&&chosen.length&&schemeReps){
     // Scheme mode: scale-down إذا تجاوز الوقت
@@ -1111,7 +1102,7 @@ function mkRFT(time,lv,team,cfg){
     if(addCardio&&_cEx&&!cfg.cardioAmt){
       var _avgRepSch=Math.round(reps.reduce(function(a,b){return a+b;},0)/rounds)||10;
       var _rftSchStrRd=_wodEstTime(chosen.map(function(){return _avgRepSch;}),chosen,null,chosen.length,team);
-      _cEx=_balanceCardio(_cEx,_rftSchStrRd,team,lv,cfg);
+      _cEx=_balanceCardio(_cEx,_rftSchStrRd,team,lv,cfg,true);
     }
   }
   // ── Universal fill boost: < 70% → add cardio or boost reps ──
@@ -1123,7 +1114,7 @@ function mkRFT(time,lv,team,cfg){
       if(!addCardio||!_cEx){
         var _fcPool=CARDIO.filter(function(c){return c.unit==='Cal';});
         if(_fcPool.length&&!cfg.withCardio){
-          addCardio=true;_cEx=Object.assign({},pk(_fcPool),{amount:_roundCal(team===2?10:10,team),unit:'Cal'});_rftNItems++;
+          addCardio=true;_cEx=Object.assign({},pk(_fcPool),{amount:_rftCL.calMin,unit:'Cal'});_rftNItems++;
         }
       }
       // Re-check after adding cardio
@@ -1196,9 +1187,9 @@ function mkEmom(time,lv,team,cfg){
   };
   var baseReps=cfg.baseReps?(team===2?evenRep(cfg.baseReps):cfg.baseReps):_emBaseReps('strength');
   // ── Cardio setup before auto-scale ──
-  var calAmts={beginner:8,intermediate:10,advanced:10,elite:20};
-  var _emCalMax={beginner:10,intermediate:10,advanced:20,elite:20}[lv]||10; // سقف Cal per minute
-  var calAmt=cfg.cardioAmt||(calAmts[lv]||10);
+  var _emCL=_cardioLimits(team,false);
+  var _emCalMax=_emCL.calMax;
+  var calAmt=cfg.cardioAmt||_emCL.calMin;
   var calPool=CARDIO.filter(function(c){return c.unit==='Cal';});
   var cEx=addCardio?Object.assign({},pk(calPool.length?calPool:CARDIO),{amount:calAmt,unit:'Cal'}):null;
   // تقريب كارديو الـ EMOM: Cal مضاعفات 10 / m مضاعفات 100
@@ -1301,12 +1292,10 @@ function mkChipper(time,lv,team,cfg){
     var addGates=cardioMode===true||(cardioMode===undefined);
     var GATE_CAL=['Assault Bike','Row','Ski Erg'];
     var GATE_MTR=['Row','Ski Erg','Run'];
-    var gateCalAmts={beginner:[10,20],intermediate:[20,30],advanced:[30,40],elite:[40,50,60]};
-    var gateMtrAmts={beginner:[100,200],intermediate:[200,300],advanced:[300,400,500],elite:[500,600,800]};
+    var _stCL=_cardioLimits(team,true);
     var gUnit=Math.random()>0.5?'Cal':'m';
     var gatePool=gUnit==='Cal'?GATE_CAL:GATE_MTR;
-    var gAmtPool=(gUnit==='Cal'?gateCalAmts:gateMtrAmts)[lv]||[20];
-    var gFixedAmt=cfg.cardioAmt||(pk(gAmtPool));
+    var gFixedAmt=cfg.cardioAmt||(gUnit==='Cal'?_stCL.calMin:_stCL.mtrMin);
     // ── Loop scaler: هدف 70-90% من الوقت ──
     if(chosen.length){
       var _stMaxR=chosen.reduce(function(m,e){return Math.min(m,_repCeil(lv,team,e.cat));},Infinity);
@@ -1332,16 +1321,15 @@ function mkChipper(time,lv,team,cfg){
         }
       }
       // ── Iterative gate balance + fill check (max 5 passes) ──
-      var _gMaxCal={beginner:20,intermediate:30,advanced:40,elite:50}[lv]||30;
-      var _gMaxMtr={beginner:300,intermediate:400,advanced:600,elite:800}[lv]||400;
-      if(team===2){_gMaxCal=Math.round(_gMaxCal*1.5/10)*10;}
+      var _gMaxCal=_stCL.calMax;
+      var _gMaxMtr=_stCL.mtrMax;
       for(var _stFc=0;_stFc<5;_stFc++){
         // Re-balance gate based on current rep
         if(addGates&&!cfg.cardioAmt){
           var _perStStr=_wodEstTime(chosen.slice(0,sz).map(function(){return rep;}),chosen.slice(0,sz),null,sz,team,lv);
           var _gTgt=_perStStr/3;
-          if(gUnit==='Cal') gFixedAmt=Math.max(10,Math.min(_gMaxCal,_roundCal(_gTgt/5.5,team)));
-          else if(gUnit==='m') gFixedAmt=Math.max(100,Math.min(_gMaxMtr,_roundMtr(_gTgt*10/3)));
+          if(gUnit==='Cal') gFixedAmt=Math.max(_stCL.calMin,Math.min(_gMaxCal,_roundCal(_gTgt/5.5,team)));
+          else if(gUnit==='m') gFixedAmt=Math.max(_stCL.mtrMin,Math.min(_gMaxMtr,_roundMtr(_gTgt*10/3)));
         }
         var _stGateT=addGates?(gUnit==='Cal'?numStations*gFixedAmt*5.5:(gUnit==='m'?numStations*(gFixedAmt/10)*3.0:0)):0;
         var _stFinalEst=_wodEstTime(chosen.map(function(){return rep;}),chosen,null,exCnt+(addGates?numStations:0),team,lv)+_stGateT;
@@ -1456,7 +1444,7 @@ function mkChipper(time,lv,team,cfg){
     // Balance cardio vs reps (Chipper done once — total str time)
     if(cEx&&!cfg.cardioAmt){
       var _clStrTotal=_wodEstTime(repsArr,chosen,null,chosen.length,team);
-      cEx=_balanceCardio(cEx,_clStrTotal,team,lv,cfg);
+      cEx=_balanceCardio(cEx,_clStrTotal,team,lv,cfg,true);
     }
   }
   // ── Build items ──
@@ -1670,19 +1658,24 @@ function mkYGIG(time,lv,team,cfg){
   var exCnt=cfg.exCnt||d.exCnt;
   var strCnt=doCardio?Math.max(1,exCnt-1):exCnt;
   var chosen=pkN(getPool(lv),strCnt);
+  // Cardio with shared limits
+  var _ygigCL=_cardioLimits(team,false);
+  var _ygigRawEx=pk(CARDIO);
+  var _ygigCAmt=_ygigRawEx.unit==='Cal'?_ygigCL.calMin:_ygigRawEx.unit==='m'?_ygigCL.mtrMin:(_ygigRawEx.amount||30);
+  var _ygigCEx=Object.assign({},_ygigRawEx,{amount:_ygigCAmt});
 
   if(fmt==='for-time'){
     var roundsEach=cfg.roundsEach||d.roundsEach;
     var timeCap=cfg.timeCap||time;
     var items=[{kind:'sep',label:'── '+roundsEach+' ROUNDS EACH ──'}];
     chosen.forEach(function(ex){items.push({kind:'str',ex:ex,detail:getDetail(ex,baseReps),baseRep:baseReps,wt:wgt(lv,ex.cat)});});
-    if(doCardio)items.push({kind:'cardio',ex:pk(CARDIO)});
+    if(doCardio)items.push({kind:'cardio',ex:_ygigCEx});
     return[{type:'YGIG / Partner WOD',title:'YGIG — For Time',infoKey:'i_ygig_ft',infoVars:{r:roundsEach,cap:timeCap},scoreKey:'sc_time',teamKey:'tm_ygig_ft',teamVars:{n:eff},items:items,chosen:chosen,ygigCfg:cfg,noLongForm:true}];
   }
   // AMRAP
   var items=[];
   chosen.forEach(function(ex){items.push({kind:'str',ex:ex,detail:getDetail(ex,baseReps),baseRep:baseReps,wt:wgt(lv,ex.cat)});});
-  if(doCardio)items.push({kind:'cardio',ex:pk(CARDIO)});
+  if(doCardio)items.push({kind:'cardio',ex:_ygigCEx});
   return[{type:'YGIG / Partner WOD',title:'YGIG — AMRAP',infoKey:'i_ygig',infoVars:{t:time},scoreKey:'sc_ygig',teamKey:'tm_ygig_amrap',teamVars:{n:eff},items:items,chosen:chosen,ygigCfg:cfg,noLongForm:true}];
 }
 
@@ -1708,8 +1701,8 @@ function mkIntervalAmrap(time,lv,team,cfg){
   var numIntervals=cfg.numIntervals||Math.floor((time+restTime)/(workTime+restTime));
   var strCount=Math.max(1,exCnt-1);
   var chosen=pkN(getPool(lv),strCount);
-  var _intCalAmts={beginner:8,intermediate:10,advanced:10,elite:20};
-  var _intCalAmt=cfg.cardioAmt||(_intCalAmts[lv]||10);
+  var _intCL=_cardioLimits(team,false);
+  var _intCalAmt=cfg.cardioAmt||_intCL.calMin;
   var _intCalPool=CARDIO.filter(function(c){return c.unit==='Cal';});
   var _intEx=Object.assign({},pk(_intCalPool.length?_intCalPool:CARDIO),{amount:_intCalAmt,unit:'Cal'});
   // ── Auto-Scale: 3-step priority → reps → exCnt → cardio ──
@@ -1733,7 +1726,7 @@ function mkIntervalAmrap(time,lv,team,cfg){
     if(_sf>1.1&&_intEx&&!cfg.cardioAmt){
       var _est3=_wodEstTime(chosen.map(function(){return baseReps;}),chosen,_intEx,chosen.length+1,team);
       var _sf3=_intBudget/_est3;
-      if(_sf3>1.1){var _intCalMax={beginner:10,intermediate:20,advanced:30,elite:40}[lv]||20;_intEx=Object.assign({},_intEx,{amount:Math.min(_intCalMax,_roundCal(_intEx.amount*_sf3,team))});}
+      if(_sf3>1.1){_intEx=Object.assign({},_intEx,{amount:Math.min(_intCL.calMax,_roundCal(_intEx.amount*_sf3,team))});}
     }
   }
   var items=[];
@@ -1764,9 +1757,11 @@ function mkGroupAB(time,lv,team,cfg){
   var exA=pkN(poolAll,strCntA);
   var exB=pkN(poolAll.filter(function(e){return exA.indexOf(e)<0;}),strCntB);
   // Pick A's cardio first, then B picks a different machine to avoid equipment clash
-  var cExA=doCardioA?pk(CARDIO):null;
+  var _gabCL=_cardioLimits(team,false);
+  function _gabCEx(ex){if(!ex)return null;var a=ex.unit==='Cal'?_gabCL.calMin:ex.unit==='m'?_gabCL.mtrMin:(ex.amount||30);return Object.assign({},ex,{amount:a});}
+  var cExA=doCardioA?_gabCEx(pk(CARDIO)):null;
   var _cPoolB=cExA?CARDIO.filter(function(c){return c.name!==cExA.name;}):CARDIO;
-  var cExB=doCardioB?pk(_cPoolB.length?_cPoolB:CARDIO):null;
+  var cExB=doCardioB?_gabCEx(pk(_cPoolB.length?_cPoolB:CARDIO)):null;
   // A starts with cardio, B ends with cardio — they swap the machine without overlap
   function mkI(exArr,withC,cEx){
     var its=[];
@@ -2150,7 +2145,7 @@ function _secChip(sec){
   try{
     // Sum str time
     est=0;
-    for(var _ci=0;_ci<Math.min(repsArr.length,exArr.length);_ci++)est+=repsArr[_ci]*getSecondsPerRep(exArr[_ci]);
+    for(var _ci=0;_ci<Math.min(repsArr.length,exArr.length);_ci++)est+=repsArr[_ci]*getSecondsPerRep(exArr[_ci],lvl,team);
     // Sum ALL gate times
     gateExArr.forEach(function(gx){
       if(gx.unit==='Cal')est+=gx.amount*5.5;
@@ -2164,14 +2159,14 @@ function _secChip(sec){
   // EMOM: pure work per cycle / (numSlots × 60s) — no transitions
   if(sec.type==='EMOM'&&iv.n){
     var _emPW=0;
-    for(var _ci2=0;_ci2<Math.min(repsArr.length,exArr.length);_ci2++)_emPW+=repsArr[_ci2]*getSecondsPerRep(exArr[_ci2]);
+    for(var _ci2=0;_ci2<Math.min(repsArr.length,exArr.length);_ci2++)_emPW+=repsArr[_ci2]*getSecondsPerRep(exArr[_ci2],lvl,team);
     gateExArr.forEach(function(gx){if(gx.unit==='Cal')_emPW+=gx.amount*5.5;else if(gx.unit==='m')_emPW+=(gx.amount/10)*3.0;else if(gx.unit==='reps')_emPW+=gx.amount*3.0;});
     est=_emPW;budget=(iv.n+(gateExArr.length||0))*60;
   }
   // AMRAP: pure work per round / target round time — no transitions (ارقام طبيعية بدون تعقيد)
   if(sec.type==='AMRAP'&&iv.rnd&&iv.rnd>0){
     var _amrPW=0;
-    for(var _ci3=0;_ci3<Math.min(repsArr.length,exArr.length);_ci3++)_amrPW+=repsArr[_ci3]*getSecondsPerRep(exArr[_ci3]);
+    for(var _ci3=0;_ci3<Math.min(repsArr.length,exArr.length);_ci3++)_amrPW+=repsArr[_ci3]*getSecondsPerRep(exArr[_ci3],lvl,team);
     gateExArr.forEach(function(gx){if(gx.unit==='Cal')_amrPW+=gx.amount*5.5;else if(gx.unit==='m')_amrPW+=(gx.amount/10)*3.0;else if(gx.unit==='reps')_amrPW+=gx.amount*3.0;});
     est=_amrPW;budget=iv.rnd*60;
   }
