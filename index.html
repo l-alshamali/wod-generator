@@ -59,7 +59,10 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:26px;heigh
 .edh{font-size:16px;color:var(--txt3);cursor:grab;flex-shrink:0;padding:0 2px;opacity:0.45;user-select:none;touch-action:none}
 .edh:active{cursor:grabbing;opacity:0.9}
 .er:last-child{border-bottom:none}
-.en{width:26px;height:26px;border-radius:50%;background:var(--bg3);border:0.5px solid var(--or);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:var(--or);flex-shrink:0}
+.en{width:26px;height:26px;border-radius:50%;background:var(--bg3);border:0.5px solid var(--or);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:var(--or);flex-shrink:0;cursor:pointer;user-select:none;-webkit-user-select:none}
+.en.reo-src{background:var(--or);color:#000;box-shadow:0 0 0 3px rgba(255,120,0,0.25)}
+.en.reo-tgt{background:var(--bg2);border-style:dashed;animation:reo-pulse 1s infinite alternate}
+@keyframes reo-pulse{from{border-color:var(--or);color:var(--or)}to{border-color:rgba(255,120,0,0.3);color:rgba(255,120,0,0.4)}}
 .eb{flex:1;min-width:0}
 .ename{font-size:14px;font-weight:500;color:var(--txt);margin-bottom:2px;font-family:'Segoe UI',sans-serif}
 .edet{font-size:13px;color:var(--or);font-weight:700;font-family:'Segoe UI',sans-serif}
@@ -2571,6 +2574,27 @@ function _exChip(it,si){
   else{color='#6a1b9a';bg='rgba(106,27,154,0.14)';}
   return'<span style="background:'+bg+';color:'+color+';font-size:10px;font-weight:700;padding:2px 7px;border-radius:20px;margin-left:5px">'+Math.round(ratio*100)+'%</span>';
 }
+function startReorder(si,ii){
+  S._reorder={si:si,ii:ii};
+  var el=document.getElementById('sec-'+si);
+  if(el)el.outerHTML=renderSec(S.wod.sections[si],si);
+}
+function cancelReorder(){
+  var si=S._reorder&&S._reorder.si;
+  delete S._reorder;
+  if(si!=null){var el=document.getElementById('sec-'+si);if(el)el.outerHTML=renderSec(S.wod.sections[si],si);}
+}
+function doReorder(si,ii){
+  var src=S._reorder;if(!src||src.si!==si)return;
+  var items=S.wod.sections[si].items;
+  // swap the two str items (find by index among str items)
+  var strItems=items.reduce(function(a,it,i){if(it.kind==='str')a.push(i);return a;},[]);
+  var srcReal=src.ii; var tgtReal=ii;
+  var tmp=items[srcReal];items[srcReal]=items[tgtReal];items[tgtReal]=tmp;
+  delete S._reorder;
+  var el=document.getElementById('sec-'+si);
+  if(el)el.outerHTML=renderSec(S.wod.sections[si],si);
+}
 function renderStr(it,si,ii,num,roundIdx){
   var ex=it.ex;
   var emTag=it.emomMin?'<span style="background:var(--og);color:var(--or);font-size:10px;font-weight:700;padding:1px 6px;border-radius:5px;margin-left:5px">'+it.emomMin+'</span>':'';
@@ -2587,7 +2611,13 @@ function renderStr(it,si,ii,num,roundIdx){
     if(_secType==='Tabata'){if(TABATA_STR_NAMES.indexOf(a)<0)return false;}
     return true;
   }).slice(0,4);
-  return'<div class="er" id="ex-'+si+'-'+ii+'"><div class="en">'+num+'</div><div class="eb"><div class="ename">'+ex.name+emTag+'</div>'+(it.noEdit?'<div class="edet" style="display:inline-flex;align-items:center;gap:4px">'+fmtDetail(it.detail)+'</div>':'<span style="font-size:14px;color:var(--or);font-weight:700">'+fmtDetail(it.detail)+'</span>'+(it.noPencil?'':'<button onclick="openEditDetail('+si+','+ii+(roundIdx!==undefined?','+roundIdx:'')+')" style="background:none;border:none;padding:0 0 0 3px;font-size:11px;cursor:pointer;line-height:1;vertical-align:middle">&#x270F;&#xFE0F;</button>'))+'</div><div class="ea"><button class="esb" onclick="toggleSwap(\''+si+'\',\''+ii+'\')">'+t('swap')+'</button><button class="esb re" onclick="regenEx('+si+','+ii+',\'str\')">'+t('new_ex')+'</button></div></div>'
+  var _reo=S._reorder;
+  var _isSrc=_reo&&_reo.si===si&&_reo.ii===ii;
+  var _isTgt=_reo&&_reo.si===si&&!_isSrc;
+  var _enCls='en'+(_isSrc?' reo-src':(_isTgt?' reo-tgt':''));
+  var _enLabel=_isSrc?'☰':num;
+  var _enClick='onclick="'+(_isSrc?'cancelReorder()':(_isTgt?'doReorder('+si+','+ii+')':'startReorder('+si+','+ii+')'))+'"';
+  return'<div class="er" id="ex-'+si+'-'+ii+'"><div class="'+_enCls+'" '+_enClick+'>'+_enLabel+'</div><div class="eb"><div class="ename">'+ex.name+emTag+'</div>'+(it.noEdit?'<div class="edet" style="display:inline-flex;align-items:center;gap:4px">'+fmtDetail(it.detail)+'</div>':'<span style="font-size:14px;color:var(--or);font-weight:700">'+fmtDetail(it.detail)+'</span>'+(it.noPencil?'':'<button onclick="openEditDetail('+si+','+ii+(roundIdx!==undefined?','+roundIdx:'')+')" style="background:none;border:none;padding:0 0 0 3px;font-size:11px;cursor:pointer;line-height:1;vertical-align:middle">&#x270F;&#xFE0F;</button>'))+'</div><div class="ea"><button class="esb" onclick="toggleSwap(\''+si+'\',\''+ii+'\')">'+t('swap')+'</button><button class="esb re" onclick="regenEx('+si+','+ii+',\'str\')">'+t('new_ex')+'</button></div></div>'
   +'<div class="sp" id="sp-'+si+'-'+ii+'"><div class="sh" style="display:flex;align-items:center;justify-content:space-between">'+t('similar')+'<button onclick="toggleSwap(\''+si+'\',\''+ii+'\')" style="background:none;border:none;cursor:pointer;font-size:16px;color:var(--txt3);line-height:1;padding:0;margin-left:8px">✕</button></div><div class="so">'
   +_altF.map(function(a){return'<div class="soi" onclick="swapStr('+si+','+ii+',\''+a.replace(/'/g,"\\'")+'\')">'+'<span class="sn">'+a+'</span><span class="stag">→ '+t('use')+'</span></div>'}).join('')
   +'</div><button class="gn" onclick="regenEx('+si+','+ii+',\'str\')">'+t('gen_diff')+'</button>'
