@@ -212,7 +212,7 @@ var T={
     i_rft:'Complete {r} rounds AFAP. Time cap: {t} min.',
     i_emom:'Every Minute On the Minute · {n} movements rotating · {s} sets · ~45 s work / min',
     i_chipper:'{n} movements done ONCE through in order. Time cap: {t} min.',i_chipper_st:'{s} Stations · {tot} Total Movements · Time cap: {t} min',
-    i_tabata:'20s on / 10s off × 8 rounds per movement = 4 min each. Total: {tot} min.',
+    i_tabata:'20s work / 10s rest × 8 intervals per movement = 4 min each. Complete all 8 intervals of one movement before moving to the next. Your Tabata score = lowest reps across any single interval. Total: {tot} min.',
     i_deathby:'Min 1: {s} reps. Add {inc} reps each minute until failure. Cap: {t} min.',
     i_buyin:'Complete buy-in, then {r} rounds, then cash-out. Cap: {t} min.',
     i_ygig:'AMRAP {t} min — partners alternate full rounds. Switch after each complete round. Scale weight per partner if needed. Score = total rounds + reps.',
@@ -277,7 +277,7 @@ var T={
     i_rft:'أكمل {r} جولات بأسرع وقت. الحد الزمني: {t} دقيقة.',
     i_emom:'كل دقيقة على الدقيقة · {n} حركات بالتناوب · {s} جولات · ~٤٥ ث. عمل',
     i_chipper:'{n} حركات تنفذ مرة واحدة بالترتيب. الحد الزمني: {t} دقيقة.',i_chipper_st:'{s} محطات · {tot} حركة إجمالية · الحد الزمني: {t} دقيقة',
-    i_tabata:'٢٠ ثانية عمل / ١٠ ثوان راحة × ٨ جولات لكل حركة = ٤ دقائق. المجموع: {tot} دقيقة.',
+    i_tabata:'٢٠ث عمل / ١٠ث راحة × ٨ جولات لكل حركة = ٤ دقائق. أكمل الـ٨ جولات كاملة لكل حركة قبل الانتقال للتالية. النتيجة = أقل عدد تكرارات حققته في أي جولة واحدة. المجموع: {tot} دقيقة.',
     i_deathby:'الدقيقة 1: {s} تكرارات. تضاف {inc} تكرارات كل دقيقة حتى الفشل. الحد: {t} دقيقة.',
     i_buyin:'أكمل البداية، ثم {r} جولات، ثم النهاية. الحد: {t} دقيقة.',
     i_ygig:'{t} دقيقة AMRAP — الشريكان يتبادلان الجولات الكاملة | التبادل بعد كل جولة مكتملة | يمكن تعديل الوزن لكل شريك',
@@ -307,38 +307,35 @@ var T={
 };
 var WOD_DESC={
   'AMRAP':{
-    ar:'جولتك المفتوحة ضد الوقت؛ التحدي هو إتمام أكبر عدد ممكن من الجولات والتكرارات للتمارين المطلوبة قبل نفاد الوقت المحدد.',
-    en:'Work against the clock to complete as many rounds and repetitions of the movements as possible within the fixed time limit.'},
-  'Interval AMRAP':{
-    ar:'جولات تحدي متعاقبة ضد الوقت؛ فترات عمل بنظام الـ AMRAP يفصل بينها وقت راحة إجباري مبرمج للحفاظ على وتيرة وطاقة الأداء.',
-    en:'Consecutive AMRAP blocks separated by structured, mandatory rest periods to maintain your training pace and energy levels.'},
+    ar:'سباق مع التكرارات. أنت أمام وقت ثابت، والهدف هو عمل أكبر عدد من الجولات أو التكرارات الممكنة قبل أن يصفر المؤقت.',
+    en:'A race against repetitions. You are facing a fixed time, and the goal is to perform as many rounds or reps as possible before the timer goes off.'},
   'EMOM':{
-    ar:'تمرين دقيق مبرمج على الدقائق؛ المطلوب هو إنجاز التكرارات المحددة فور بداية كل دقيقة جديدة، واستغلال الثواني المتبقية منها للراحة قبل الدقيقة التالية.',
-    en:'Start the prescribed repetitions at the beginning of every minute; complete them quickly and use the remaining seconds of that minute to rest.'},
+    ar:'الانضباط بالدقيقة. تبدأ المهمة في بداية الدقيقة، وما يتبقى من الدقيقة بعد إنهائها يعتبر استراحة. تبدأ الحركة التالية مع بداية الدقيقة الجديدة.',
+    en:'Minute discipline. Start the task at the beginning of the minute; any remaining time after finishing is your rest. Start the next movement at the beginning of the new minute.'},
   'For Time / RFT':{
-    ar:'جولات ثابتة ومقفولة ضد الساعة؛ حجم التمارين والعدات محدد بالكامل مسبقا، والمطلوب هو إنهاء اللستة كاملة بأسرع وقت ممكن لتسجيل زمنك الإجمالي.',
-    en:'A performance time-trial where the workload is fixed; challenge yourself to complete the entire prescription as fast as possible to log your total time.'},
+    ar:'سباق مع الساعة. أنت أمام حجم عمل ثابت، والهدف هو إنهاء هذه القائمة بأسرع ما يمكن.',
+    en:'A race against the clock. You are facing a fixed workload, and the goal is to finish this list as quickly as possible.'},
   'Chipper':{
-    ar:'مسار تدريبي خطي وممتد؛ لستة تمارين متنوعة بعدات مرتفعة ضد الساعة، تنجز فيها كل حركة وتغلق تماما قبل الانتقال للحركة التالية لمرة واحدة بدون تكرار جولات.',
-    en:'A comprehensive checklist of high-repetition exercises completed sequentially from top to bottom, testing sustained physical and mental endurance.'},
+    ar:'إنجاز قائمة طويلة. الهدف هو "تفكيك" (Chip away) قائمة تمارين متنوعة، واحداً تلو الآخر، حتى تصل إلى النهاية.',
+    en:'Completing a long list. The goal is to "chip away" at a list of various exercises, one by one, until you reach the end.'},
   'Ladder':{
-    ar:'تمرين السلم المتغير؛ بروتوكول يعتمد على التغيير الميكانيكي في حجم العدات مع كل جولة جديدة، إما بالزيادة (تصاعدي)، أو بالنقصان (تنازلي)، أو بالنمط الهرمي.',
-    en:'A progressive volume scheme where repetitions scale each round, either increasing (ascending), decreasing (descending), or following a pyramid format.'},
+    ar:'التصاعد أو التنازل. يتغير مستوى الجهد تدريجياً عبر زيادة عدد التكرارات في كل جولة (تصاعدي) أو إنقاصها (تنازلي).',
+    en:'Ascending or descending. The effort level changes progressively by increasing the number of reps each round (ascending) or decreasing them (descending).'},
   'Tabata':{
-    ar:'بروتوكول التاباتا العلمي عالي الشدة؛ يتكون من 8 جولات متتالية لكل حركة، تعتمد على بذل أقصى جهد بدني لمدة 20 ثانية، يليه 10 ثوان من الراحة السلبية المطلقة.',
-    en:'The scientifically validated Tabata protocol: 8 cycles of maximum effort for 20 seconds, punctuated by 10 seconds of absolute passive recovery.'},
+    ar:'"الكثافة القصوى"؛ بروتوكول زمني صارم يعتمد على 20 ثانية عمل بأقصى جهد تليها 10 ثوانٍ راحة، مكررة لـ 8 جولات. الهدف هو دفع القلب والرئتين لأقصى طاقتهما في 4 دقائق فقط.',
+    en:'"Maximum intensity"; a strict timing protocol based on 20 seconds of maximum effort followed by 10 seconds of rest, repeated for 8 rounds. The goal is to push the heart and lungs to their limit in just 4 minutes.'},
   'Buy-In / Cash-Out':{
-    ar:'بوابات الأداء للتمرين؛ مجهود كارديو يؤدى لمرة واحدة فقط؛ إما كشرط أساسي لفتح وبدء التمرين الأساسي (Buy-In)، أو كخاتمة استنزافية لإنهاء الحصة (Cash-Out).',
-    en:'Mandatory metabolic tasks performed once, either as a prerequisite to enter the main workout (Buy-In) or as an exhausting finisher (Cash-Out).'},
+    ar:'إطار التمرين. تمرين الـ Buy-in (مثل الكارديو) هو "ثمن الدخول" للمهمة الرئيسية، وتمرين الـ Cash-out هو "المكافأة الختامية" قبل الاستراحة.',
+    en:'Workout bookends. A Buy-in exercise (like cardio) is the "entry fee" for the main task, while a Cash-out exercise is the "final reward" before resting.'},
   'Death By':{
-    ar:'التحدي التصاعدي حتى الفشل؛ اختبار استنزافي يبدأ بعدات منخفضة وتزداد التكرارات تدريجيا مع كل دقيقة جديدة، حتى تعجز ميكانيكيا عن إنهاء حجم العمل خلال الـ 60 ثانية.',
-    en:'An escalating minute-by-minute volume challenge, adding incremental reps each minute until you can no longer complete the required workload within the 60-second window.'},
+    ar:'تحدي الفشل التدريجي. يبدأ التمرين بتكرار واحد في الدقيقة الأولى، ثم تزيد تكراراً واحداً في كل دقيقة تالية. يستمر التحدي حتى تعجز عن إتمام التكرارات المطلوبة ضمن نافذة الـ 60 ثانية.',
+    en:'The progressive failure challenge. Start with 1 rep in the first minute, then add 1 rep every subsequent minute. The challenge continues until you can no longer complete the required workload within the 60-second window.'},
   'Group A':{
-    ar:'تبادل المحطات التزامني؛ تقسيم الرياضيين إلى مجموعتين مستقلتين لتبادل المحطات التدريبية والأجهزة بشكل متواز، لتحسين التدفق الحركي داخل الصالة ومنع الازدحام.',
-    en:'Synchronized station rotation where two independent groups train simultaneously and alternate training blocks to optimize equipment flow and gym space.'},
+    ar:'التنظيم التبادلي. هذا النظام ممتاز لتوزيع الجهد والمعدات؛ المجموعة (أ) تؤدي تمرين (1) بينما المجموعة (ب) تؤدي تمرين (2)، ثم يتبادلان المواقع.',
+    en:'Alternating organization. This system is excellent for managing effort and equipment; Group A performs exercise (1) while Group B performs exercise (2), then they switch stations.'},
   'YGIG / Partner WOD':{
-    ar:'تمرين الشركاء التبادلي؛ بروتوكول يعتمد على تنظيم الشدة عبر التناوب الثنائي؛ حيث تشكل فترة عمل اللاعب الأول فترة الراحة والاستشفاء المباشر لزميله.',
-    en:'A partner-based workout where athletes alternate rounds; the work duration of one teammate serves as the immediate recovery window for the other.'}
+    ar:'العمل كفريق. أنت وزميلك تعملان بالتناوب؛ هو يؤدي جولة كاملة بينما أنت ترتاح، ثم تأتي أنت لتؤدي الجولة التالية، مما يضمن كثافة عالية جداً.',
+    en:'Team-based rotation. You and your partner work in turns; they perform a full round while you rest, then you perform the next round, ensuring very high intensity.'}
 };
 var TNC={
   en:{
@@ -420,23 +417,23 @@ function loadCfg(){
 }
 var STR=[
   {name:'Deadlift',cat:'barbell',tier:1,alts:['Romanian Deadlift','Sumo Deadlift','DB Deadlift','KB Gorilla Row']},
-  {name:'Strict Press',cat:'barbell',tier:1,alts:['Push Press','DB Strict Press','Chin-Up','Z-Press']},
+  {name:'Shoulder Press',cat:'barbell',tier:1,alts:['Push Press','DB Strict Press','Chin-Up','Z-Press']},
   {name:'Bench Press',cat:'barbell',tier:1,alts:['DB Bench Press','Floor Press','Push-Up','Box Dip']},
   {name:'Barbell Row',cat:'barbell',tier:1,alts:['DB Row','KB Row','Ring Row','Push-Up']},
   {name:'Good Morning',cat:'barbell',tier:1,alts:['Romanian Deadlift','Hang Power Clean','Back Squat','KB Good Morning']},
   {name:'Air Squat',cat:'gymnastics',tier:1,alts:['Goblet Squat','Jump Squat','KB Swing','Mountain Climber']},
   {name:'Push-Up',cat:'gymnastics',tier:1,alts:['Ring Dip','Hand-Release Push-Up','Handstand Push-Up','Wall Walk']},
-  {name:'Pull-Up',cat:'gymnastics',tier:1,alts:['Jumping Pull-Up','Banded Pull-Up','Ring Row','Negative Pull-Up']},
+  {name:'Strict Pull-up',cat:'gymnastics',tier:1,alts:['Jumping Pull-Up','Banded Pull-Up','Ring Row','Negative Pull-Up']},
   {name:'Chin-Up',cat:'gymnastics',tier:1,alts:['Pull-Up','Jumping Pull-Up','Banded Pull-Up','Ring Row']},
   {name:'Kipping Pull-Up',cat:'gymnastics',tier:2,alts:['Strict Pull-Up','Jumping Pull-Up','Banded Pull-Up','Ring Row']},
   {name:'Negative Pull-Up',cat:'gymnastics',tier:1,alts:['Jumping Pull-Up','Ring Row','Banded Pull-Up','Pull-Up']},
   {name:'Hanging Knee Raise',cat:'gymnastics',tier:1,alts:['AbMat Sit-Up','V-Up','Toes-to-Bar','Leg Raise']},
   {name:'Wall Ball',cat:'gymnastics',tier:1,alts:['DB Thruster','KB Swing','Hollow Rock','Thruster']},
-  {name:'Burpee',cat:'gymnastics',tier:1,alts:['KB Swing','Plank Hold','Air Squat','AbMat Sit-Up']},
-  {name:'Box Jump',cat:'gymnastics',tier:1,alts:['Box Step-Up','Step-Up','Jump Squat','Box Jump Over']},
-  {name:'Walking Lunge',cat:'gymnastics',tier:1,alts:['Overhead Lunge','Reverse Lunge','Step-Up','DB Lunge']},
+  {name:'Burpee',cat:'gymnastics',tier:1,alts:['Mountain Climber','Jump Squat','Broad Jump','Box Jump']},
+  {name:'Box Jump',cat:'gymnastics',tier:1,alts:['Box Step-Up','Jump Squat','Box Jump Over']},
+  {name:'Walking Lunge',cat:'gymnastics',tier:1,alts:['Overhead Lunge','Reverse Lunge','Box Step-Up','DB Lunge']},
   {name:'AbMat Sit-Up',cat:'gymnastics',tier:1,alts:['Mountain Climber','V-Up','Hollow Rock','Toes-to-Bar']},
-  {name:'Step-Up',cat:'gymnastics',tier:1,alts:['Box Jump','Walking Lunge','DB Box Step-Up','Reverse Lunge']},
+  {name:'Box Step-Up',cat:'gymnastics',tier:1,alts:['Box Jump','Walking Lunge','DB Box Step-Up','Reverse Lunge']},
   {name:'V-Up',cat:'gymnastics',tier:1,alts:['Leg Raise','Toes-to-Bar','Hollow Rock','Hollow Hold']},
   {name:'Hollow Rock',cat:'gymnastics',tier:1,alts:['Hollow Hold','V-Up','AbMat Sit-Up','Arch Hold']},
   {name:'Hollow Hold',cat:'gymnastics',tier:1,unit:'time',alts:['Plank Hold','Arch Hold','V-Up','AbMat Sit-Up']},
@@ -453,11 +450,13 @@ var STR=[
   {name:'KB Deadlift',cat:'kettlebell',tier:1,alts:['Deadlift','DB Deadlift','Single-Leg KB DL','Sumo KB Deadlift']},
   {name:'KB Good Morning',cat:'kettlebell',tier:1,alts:['Good Morning','Romanian Deadlift','DB Good Morning','GHD Hip Extension']},
   {name:'KB Gorilla Row',cat:'kettlebell',tier:1,alts:['DB Row','Barbell Row','Ring Row','Cable Row']},
-  {name:'DB Box Step-Up',cat:'dumbbell',tier:1,alts:['Step-Up','Box Jump','KB Box Step-Up','Reverse Lunge']},
+  {name:'DB Box Step-Up',cat:'dumbbell',tier:1,alts:['Box Step-Up','Box Jump','KB Box Step-Up','Reverse Lunge']},
+  {name:'DB Lunge',cat:'dumbbell',tier:1,alts:['DB Overhead Lunge','DB Front Rack Lunge','Walking Lunge','Reverse Lunge']},
   {name:'DB Deadlift',cat:'dumbbell',tier:1,alts:['Deadlift','KB Deadlift','Romanian Deadlift','Trap Bar Deadlift']},
   {name:'DB Row',cat:'dumbbell',tier:1,alts:['Barbell Row','KB Row','Ring Row','Renegade Row']},
   {name:'DB Romanian Deadlift',cat:'dumbbell',tier:1,alts:['Romanian Deadlift','KB Deadlift','Good Morning','Single-Leg RDL']},
-  {name:'Power Clean',cat:'barbell',tier:2,alts:['Hang Power Clean','DB Power Clean','Muscle Clean','Squat Clean']},
+  {name:'DB Front Squat',cat:'dumbbell',tier:1,alts:['Goblet Squat','DB Thruster','Front Squat','Air Squat']},
+  {name:'Power Clean',cat:'barbell',tier:2,alts:['Hang Power Clean','DB Clean','Muscle Clean','Squat Clean']},
   {name:'Push Press',cat:'barbell',tier:2,alts:['Strict Press','Push Jerk','DB Push Press','KB Press']},
   {name:'Thruster',cat:'barbell',tier:2,alts:['DB Thruster','KB Thruster','Wall Ball','Front Squat + Push Press']},
   {name:'Front Squat',cat:'barbell',tier:2,alts:['Back Squat','Goblet Squat','DB Front Squat','Zercher Squat']},
@@ -467,6 +466,7 @@ var STR=[
   {name:'Shoulder-to-Overhead',cat:'barbell',tier:2,alts:['Push Press','Push Jerk','Strict Press','Split Jerk']},
   {name:'Barbell High Pull',cat:'barbell',tier:2,alts:['Sumo DL High Pull','Power Clean','Upright Row','DB High Pull']},
   {name:'Zercher Squat',cat:'barbell',tier:2,alts:['Front Squat','Goblet Squat','Back Squat','Sandbag Squat']},
+  {name:'Barbell Front-rack Lunge',cat:'barbell',tier:2,alts:['Walking Lunge','DB Front Rack Lunge','Reverse Lunge','Front Squat']},
   {name:'Toes-to-Bar',cat:'gymnastics',tier:2,alts:['Knees-to-Chest','Hanging Knee Raise','V-Up','AbMat Sit-Up']},
   {name:'Box Jump Over',cat:'gymnastics',tier:2,alts:['Box Step Over','Burpee Box Jump','Lateral Box Jump','Box Jump']},
   {name:'Ring Dip',cat:'gymnastics',tier:2,alts:['Bar Dip','Push-Up','Banded Ring Dip','Box Dip']},
@@ -474,7 +474,7 @@ var STR=[
   {name:'Chest-to-Bar Pull-Up',cat:'gymnastics',tier:2,alts:['Pull-Up','Banded C2B','Ring Row','Strict C2B']},
   {name:'Burpee Box Jump Over',cat:'gymnastics',tier:2,alts:['Burpee Box Jump','Bar-Facing Burpee','Box Jump Over','Lateral Burpee']},
   {name:'Sled Push',cat:'gymnastics',tier:2,unit:'carry',alts:['Farmers Carry','Yoke Walk','Bear Crawl','Sandbag Carry']},
-  {name:'Sandbag Over Shoulder',cat:'gymnastics',tier:2,alts:['D-Ball Over Shoulder','Power Clean','DB Power Clean','KB Clean']},
+  {name:'Sandbag Over Shoulder',cat:'gymnastics',tier:2,alts:['D-Ball Over Shoulder','Power Clean','DB Clean','KB Clean']},
   {name:'Bar Dip',cat:'gymnastics',tier:2,alts:['Ring Dip','Box Dip','Push-Up','Banded Dip']},
   {name:'American KB Swing',cat:'kettlebell',tier:2,alts:['Russian KBS','KB Snatch','KB Clean','DB Swing']},
   {name:'KB Snatch',cat:'kettlebell',tier:2,alts:['DB Snatch','American KB Swing','Power Snatch','KB Clean']},
@@ -485,24 +485,24 @@ var STR=[
   {name:'DB Thruster',cat:'dumbbell',tier:2,alts:['Thruster','KB Thruster','Wall Ball','DB Push Press']},
   {name:'DB Shoulder-to-Overhead',cat:'dumbbell',tier:2,alts:['DB Push Press','DB Strict Press','KB Press','Shoulder-to-Overhead']},
   {name:'DB Overhead Lunge',cat:'dumbbell',tier:2,unit:'reps',alts:['DB Lunge','Overhead Lunge','KB Overhead Lunge','DB Walking Lunge']},
-  {name:'DB Power Clean',cat:'dumbbell',tier:2,alts:['Power Clean','Hang Power Clean','KB Clean','DB Hang Power Clean']},
-  {name:'DB Front Rack Lunge',cat:'dumbbell',tier:2,alts:['Walking Lunge','DB Overhead Lunge','KB Front Rack Lunge','Step-Up']},
+  {name:'DB Clean',cat:'dumbbell',tier:2,alts:['Power Clean','Hang Power Clean','KB Clean','DB Hang Power Clean']},
+  {name:'DB Front Rack Lunge',cat:'dumbbell',tier:2,alts:['Walking Lunge','DB Overhead Lunge','KB Front Rack Lunge','Box Step-Up']},
   {name:'Renegade Row',cat:'dumbbell',tier:2,alts:['DB Row','KB Row','Ring Row','Barbell Row']},
   {name:'Hang Power Clean',cat:'barbell',tier:3,alts:['Power Clean','High Hang Clean','Squat Clean','DB Hang Clean']},
   {name:'Power Snatch',cat:'barbell',tier:3,alts:['Hang Power Snatch','DB Snatch','Squat Snatch','Snatch Balance']},
   {name:'Ground to Overhead',cat:'barbell',tier:3,alts:['Clean & Jerk','Power Snatch','Thruster','DB GtOH']},
   {name:'Push Jerk',cat:'barbell',tier:3,alts:['Push Press','Split Jerk','Strict Press','DB Push Jerk']},
   {name:'Overhead Squat',cat:'barbell',tier:3,alts:['Front Squat','DB Overhead Squat','Snatch Balance','Sotts Press']},
-  {name:'Hang Squat Clean',cat:'barbell',tier:3,alts:['Power Clean','Hang Power Clean','Squat Clean','DB Hang Clean']},
+  {name:'Hang Clean',cat:'barbell',tier:3,alts:['Power Clean','Hang Power Clean','Squat Clean','DB Hang Clean']},
   {name:'Handstand Push-Up',cat:'gymnastics',tier:3,alts:['Pike Push-Up','Strict Press','Z-Press','DB Strict Press']},
   {name:'Kipping HSPU',cat:'gymnastics',tier:3,alts:['Strict HSPU','Pike Push-Up','DB Strict Press','Z-Press']},
   {name:'Bar Muscle-Up',cat:'gymnastics',tier:3,alts:['Chest-to-Bar Pull-Up','C2B + Dip','Jumping Muscle-Up','Banded MU']},
   {name:'Rope Climb',cat:'gymnastics',tier:3,alts:['Legless Rope Climb','3 Pull-Ups per Climb','Ring Row','Strict Pull-Up']},
-  {name:'Pistol Squat',cat:'gymnastics',tier:3,alts:['Banded Pistol','Bulgarian Split Squat','Step-Up','Reverse Lunge']},
+  {name:'Single-leg Squat (Pistol)',cat:'gymnastics',tier:3,alts:['Banded Pistol','Bulgarian Split Squat','Box Step-Up','Reverse Lunge']},
   {name:'Wall Walk',cat:'gymnastics',tier:3,alts:['Handstand Push-Up','Pike Push-Up','Bear Crawl','HS Hold 30s']},
   {name:'Butterfly Pull-Up',cat:'gymnastics',tier:3,alts:['Kipping Pull-Up','Strict Pull-Up','C2B Pull-Up','Ring Row']},
   {name:'L-Sit',cat:'gymnastics',tier:3,unit:'time',alts:['Hollow Hold','Plank Hold','V-Up','AbMat Sit-Up']},
-  {name:'D-Ball Over Shoulder',cat:'gymnastics',tier:3,alts:['Sandbag Over Shoulder','Power Clean','KB Clean','DB Power Clean']},
+  {name:'D-Ball Over Shoulder',cat:'gymnastics',tier:3,alts:['Sandbag Over Shoulder','Power Clean','KB Clean','DB Clean']},
   {name:'Tire Flip',cat:'gymnastics',tier:3,alts:['Deadlift','Power Clean','Sandbag Over Shoulder','D-Ball Over Shoulder']},
   {name:'KB Clean',cat:'kettlebell',tier:2,alts:['KB Swing','DB Clean','Power Clean','Hang Power Clean']},
   {name:'KB Press',cat:'kettlebell',tier:3,alts:['Strict Press','Push Press','DB Strict Press','Z-Press']},
@@ -511,29 +511,31 @@ var STR=[
   {name:'Yoke Walk',cat:'kettlebell',tier:3,unit:'carry',alts:['Farmers Carry','Sled Push','Sandbag Carry','Barbell Carry']},
   {name:'Devil\'s Press',cat:'dumbbell',tier:3,alts:['DB Snatch','DB Thruster','Man Maker','Burpee + DB Snatch']},
   {name:'Man Maker',cat:'dumbbell',tier:3,alts:['Devil\'s Press','DB Thruster','Burpee + Row','DB Complex']},
-  {name:'DB Clean and Press',cat:'dumbbell',tier:3,alts:['DB Power Clean','DB Thruster','DB S2OH','Power Clean']},
-  {name:'Squat Clean',cat:'barbell',tier:4,alts:['Power Clean','Hang Squat Clean','DB Squat Clean','Hang Clean']},
+  {name:'DB Clean and Press',cat:'dumbbell',tier:3,alts:['DB Clean','DB Thruster','DB S2OH','Power Clean']},
+  {name:'Clean',cat:'barbell',tier:4,alts:['Power Clean','Hang Squat Clean','DB Squat Clean','Hang Clean']},
   {name:'Clean & Jerk',cat:'barbell',tier:4,alts:['Power Clean','Ground to Overhead','DB C&J','Squat Clean + Split Jerk']},
   {name:'Hang Power Snatch',cat:'barbell',tier:3,alts:['Power Snatch','DB Snatch','Overhead Squat','Hang Squat Snatch']},
   {name:'Split Jerk',cat:'barbell',tier:4,alts:['Push Jerk','Push Press','Power Jerk','DB Push Jerk']},
   {name:'Snatch Balance',cat:'barbell',tier:4,alts:['Overhead Squat','Drop Snatch','Sotts Press','Hang Power Snatch']},
   {name:'Ring Muscle-Up',cat:'gymnastics',tier:4,alts:['Bar Muscle-Up','Ring Dip + Pull-Up','Jumping Ring MU','Banded Ring MU']},
   {name:'Strict HSPU',cat:'gymnastics',tier:4,alts:['Handstand Push-Up','Pike Push-Up','Strict Press','Z-Press']},
-  {name:'Wall-Facing HSPU',cat:'gymnastics',tier:4,alts:['Strict HSPU','Kipping HSPU','Pike Push-Up','Handstand Push-Up']},
+  {name:'Chest-to-wall Handstand Push-up',cat:'gymnastics',tier:4,alts:['Strict HSPU','Kipping HSPU','Pike Push-Up','Handstand Push-Up']},
   {name:'Handstand Walk',cat:'gymnastics',tier:4,unit:'carry',alts:['Bear Crawl 20m','Wall Walk','HS Hold','Handstand Walk Attempt']},
   {name:'Hollow Body Hold',cat:'gymnastics',tier:4,unit:'time',alts:['L-Sit','Plank','Arch Hold','V-Up']},
   {name:'Pegboard',cat:'gymnastics',tier:4,alts:['Rope Climb','Bar Muscle-Up','Strict Pull-Up','Legless Rope Climb']},
   {name:'Freestanding HS Hold',cat:'gymnastics',tier:4,unit:'time',alts:['Wall Handstand Hold','Wall Walk','HS Hold 30s','Headstand Hold']},
   {name:'Legless Rope Climb',cat:'gymnastics',tier:4,alts:['Rope Climb','Bar Muscle-Up','3 Pull-Ups per Climb','Strict Pull-Up']},
   {name:'Turkish Get-Up',cat:'kettlebell',tier:3,unit:'side',alts:['KB Windmill','DB TGU','Overhead Lunge','KB Press']},
+  {name:'DB Turkish Get-up',cat:'dumbbell',tier:3,unit:'side',alts:['Turkish Get-Up','Man Maker','DB Clean and Press','Renegade Row']},
   // ── NEW T1 · Barbell ──────────────────────────────────────
   {name:'Sumo Deadlift',cat:'barbell',tier:1,alts:['Deadlift','KB Deadlift','DB Deadlift','Wide-Stance RDL']},
   {name:'Floor Press',cat:'barbell',tier:1,alts:['Bench Press','DB Floor Press','Push-Up','Close-Grip Bench']},
   {name:'Barbell Hip Thrust',cat:'barbell',tier:1,alts:['Glute Bridge','KB Hip Thrust','Hip Extension','Single-Leg Hip Thrust']},
   // ── NEW T1 · Gymnastics ───────────────────────────────────
   {name:'Ring Row',cat:'gymnastics',tier:1,alts:['Banded Pull-Up','Jumping Pull-Up','Pull-Up','Negative Pull-Up']},
-  {name:'Reverse Lunge',cat:'gymnastics',tier:1,alts:['Walking Lunge','Step-Up','Bulgarian Split Squat','Box Step-Up']},
-  {name:'Broad Jump',cat:'gymnastics',tier:1,alts:['Box Jump','Jump Squat','Burpee','Step-Up']},
+  {name:'Reverse Lunge',cat:'gymnastics',tier:1,alts:['Walking Lunge','Lunge','Box Step-Up','Bulgarian Split Squat']},
+  {name:'Lunge',cat:'gymnastics',tier:1,alts:['Walking Lunge','Reverse Lunge','Box Step-Up','DB Lunge']},
+  {name:'Broad Jump',cat:'gymnastics',tier:1,alts:['Box Jump','Jump Squat','Burpee','Box Step-Up']},
   {name:'Back Extension',cat:'gymnastics',tier:1,alts:['GHD Hip Extension','Superman Hold','Good Morning','KB Good Morning']},
   {name:'Side Plank',cat:'gymnastics',tier:1,unit:'time',alts:['Plank Hold','Hollow Hold','L-Sit','Arch Hold']},
   {name:'Superman Hold',cat:'gymnastics',tier:1,unit:'time',alts:['Arch Hold','Back Extension','Plank Hold','Hollow Hold']},
@@ -552,7 +554,7 @@ var STR=[
   {name:'Pike Push-Up',cat:'gymnastics',tier:2,alts:['Push-Up','Handstand Push-Up','DB Strict Press','Z-Press']},
   {name:'Ring Push-Up',cat:'gymnastics',tier:2,alts:['Push-Up','Ring Dip','Box Dip','Bar Dip']},
   {name:'Bar-Facing Burpee',cat:'gymnastics',tier:2,alts:['Burpee','Lateral Burpee','Burpee Box Jump Over','No Push-Up Burpee']},
-  {name:'Bulgarian Split Squat',cat:'gymnastics',tier:2,alts:['Reverse Lunge','Pistol Squat','Step-Up','Walking Lunge']},
+  {name:'Bulgarian Split Squat',cat:'gymnastics',tier:2,alts:['Reverse Lunge','Pistol Squat','Box Step-Up','Walking Lunge']},
   {name:'Cossack Squat',cat:'gymnastics',tier:2,alts:['Air Squat','Pistol Squat','Bulgarian Split Squat','Goblet Squat']},
   {name:'Knees-to-Chest',cat:'gymnastics',tier:2,alts:['Toes-to-Bar','Hanging Knee Raise','V-Up','AbMat Sit-Up']},
   // ── NEW T2 · Kettlebell ───────────────────────────────────
@@ -561,7 +563,9 @@ var STR=[
   {name:'KB Row',cat:'kettlebell',tier:2,alts:['DB Row','Barbell Row','Ring Row','KB Gorilla Row']},
   // ── NEW T2 · Dumbbell ─────────────────────────────────────
   {name:'DB Push Press',cat:'dumbbell',tier:2,alts:['Push Press','DB Strict Press','KB Push Press','DB S2OH']},
-  {name:'DB Hang Power Clean',cat:'dumbbell',tier:2,alts:['DB Power Clean','Hang Power Clean','KB Clean','DB Snatch']},
+  {name:'DB Hang Power Clean',cat:'dumbbell',tier:2,alts:['DB Clean','Hang Power Clean','KB Clean','DB Snatch']},
+  {name:'DB Hang Clean',cat:'dumbbell',tier:2,alts:['DB Clean','DB Hang Power Clean','Hang Clean','Hang Power Clean']},
+  {name:'DB Push Jerk',cat:'dumbbell',tier:2,alts:['DB Push Press','DB Shoulder-to-Overhead','Push Jerk','DB Thruster']},
   // ── NEW T2 · Cardio ───────────────────────────────────────
   // ── NEW T3 · Barbell ──────────────────────────────────────
   {name:'High Hang Power Clean',cat:'barbell',tier:3,alts:['Hang Power Clean','Power Clean','Muscle Clean','DB Hang Clean']},
@@ -571,19 +575,24 @@ var STR=[
   {name:'Skin the Cat',cat:'gymnastics',tier:3,alts:['Ring Muscle-Up','L-Sit','Ring Row','Strict Pull-Up']},
   {name:'Dragon Flag',cat:'gymnastics',tier:3,alts:['L-Sit','Toes-to-Bar','V-Up','Hollow Body Hold']},
   {name:'Nordic Curl',cat:'gymnastics',tier:3,alts:['GHD Sit-Up','Romanian Deadlift','Good Morning','Glute Bridge']},
+  {name:'Strict Chest-to-bar Pull-up',cat:'gymnastics',tier:3,alts:['Chest-to-Bar Pull-Up','Strict Pull-up','Butterfly Pull-Up','Kipping Pull-Up']},
+  {name:'Strict Toes-to-bar',cat:'gymnastics',tier:3,alts:['Toes-to-Bar','Hanging Knee Raise','Knees-to-Chest','Leg Raise']},
   // ── NEW T3 · Dumbbell ─────────────────────────────────────
-  {name:'DB Hang Power Snatch',cat:'dumbbell',tier:3,alts:['DB Snatch','Power Snatch','KB Snatch','DB Power Clean']},
+  {name:'DB Hang Power Snatch',cat:'dumbbell',tier:3,alts:['DB Snatch','Power Snatch','KB Snatch','DB Clean']},
   {name:'DB Overhead Squat',cat:'dumbbell',tier:3,alts:['Overhead Squat','DB Front Squat','Goblet Squat','Zercher Squat']},
   // ── NEW T3 · Cardio ───────────────────────────────────────
   // ── NEW T4 · Barbell ──────────────────────────────────────
   {name:'Squat Snatch',cat:'barbell',tier:4,alts:['Power Snatch','Hang Squat Snatch','Overhead Squat','Hang Power Snatch']},
   {name:'Power Jerk',cat:'barbell',tier:4,alts:['Push Jerk','Split Jerk','Push Press','Clean & Jerk']},
   // ── NEW T4 · Dumbbell ─────────────────────────────────────
-  {name:'DB Squat Clean',cat:'dumbbell',tier:4,alts:['DB Power Clean','Squat Clean','DB Hang Power Clean','DB Thruster']},
-  {name:'DB Clean & Jerk',cat:'dumbbell',tier:4,alts:['Clean & Jerk','DB Power Clean','DB Thruster','DB S2OH']},
+  {name:'DB Squat Clean',cat:'dumbbell',tier:4,alts:['DB Clean','Squat Clean','DB Hang Power Clean','DB Thruster']},
+  {name:'DB Clean & Jerk',cat:'dumbbell',tier:4,alts:['Clean & Jerk','DB Clean','DB Thruster','DB S2OH']},
   // ── NEW T4 · Kettlebell ───────────────────────────────────
   {name:'Double KB Front Squat',cat:'kettlebell',tier:4,alts:['Front Squat','KB Front Squat','Goblet Squat','Double KB Clean']},
   {name:'Double KB Clean & Press',cat:'kettlebell',tier:4,alts:['Clean & Jerk','KB Thruster','Double KB Front Squat','KB Complex']},
+  {name:'Kipping Deficit HSPU',cat:'gymnastics',tier:4,alts:['Kipping HSPU','Strict HSPU','Handstand Push-Up','Chest-to-wall Handstand Push-up']},
+  {name:'Strict Bar Muscle-up',cat:'gymnastics',tier:4,alts:['Bar Muscle-Up','Strict Muscle-up','Ring Muscle-Up','Chest-to-Bar Pull-Up']},
+  {name:'Strict Muscle-up',cat:'gymnastics',tier:4,alts:['Ring Muscle-Up','Bar Muscle-Up','Strict Bar Muscle-up','Chest-to-Bar Pull-Up']},
   // ── NEW T4 · Cardio ───────────────────────────────────────
 ];
 var CARDIO=[
@@ -607,6 +616,7 @@ var CARDIO=[
   {name:'Double-Unders',amount:50,   unit:'reps', alts:['Single-Unders','Jump Rope']},
   {name:'Sprint',       amount:100,  unit:'m',    alts:['Run','Row']},
 ];
+var TABATA_STR_NAMES=['Air Squat','Push-Up','Burpee','Mountain Climber','Box Jump','Box Step-Up','Slam Ball','Wall Ball','V-Up','Knees-to-Chest','Broad Jump','KB Swing','American KB Swing','KB Thruster','DB Thruster','DB Snatch','DB Lunge','DB Box Step-Up','DB Push Press','Walking Lunge','Lunge','Reverse Lunge'];
 var TABATA_CARDIO=[
   {name:'Run',          alts:['Row','Assault Bike','Ski Erg','Sprint']},
   {name:'Sprint',       alts:['Run','Row','Assault Bike']},
@@ -623,7 +633,7 @@ function _snapTeam(r){return r<24?Math.max(2,Math.round(r/2)*2):Math.max(10,Math
 function getSecondsPerRep(ex,lv,team){
   // Speed factor: المستوى فقط — الإيليت أسرع → fill guarantee يعطيه رب أكثر تلقائياً
   var _teamF=team===2?({beginner:0.82,intermediate:0.75,advanced:0.68,elite:0.60}[lv||'intermediate']||0.75):1;
-  var spd=({beginner:1.60,intermediate:1.20,advanced:1.00,elite:0.80}[lv||'intermediate']||1.20)*_teamF;
+  var spd=({beginner:1.70,intermediate:1.30,advanced:1.00,elite:0.80}[lv||'intermediate']||1.30)*_teamF;
   var t=ex.tier||1;
   var base;
   if(ex.cat==='gymnastics'){
@@ -688,12 +698,17 @@ function _cardioLimits(team,shared,lv){
   return{calMin:cal.min*mult,calMax:cal.max*mult,mtrMin:mtr.min*mult,mtrMax:mtr.max*mult,mtrStep:100,duMin:du.min*mult,duMax:du.max*mult};
 }
 // ── Cardio Helpers ──────────────────────────────────────────────────────────
-function _cardioInitAmt(unit,CL){return unit==='Cal'?CL.calMin:unit==='m'?CL.mtrMin:CL.duMin;}
+function _cardioInitAmt(unit,CL){
+  if(unit==='Cal')return CL.calMin;
+  if(unit==='m'){var _s=[];for(var _a=CL.mtrMin;_a<=CL.mtrMax;_a+=_mtrStep(_a))_s.push(_a);return _s.length?_s[Math.floor(Math.random()*_s.length)]:CL.mtrMin;}
+  return CL.duMin;
+}
 function _cardioAtMax(cEx,CL){return cEx.unit==='Cal'?cEx.amount>=CL.calMax:cEx.unit==='m'?cEx.amount>=CL.mtrMax:cEx.amount>=CL.duMax;}
 function _cardioAtMin(cEx,CL){return cEx.unit==='Cal'?cEx.amount<=CL.calMin:cEx.unit==='m'?cEx.amount<=CL.mtrMin:cEx.amount<=CL.duMin;}
 function _calSnapStep(v){return v<24?2:10;}
-function _cardioUp(cEx,CL){var a;if(cEx.unit==='Cal'){var st=_calSnapStep(cEx.amount);a=Math.min(CL.calMax,cEx.amount+st);if(a>=24&&a%10!==0)a=Math.round(a/10)*10;a=Math.min(CL.calMax,a);}else if(cEx.unit==='m')a=Math.min(CL.mtrMax,cEx.amount+CL.mtrStep);else a=Math.min(CL.duMax,cEx.amount+10);return Object.assign({},cEx,{amount:a});}
-function _cardioDn(cEx,CL){var a;if(cEx.unit==='Cal'){var st=_calSnapStep(cEx.amount);a=Math.max(CL.calMin,cEx.amount-st);if(a>=24&&a%10!==0)a=Math.round(a/10)*10;a=Math.max(CL.calMin,a);}else if(cEx.unit==='m')a=Math.max(CL.mtrMin,cEx.amount-CL.mtrStep);else a=Math.max(CL.duMin,cEx.amount-10);return Object.assign({},cEx,{amount:a});}
+function _mtrStep(amt){return amt>=600?200:100;}
+function _cardioUp(cEx,CL){var a;if(cEx.unit==='Cal'){var st=_calSnapStep(cEx.amount);a=Math.min(CL.calMax,cEx.amount+st);if(a>=24&&a%10!==0)a=Math.round(a/10)*10;a=Math.min(CL.calMax,a);}else if(cEx.unit==='m')a=Math.min(CL.mtrMax,cEx.amount+_mtrStep(cEx.amount));else a=Math.min(CL.duMax,cEx.amount+10);return Object.assign({},cEx,{amount:a});}
+function _cardioDn(cEx,CL){var a;if(cEx.unit==='Cal'){var st=_calSnapStep(cEx.amount);a=Math.max(CL.calMin,cEx.amount-st);if(a>=24&&a%10!==0)a=Math.round(a/10)*10;a=Math.max(CL.calMin,a);}else if(cEx.unit==='m')a=Math.max(CL.mtrMin,cEx.amount-_mtrStep(cEx.amount));else a=Math.max(CL.duMin,cEx.amount-10);return Object.assign({},cEx,{amount:a});}
 function _cardioSecEst(cEx){if(!cEx||!cEx.amount)return 0;if(cEx.unit==='Cal')return cEx.amount*5.5;if(cEx.unit==='m')return(cEx.amount/10)*3.0;return cEx.amount*3.0;}
 // يخفض الكارديو حتى ما يتعدى capSec ثانية
 function _cardioCapSec(cEx,capSec,CL){if(!cEx||!cEx.amount||capSec<=0)return cEx;var s=0;while(_cardioSecEst(cEx)>capSec&&!_cardioAtMin(cEx,CL)&&s++<30)cEx=_cardioDn(cEx,CL);return cEx;}
@@ -787,6 +802,16 @@ function _repSnap(v,mn,mx){
   if(mx!=null)s=Math.min(mx,s);
   return s;
 }
+function _diffSortReps(repsArr,chosen,lv,team){
+  if(!chosen||chosen.length<2)return{chosen:chosen,repsArr:repsArr};
+  var avgRep=repsArr.reduce(function(s,r){return s+r;},0)/repsArr.length;
+  var pairs=chosen.map(function(e,i){return{ex:e,spr:getSecondsPerRep(e,lv,team)||1,rep:repsArr[i]};});
+  pairs.sort(function(a,b){return b.spr-a.spr;}); // hardest first
+  var avgSpr=pairs.reduce(function(s,p){return s+p.spr;},0)/pairs.length;
+  var newChosen=pairs.map(function(p){return p.ex;});
+  var newReps=pairs.map(function(p){return Math.max(2,_repSnap(Math.round(avgRep*avgSpr/p.spr)));});
+  return{chosen:newChosen,repsArr:newReps};
+}
 function _exLims(exArr,lv,team){
   if(!exArr||!exArr.length){var fb=_repLimits('barbell',lv,team);return{min:fb.min,max:fb.max};}
   var acc=exArr.reduce(function(a,e){var l=_repLimits(e.cat,lv,team);return{min:Math.max(a.min,l.min),max:Math.min(a.max,l.max)};},{min:0,max:Infinity});
@@ -795,6 +820,7 @@ function _exLims(exArr,lv,team){
 }
 // ── For Time (Chipper): معاملات تضخيم الحد الأعلى للتكرارات ──
 var _CHIPPER_MULT={beginner:2.0,intermediate:2.0,advanced:2.0,elite:2.0};
+var _CARDIO_CNT_MOV={2:[4,6,8,10,12],3:[6,9,12],4:[8,12]};
 function _exLimsForTime(exArr,lv,team){
   var _mult=_CHIPPER_MULT[lv]||1.0;
   var _snapMax=function(cat,lv,team){
@@ -810,8 +836,7 @@ function _exLimsForTime(exArr,lv,team){
 }
 function pkN(a,n){
   var shuffled=a.slice().sort(function(){return Math.random()-.5});
-  // تنويع: تجنب التمارين المتشابهة (alts)
-  if(!shuffled.length||!shuffled[0].alts)return shuffled.slice(0,n);
+  if(!shuffled.length)return [];
   var picked=[],excluded={};
   for(var i=0;i<shuffled.length&&picked.length<n;i++){
     var ex=shuffled[i];
@@ -842,10 +867,9 @@ function getChipperPool(lv,team){
 // ── Time-driven exercise count targets ────────────────────────────────────
 function _timeCfg(time){
   if(time<=15)return{min:3,max:5};
-  if(time<=30)return{min:4,max:6};
-  if(time<=40)return{min:5,max:7};
-  if(time<=50)return{min:6,max:8};
-  return{min:7,max:9};
+  if(time<=30)return{min:4,max:7};
+  if(time<=45)return{min:6,max:9};
+  return{min:8,max:12};
 }
 var _CARRY_VALS={beginner:'30m',intermediate:'60m',advanced:'90m',elite:'120m'};
 var _TIME_VALS={beginner:'30s',intermediate:'45s',advanced:'60s',elite:'90s'};
@@ -976,6 +1000,7 @@ function mkAmrap(time,lv,team,cfg){
   // ── حارس نهائي ──
   _rArr=_rArr.map(function(r){return _repSnap(Math.round(r||_amrHardMin),_amrHardMin,_patternMax);});
   while(_rArr.length<chosen.length)_rArr.push(baseReps||_amrHardMin);
+  var _dsA=_diffSortReps(_rArr,chosen,lv,team);_rArr=_dsA.repsArr;chosen=_dsA.chosen;
   var items=[];
   chosen.forEach(function(ex,i){
     var r=_rArr[i]||baseReps;
@@ -1084,12 +1109,11 @@ function mkRFT(time,lv,team,cfg){
       var _n=chosen.length;
       var _h=Math.floor(_n/2);
       if(_rpType==='asc'){
-        var _st=_eb-_h*_step;
-        return chosen.map(function(e,i){return _snapFn(_st+i*_step,_rftLimsAll.min,_rftLimsAll.max);});
+        var _bot=Math.round(Math.max(_eb-_h*_step,_rftLimsAll.min)/_step)*_step;
+        return chosen.map(function(e,i){return _snapFn(_bot+i*_step,_rftLimsAll.min,_rftLimsAll.max);});
       } else if(_rpType==='desc'){
-        var _st2=_eb-_h*_step;
-        var _seq=chosen.map(function(e,i){return _snapFn(_st2+i*_step,_rftLimsAll.min,_rftLimsAll.max);});
-        return _seq.slice().reverse();
+        var _top=Math.round(Math.min(_eb+_h*_step,_rftLimsAll.max)/_step)*_step;
+        return chosen.map(function(e,i){return _snapFn(_top-i*_step,_rftLimsAll.min,_rftLimsAll.max);});
       } else {
         var _fl=_snapFn(_eb,_rftLimsAll.min,_rftLimsAll.max);
         return chosen.map(function(){return _fl;});
@@ -1208,6 +1232,7 @@ function mkRFT(time,lv,team,cfg){
       baseReps=_safeR;_perExReps=null;
     }
   }
+  if(_perExReps&&_perExReps.length){var _dsR=_diffSortReps(_perExReps,chosen,lv,team);_perExReps=_dsR.repsArr;chosen=_dsR.chosen;}
   var items=[{kind:'sep',label:'── '+rounds+' ROUNDS ──'}];
   chosen.forEach(function(ex,i){
     var _bRep=(_perExReps&&_perExReps[i]!=null)?_perExReps[i]:(reps[0]||baseReps);
@@ -1264,6 +1289,7 @@ function mkEmom(time,lv,team,cfg){
       cEx=Object.assign({},_cp,{amount:_initAmt});
     }
   }
+  if(_emRArr&&_emRArr.length){var _dsE=_diffSortReps(_emRArr,chosen,lv,team);_emRArr=_dsE.repsArr;chosen=_dsE.chosen;}
   var _emomRest=_hasRest;
   var _emomCycle=numMov+(addCardio&&cEx?1:0)+(_emomRest?1:0);
   var sets=cfg.rounds||Math.floor(time/_emomCycle);
@@ -1287,19 +1313,21 @@ var CHIPPER_SCHEMES={
 };
 function mkChipper(time,lv,team,cfg){
   cfg=cfg||{};
-  // ── STATIONS MODE ──────────────────────────────────────────────
-  var _resolvedMode=cfg.stationMode||(Math.random()>.5?'stations':'classic');
-  if(_resolvedMode==='stations'){
-    var sz=cfg.stationSize||(Math.random()>0.5?3:2);
-    var validCounts=sz===2?[4,6,8]:[6,9,12];
-    // ── Time-driven station count: SHORT→min, MED→mid, LONG→max ──
-    if(!cfg.exCnt){var exCnt=time<=15?validCounts[0]:time<=30?validCounts[1]:validCounts[validCounts.length-1];}
-    else var exCnt=cfg.exCnt;
-    if(validCounts.indexOf(exCnt)<0)exCnt=validCounts[1];
-    var numStations=exCnt/sz;
+  // stations mode removed — always classic
+  if(false){
+    // ── Station count: from cfg or time-based random ──
+    var _availStCnts=time<=15?[2]:time<=30?[2,3]:[2,3,4];
+    var numStations=cfg.stationCount||pk(_availStCnts);
+    // ── sz: حسب الجدول والوقت ──
+    var _szAll={2:[2,3,4,5,6],3:[2,3,4],4:[2,3]};
+    var _szByTime={2:time<=15?[2,3]:time<=30?[2,3,4,5]:[2,3,4,5,6],3:time<=15?[2]:time<=30?[2,3]:[2,3,4],4:time<=30?[2]:[2,3]};
+    var _szPool=cfg.exCnt?null:(_szByTime[numStations]||_szAll[numStations]||[2,3]);
+    var sz=cfg.exCnt?Math.round(cfg.exCnt/numStations):(pk(_szPool)||2);
+    if(sz<1)sz=1;
+    var exCnt=cfg.exCnt||(numStations*sz);
     var rep=team===2?20:10;
     var chosen=pkN(getChipperPool(lv,team),exCnt);
-    var addGates=cfg.withCardio!==false;
+    var addGates=true;
     var GATE_CAL=['Assault Bike','Row','Ski Erg'];
     var GATE_MTR=['Row','Ski Erg','Run'];
     var _stCL=_cardioLimits(team,true,lv);
@@ -1310,41 +1338,59 @@ function mkChipper(time,lv,team,cfg){
     var _gCapCal=Math.min(_stCL.calMax,_roundCal(_stBdg*0.30/numStations/5.5,team));
     var _gCapMtr=Math.min(_stCL.mtrMax,_roundMtr(_stBdg*0.30/numStations/0.30));
     var gFixedAmt=cfg.cardioAmt||(gUnit==='Cal'?_stCL.calMin:_stCL.mtrMin);
-    // ── Loop scaler: هدف 70-90% من الوقت ──
+    // ── Loop scaler: هدف 90-100% من الوقت ──
+    var _stMaxSt=Math.max.apply(null,_availStCnts);
+    var _stMinSt=Math.min.apply(null,_availStCnts);
     if(chosen.length){
       var _stLims=_exLimsForTime(chosen,lv,team);
       var _stMaxR=_stLims.max;
       var _stMinR=_stLims.min;
-      for(var _stFc=0;_stFc<10;_stFc++){
+      for(var _stFc=0;_stFc<20;_stFc++){
+        exCnt=numStations*sz;
+        var _stSlice=chosen.slice(0,exCnt);
         var _stGateT=addGates?(gUnit==='Cal'?numStations*gFixedAmt*5.5:(gUnit==='m'?numStations*(gFixedAmt/10)*3.0:0)):0;
-        var _stFinalEst=_wodEstTime(chosen.map(function(){return rep;}),chosen,null,exCnt+(addGates?numStations:0),team,lv)+_stGateT;
+        var _stFinalEst=_wodEstTime(_stSlice.map(function(){return rep;}),_stSlice,null,exCnt+(addGates?numStations:0),team,lv)+_stGateT;
         if(_stFinalEst>=_stBdg*0.90&&_stFinalEst<=_stBdg*1.00)break;
         if(_stFinalEst>_stBdg*1.00){
           // ↓ نزّل الرب أولاً
           var _stDnSf=(_stBdg*0.95)/_stFinalEst;
           var _stPrevRep=rep;
           rep=_repSnap(Math.round(rep*_stDnSf),_stMinR,_stMaxR);
-          if(rep===_stPrevRep){
-            // الرب بالحد — نزّل الكارديو
-            if(!cfg.cardioAmt){
-              if(gUnit==='Cal'){var _ncG=gFixedAmt-_calStepDn(gFixedAmt);gFixedAmt=Math.max(_stCL.calMin,_ncG);}
-              else{var _nmG=gFixedAmt-_stCL.mtrStep;gFixedAmt=Math.max(_stCL.mtrMin,_nmG);}
-            } else break;
+          if(rep!==_stPrevRep)continue;
+          // rep بالحد ↓ — نزّل الكارديو
+          if(!cfg.cardioAmt){
+            var _stCdnChanged=false;
+            if(gUnit==='Cal'){var _ncG=Math.max(_stCL.calMin,gFixedAmt-_calStepDn(gFixedAmt));if(_ncG!==gFixedAmt){gFixedAmt=_ncG;_stCdnChanged=true;}}
+            else{var _nmG=Math.max(_stCL.mtrMin,gFixedAmt-_stCL.mtrStep);if(_nmG!==gFixedAmt){gFixedAmt=_nmG;_stCdnChanged=true;}}
+            if(_stCdnChanged)continue;
           }
+          // كل الكنوبات بالحد ↓ — نزّل ستيشن
+          if(!cfg.stationCount&&numStations>_stMinSt){numStations--;_gCapCal=Math.min(_stCL.calMax,_roundCal(_stBdg*0.30/numStations/5.5,team));_gCapMtr=Math.min(_stCL.mtrMax,_roundMtr(_stBdg*0.30/numStations/0.30));}
+          else break;
         } else {
           // ↑ ارفع الرب أولاً
           var _stBoostSf=(_stBdg*0.95)/_stFinalEst;
           var _stPrevRepU=rep;
           rep=_repSnap(Math.round(rep*_stBoostSf),_stMinR,_stMaxR);
-          if(rep===_stPrevRepU){
-            // الرب بالسقف — ارفع الكارديو
-            if(!cfg.cardioAmt){
-              if(gUnit==='Cal'){var _ngC=Math.min(_gCapCal,gFixedAmt+_calStep(gFixedAmt));if(_ngC===gFixedAmt)break;gFixedAmt=_ngC;}
-              else{var _ngM=Math.min(_gCapMtr,gFixedAmt+_stCL.mtrStep);if(_ngM===gFixedAmt)break;gFixedAmt=_ngM;}
-            } else break;
+          if(rep!==_stPrevRepU)continue;
+          // rep بالسقف ↑ — ارفع الكارديو
+          if(!cfg.cardioAmt){
+            var _stCupChanged=false;
+            if(gUnit==='Cal'){var _ngC=Math.min(_gCapCal,gFixedAmt+_calStep(gFixedAmt));if(_ngC!==gFixedAmt){gFixedAmt=_ngC;_stCupChanged=true;}}
+            else{var _ngM=Math.min(_gCapMtr,gFixedAmt+_stCL.mtrStep);if(_ngM!==gFixedAmt){gFixedAmt=_ngM;_stCupChanged=true;}}
+            if(_stCupChanged)continue;
           }
+          // كل الكنوبات بالسقف ↑ — زد ستيشن
+          if(!cfg.stationCount&&numStations<_stMaxSt){
+            numStations++;
+            exCnt=numStations*sz;
+            if(chosen.length<exCnt){var _morePool=getChipperPool(lv,team).filter(function(e){return!chosen.some(function(c){return c.name===e.name;});});chosen=chosen.concat(pkN(_morePool,exCnt-chosen.length));}
+            var _newLims=_exLimsForTime(chosen.slice(0,exCnt),lv,team);_stMaxR=_newLims.max;_stMinR=_newLims.min;
+            _gCapCal=Math.min(_stCL.calMax,_roundCal(_stBdg*0.30/numStations/5.5,team));_gCapMtr=Math.min(_stCL.mtrMax,_roundMtr(_stBdg*0.30/numStations/0.30));
+          } else break;
         }
       }
+      exCnt=numStations*sz;
     }
     var usedGates=[];
     var items=[];
@@ -1363,14 +1409,20 @@ function mkChipper(time,lv,team,cfg){
         items.push({kind:'station-gate',ex:gEx,stationNum:s+1,isLast:isLast});
       }
     }
-    return[{type:'Chipper',title:'Chipper Stations — For Time',infoKey:'i_chipper_st',infoVars:{s:numStations,z:sz,tot:numStations*sz,t:time},scoreKey:'sc_time',teamKey:team>1?'tm_shared':null,items:items,chipperCfg:cfg}];
+    return[{type:'Chipper',title:'Chipper — For Time',infoKey:'i_chipper_st',infoVars:{s:numStations,z:sz,tot:numStations*sz,t:time},scoreKey:'sc_time',teamKey:team>1?'tm_shared':null,items:items,chipperCfg:cfg}];
   }
   // ── CLASSIC MODE ───────────────────────────────────────────────
   var _clTc=_timeCfg(time);
-  var exCnt=cfg.exCnt||ri(_clTc.min,_clTc.max);
+  var _clPreCN=(cfg.withCardio===true)?(cfg.cardioCount||1):1;
+  var _clCntMovPool=(_clPreCN>=2&&_CARDIO_CNT_MOV[_clPreCN])||null;
+  var exCnt=cfg.exCnt||(_clCntMovPool?pk(_clCntMovPool):ri(_clTc.min,_clTc.max));
   var repsArr=[];
-  var _clIsFlat=false,_clIsScheme=false;
-  if(Math.random()>0.5){_clIsScheme=true;}else{_clIsFlat=true;}
+  // ── Pattern selection ──
+  var _clPats=team===2?['flat_10','flat_20','desc_10','desc_20','asc_10','asc_20']:['flat_5','flat_10','flat_20','desc_10','desc_20','asc_10','asc_20'];
+  var _clPat=cfg.pat||pk(_clPats);
+  var _isFlat=_clPat.indexOf('flat')===0;
+  var _isAsc=_clPat.indexOf('asc')===0;
+  var _isDesc=_clPat.indexOf('desc')===0;
   var cardioMode=cfg.withCardio;
   var addCardio=cardioMode===true||(cardioMode===undefined&&Math.random()>.5);
   var strCount=exCnt;
@@ -1378,144 +1430,79 @@ function mkChipper(time,lv,team,cfg){
   var _clCLInit=_cardioLimits(team,true,lv);
   var cEx=addCardio?(function(){if(!CARDIO.length)return null;var _cp=pk(CARDIO);var _cu=_cp.unit;return Object.assign({},_cp,{amount:_cardioInitAmt(_cu,_clCLInit)});})():null;
   var _clBudget=time*60;
-  // ── مساعد: swap-cardio ──
   var _swapCardio=function(curCex,CL){var _alts=CARDIO.filter(function(c){return!curCex||c.unit!==curCex.unit;});if(!_alts.length)return curCex;var _nc=pk(_alts);return Object.assign({},_nc,{amount:_cardioInitAmt(_nc.unit,CL)});};
-  // ── Build repsArr after chosen is known ──
   {
-    var _clCardioFilled=false;
-    if(_clIsScheme){
-      // ── SCHEME: سلم مضاعفات 10 أو 20 ──
-      var _clSchemeLims=_exLimsForTime(chosen,lv,team);
-      var _schMult=Math.random()>0.5?10:20;
-      // تقليل عدد التمارين عشان السلم يطلع نظيف بدون تكرار
-      var _schSafeEx=Math.max(2,Math.floor(_clSchemeLims.max/_schMult));
-      if(!cfg.exCnt&&exCnt>_schSafeEx){exCnt=_schSafeEx;chosen=chosen.slice(0,exCnt);}
-      var _step=_schMult;
-      var _genSeq=function(s,n){var a=[];for(var _k=1;_k<=n;_k++)a.push(s*_k);return a;};
-      var _seq=_genSeq(_step,exCnt);
-      // دالة لتطبيق snap على السيكونس قبل حساب الوقت (اللوب يشوف الأرقام الفعلية لا الخام)
-      var _snapSchSeq=function(s){return s.map(function(r){return _repSnap(r,_clSchemeLims.min,_clSchemeLims.max);});};
-      var _schCL=_cardioLimits(team,true,lv);
-      for(var _schLoop=0;_schLoop<60;_schLoop++){
-        var _schEst=_wodEstTime(_snapSchSeq(_seq),chosen,cEx,exCnt+(addCardio&&cEx?1:0),team,lv);
-        if(_schEst>=_clBudget*0.90&&_schEst<=_clBudget*1.00)break;
-        if(_schEst>_clBudget*1.00){
-          // ↓ كنوبات
-          var _dSchK=[];
-          if(!cfg.baseReps&&_step>_schMult){_dSchK.push('step');_dSchK.push('step');}
-          if(cEx&&!cfg.cardioAmt&&!_cardioAtMin(cEx,_schCL))_dSchK.push('cardio');
-          if(exCnt>2&&!cfg.exCnt)_dSchK.push('exercise');
-          if(CARDIO.length>1&&cEx&&!cfg.cardioAmt&&_cardioAtMin(cEx,_schCL))_dSchK.push('swap-cardio');
-          if(!_dSchK.length){
-            if(cEx&&!cfg.cardioAmt&&cfg.withCardio!==true){addCardio=false;cEx=null;}
-            else break;
-          } else {
-            var _dSchPk=pk(_dSchK);
-            if(_dSchPk==='step'){_step=Math.max(_schMult,_step-_schMult);_seq=_genSeq(_step,exCnt);}
-            else if(_dSchPk==='cardio'){cEx=_cardioDn(cEx,_schCL);}
-            else if(_dSchPk==='exercise'){chosen.pop();exCnt--;_seq=_genSeq(_step,exCnt);}
-            else if(_dSchPk==='swap-cardio'){cEx=_swapCardio(cEx,_schCL);}
-          }
-        } else {
-          // ↑ كنوبات — الستيب يرتفع طالما التسلسل كله ≤ tableMax
-          var _uSchK=[];
-          if(!cfg.baseReps&&(_step+_schMult)*exCnt<=_clSchemeLims.max){_uSchK.push('step');_uSchK.push('step');_uSchK.push('step');}
-          if(!cfg.cardioAmt){
-            if(!addCardio||!cEx){if(cfg.withCardio!==false&&CARDIO.length)_uSchK.push('add-cardio');}
-            else if(!_cardioAtMax(cEx,_schCL)&&_cardioSecEst(cEx)<_clBudget*0.30)_uSchK.push('cardio');
-            // لا swap في UP — يسبب دوران يرجع من min
-          }
-          if(chosen.length<_clTc.max&&!cfg.exCnt)_uSchK.push('exercise');
-          if(!_uSchK.length)break;
-          var _uSchPk=pk(_uSchK);
-          if(_uSchPk==='step'){_step+=_schMult;_seq=_genSeq(_step,exCnt);}
-          else if(_uSchPk==='add-cardio'){var _sc3=pk(CARDIO);addCardio=true;cEx=Object.assign({},_sc3,{amount:_cardioInitAmt(_sc3.unit,_schCL)});}
-          else if(_uSchPk==='cardio'){cEx=_cardioUp(cEx,_schCL);}
-          else if(_uSchPk==='exercise'){var _schAP=getChipperPool(lv,team).filter(function(e){return!chosen.some(function(c){return c.name===e.name;});});if(_schAP.length){chosen.push(pk(_schAP));exCnt++;_seq=_genSeq(_step,exCnt);}}
-          else if(_uSchPk==='swap-cardio'){cEx=_swapCardio(cEx,_schCL);}
-        }
+    // ── Limits ──
+    var _clLims=_exLimsForTime(chosen,lv,team);
+    var _clMinR=_clLims.min;var _clMaxR=_clLims.max;
+    // ── Step & cap per pattern ──
+    var _clStep=({'flat_5_25':5,'flat_5':5,'flat_10':10,'flat_20':20,'desc_10':10,'desc_20':20,'asc_10':10,'asc_20':20})[_clPat]||10;
+    var _clCap=({'flat_5_25':25})[_clPat]||_clMaxR;
+    _clCap=Math.min(_clCap,_clMaxR);
+    var _clSnap=function(v,cap){var s=Math.round(v/_clStep)*_clStep;s=Math.max(_clMinR,Math.max(_clStep,s));return Math.min(cap||_clMaxR,s);};
+    // ── Viability for ladder patterns ──
+    if(_isDesc||_isAsc){
+      var _maxLadderEx=Math.max(1,Math.floor(_clCap/_clStep));
+      if(!cfg.exCnt&&exCnt>_maxLadderEx){
+        if(_maxLadderEx<2){_clPat='flat_10';_isFlat=true;_isDesc=false;_isAsc=false;_clStep=10;}
+        else{exCnt=_maxLadderEx;chosen=chosen.slice(0,exCnt);}
       }
-      // صاعد أو نازل 50/50
-      var _schIsDesc=Math.random()>0.5;
-      repsArr=_schIsDesc?_seq.slice().reverse():_seq.slice();
-      // تطبيق مضاعفات النمط مع حدود الجدول
-      repsArr=repsArr.map(function(r){return _repSnap(r,_clSchemeLims.min,_clSchemeLims.max);});
-      // اذا السلم انهار (≥60% نفس القيمة) حوّله لـ flat بالقيمة الأعلى
-      var _schTopV=_clSchemeLims.max;
-      var _schTopCnt=repsArr.filter(function(r){return r>=_schTopV-1;}).length;
-      if(_schTopCnt>=Math.ceil(repsArr.length*0.6)){repsArr=repsArr.map(function(){return _schTopV;});}
-      // ترتيب التمارين: الأصعب يأخذ أكبر عدد
-      var _diffRank={barbell:1,kettlebell:2,dumbbell:3,gymnastics:4};
-      var _rankEx=function(ex){return _diffRank[ex&&ex.cat]||5;};
-      chosen.sort(function(a,b){return _schIsDesc?_rankEx(b)-_rankEx(a):_rankEx(a)-_rankEx(b);});
-    }else{
-      // ── FLAT: رقم واحد لكل الحركات ──
-      var _clFlatLims=_exLimsForTime(chosen,lv,team);
-      var _clMinR=_clFlatLims.min;
-      var _clMaxR=_clFlatLims.max;
-      // نمط البداية: زوجي (≤20) أو مضاعفات 5 (≤20، سولو فقط)
-      var _flatPat=(!cfg.baseReps&&team===1&&Math.random()>0.5)?'five':'even';
-      // القيمة الأولى: صغيرة ضمن النمط (< 24 دايماً)
-      var _fInit5=Math.max(5,Math.ceil(_clMinR/5)*5);
-      var _fInit2=_repSnap(Math.max(2,_clMinR),_clMinR,22);
-      var _snapBase=_flatPat==='five'?Math.min(20,_fInit5):Math.min(20,_fInit2);
-      if(_snapBase<2)_snapBase=2;
-      // دوال الانتقال: تراعي قاعدة <24→زوجي / ≥24→×10 بدون إنتاج 32 أو 26
-      var _flatUp=function(v){
-        if(v<20)return _repSnap(v+(_flatPat==='five'?5:2),_clMinR,_clMaxR);
-        if(v<=22)return Math.min(_clMaxR,30); // قفز للأول ×10 فوق 24
-        return _repSnap(v+10,_clMinR,_clMaxR);
-      };
-      var _flatDn=function(v){
-        if(v>24)return _repSnap(v-10,_clMinR,_clMaxR);
-        if(v>=24)return Math.max(_clMinR,22);
-        var s=_flatPat==='five'?5:2;
-        return Math.max(_clMinR,_repSnap(v-s,_clMinR,22));
-      };
+    }
+    // ── Initial values ──
+    var _snapBase,_dTop;
+    if(_isFlat){
+      _snapBase=_clSnap(Math.max(_clMinR,_clStep),_clCap);
       repsArr=chosen.map(function(){return _snapBase;});
-      var _clCL=_cardioLimits(team,true,lv);
-      var _clCardioRemovedFlat=false;
-      for(var _clLoop=0;_clLoop<60;_clLoop++){
-        var _clFlatChk=_wodEstTime(repsArr,chosen,cEx,chosen.length+(addCardio&&cEx?1:0),team,lv);
-        if(_clFlatChk>=_clBudget*0.90&&_clFlatChk<=_clBudget*1.00)break;
-        if(_clFlatChk>_clBudget*1.00){
-          // ↓ كنوبات
-          var _dnK=[];
-          var _clNd=_flatDn(_snapBase);
-          if(!cfg.baseReps&&_clNd!==_snapBase&&_clNd>=_clMinR){_dnK.push('reps');_dnK.push('reps');}
-          if(cEx&&!cfg.cardioAmt&&!_cardioAtMin(cEx,_clCL))_dnK.push('cardio');
-          if(!cfg.exCnt&&chosen.length>2)_dnK.push('exercise');
-          if(CARDIO.length>1&&cEx&&!cfg.cardioAmt&&_cardioAtMin(cEx,_clCL))_dnK.push('swap-cardio');
-          if(!_dnK.length){
-            if(cEx&&!cfg.cardioAmt&&cfg.withCardio!==true){addCardio=false;cEx=null;_clCardioRemovedFlat=true;}
-            else break;
-          } else {
-            var _dnPick=pk(_dnK);
-            if(_dnPick==='reps'){var _clND=_flatDn(_snapBase);if(_clND!==_snapBase&&_clND>=_clMinR){_snapBase=_clND;repsArr=repsArr.map(function(){return _snapBase;});}}
-            else if(_dnPick==='cardio'){cEx=_cardioDn(cEx,_clCL);}
-            else if(_dnPick==='exercise'){chosen.pop();exCnt--;repsArr=repsArr.slice(0,chosen.length);}
-            else if(_dnPick==='swap-cardio'){cEx=_swapCardio(cEx,_clCL);}
-          }
-        } else {
-          // ↑ كنوبات
-          var _upK=[];
-          var _clNu=_flatUp(_snapBase);
-          if(!cfg.baseReps&&_clNu!==_snapBase&&_clNu<=_clMaxR){_upK.push('reps');_upK.push('reps');_upK.push('reps');}
-          if(!_clCardioRemovedFlat&&!cfg.cardioAmt){
-            var _clCap30=_clBudget*0.30;
-            if(!addCardio||!cEx){if(cfg.withCardio!==false&&CARDIO.length)_upK.push('add-cardio');}
-            else if(!_cardioAtMax(cEx,_clCL)&&_cardioSecEst(cEx)<_clCap30)_upK.push('cardio');
-            // لا swap-cardio في اتجاه UP — يسبب دوران من min وبعدين الكارديو يطلع بقيمة عشوائية
-          }
-          if(chosen.length<_clTc.max&&!cfg.exCnt)_upK.push('exercise');
-          if(!_upK.length)break;
-          var _upPick=pk(_upK);
-          if(_upPick==='reps'){var _nSB=_flatUp(_snapBase);if(_nSB!==_snapBase&&_nSB<=_clMaxR){_snapBase=_nSB;repsArr=repsArr.map(function(){return _snapBase;});}}
-          else if(_upPick==='add-cardio'){var _sc2=pk(CARDIO);addCardio=true;cEx=Object.assign({},_sc2,{amount:_cardioInitAmt(_sc2.unit,_clCL)});}
-          else if(_upPick==='cardio'){cEx=_cardioUp(cEx,_clCL);}
-          else if(_upPick==='exercise'){var _clAP=getChipperPool(lv,team).filter(function(e){return!chosen.some(function(c){return c.name===e.name;});});if(_clAP.length){chosen.push(pk(_clAP));repsArr.push(_snapBase);}}
-          else if(_upPick==='swap-cardio'){cEx=_swapCardio(cEx,_clCL);}
+    }else if(_isDesc){
+      _dTop=Math.min(_clCap,_clStep*exCnt);
+      _dTop=Math.max(_clStep,Math.round(_dTop/_clStep)*_clStep);
+      repsArr=chosen.map(function(e,i){return Math.max(_clMinR,_dTop-i*_clStep);});
+    }else{
+      // Ascending: يبدأ من الأدنى ويصعد
+      var _ascBot=Math.max(_clMinR,_clStep);
+      repsArr=chosen.map(function(e,i){return Math.min(_clCap,_ascBot+i*_clStep);});
+    }
+    // ── Helpers ──
+    var _clCL=_cardioLimits(team,true,lv);
+    var _clCardioRemoved=false;
+    var _descGen=function(top){return chosen.map(function(e,i){return Math.max(_clMinR,top-i*_clStep);});};
+    var _flatUp2=function(v){return Math.min(_clCap,_clSnap(v+_clStep,_clCap));};
+    var _flatDn2=function(v){return Math.max(_clMinR,_clSnap(v-_clStep,_clCap));};
+    // ── Fill loop ──
+    for(var _clLoop=0;_clLoop<60;_clLoop++){
+      var _clEst=_wodEstTime(repsArr,chosen,cEx,chosen.length+(addCardio&&cEx?1:0),team,lv);
+      if(_clEst>=_clBudget*0.90&&_clEst<=_clBudget*1.00)break;
+      if(_clEst>_clBudget*1.00){
+        var _dnK=[];
+        if(_isFlat){if(!cfg.baseReps&&_flatDn2(_snapBase)!==_snapBase){_dnK.push('reps');_dnK.push('reps');}}
+        else{if(!cfg.baseReps&&_dTop-_clStep>=_clStep){_dnK.push('reps');_dnK.push('reps');}}
+        if(cEx&&!cfg.cardioAmt&&!_cardioAtMin(cEx,_clCL))_dnK.push('cardio');
+        if(!cfg.exCnt&&chosen.length>2)_dnK.push('exercise');
+        if(CARDIO.length>1&&cEx&&!cfg.cardioAmt&&_cardioAtMin(cEx,_clCL))_dnK.push('swap-cardio');
+        if(!_dnK.length){if(cEx&&!cfg.cardioAmt&&cfg.withCardio!==true){addCardio=false;cEx=null;_clCardioRemoved=true;}else break;}
+        else{var _dnPick=pk(_dnK);
+          if(_dnPick==='reps'){if(_isFlat){_snapBase=_flatDn2(_snapBase);repsArr=chosen.map(function(){return _snapBase;});}else{_dTop-=_clStep;repsArr=_descGen(_dTop);}}
+          else if(_dnPick==='cardio'){cEx=_cardioDn(cEx,_clCL);}
+          else if(_dnPick==='exercise'){chosen.pop();exCnt--;repsArr=_isFlat?repsArr.slice(0,chosen.length):_descGen(_dTop);}
+          else if(_dnPick==='swap-cardio'){cEx=_swapCardio(cEx,_clCL);}
         }
+      }else{
+        var _upK=[];
+        if(_isFlat){if(!cfg.baseReps&&_flatUp2(_snapBase)!==_snapBase){_upK.push('reps');_upK.push('reps');_upK.push('reps');}}
+        else{if(!cfg.baseReps&&_dTop+_clStep<=_clCap){_upK.push('reps');_upK.push('reps');_upK.push('reps');}}
+        if(!_clCardioRemoved&&!cfg.cardioAmt){
+          if(!addCardio||!cEx){if(cfg.withCardio!==false&&CARDIO.length)_upK.push('add-cardio');}
+          else if(!_cardioAtMax(cEx,_clCL)&&_cardioSecEst(cEx)<_clBudget*0.30)_upK.push('cardio');
+        }
+        // desc: only add exercise if new bottom gets a real step (not clamped to min)
+        var _canAddEx=_isFlat||(chosen.length+1)*_clStep<=_clCap;
+        if(chosen.length<_clTc.max&&!cfg.exCnt&&_canAddEx)_upK.push('exercise');
+        if(!_upK.length)break;
+        var _upPick=pk(_upK);
+        if(_upPick==='reps'){if(_isFlat){_snapBase=_flatUp2(_snapBase);repsArr=chosen.map(function(){return _snapBase;});}else{_dTop+=_clStep;repsArr=_descGen(_dTop);}}
+        else if(_upPick==='add-cardio'){var _sc2=pk(CARDIO);addCardio=true;cEx=Object.assign({},_sc2,{amount:_cardioInitAmt(_sc2.unit,_clCL)});}
+        else if(_upPick==='cardio'){cEx=_cardioUp(cEx,_clCL);}
+        else if(_upPick==='exercise'){var _clAP=getChipperPool(lv,team).filter(function(e){return!chosen.some(function(c){return c.name===e.name;});});if(_clAP.length){chosen.push(pk(_clAP));repsArr=_isFlat?repsArr.concat([_snapBase]):_descGen(_dTop);}}
       }
     }
     // ── Post-loop: اضغط الكارديو وحده لسد الفجوة (cap 45%) ──
@@ -1532,49 +1519,77 @@ function mkChipper(time,lv,team,cfg){
     if(addCardio&&cEx)cEx=_cardioCapSec(cEx,_clBudget*0.40,_clCLInit);
   }
   // ── Build items ──
+  strCount=chosen.length;
+  // no _diffSortReps — الباترن المختار يبقى كما هو
   var items=[];
-  chosen.forEach(function(ex,i){
-    items.push({kind:'str',ex:ex,detail:getDetail(ex,repsArr[i],null,lv,team),baseRep:repsArr[i],wt:wgt(lv,ex.cat)});
-  });
-  if(addCardio){items.push({kind:'cardio',ex:cEx});}
-  return[{type:'Chipper',title:'Chipper — For Time',infoKey:'i_chipper',infoVars:{n:strCount,t:time},scoreKey:'sc_time',teamKey:team>1?'tm_shared':null,items:items,chipperCfg:cfg}];
+  var _clCardioN=addCardio&&cEx?(cfg.cardioCount||1):0;
+  if(_clCardioN<=1){
+    chosen.forEach(function(ex,i){items.push({kind:'str',ex:ex,detail:getDetail(ex,repsArr[i],null,lv,team),baseRep:repsArr[i],wt:wgt(lv,ex.cat)});});
+    if(addCardio&&cEx)items.push({kind:'cardio',ex:cEx});
+  }else{
+    // توزيع N كارديو بين التمارين بالتساوي
+    var _chunk=Math.ceil(chosen.length/_clCardioN);
+    chosen.forEach(function(ex,i){
+      items.push({kind:'str',ex:ex,detail:getDetail(ex,repsArr[i],null,lv,team),baseRep:repsArr[i],wt:wgt(lv,ex.cat)});
+      if((i+1)%_chunk===0&&Math.floor(i/_chunk)<_clCardioN){
+        var _cxCopy=Object.assign({},cEx);
+        items.push({kind:'cardio',ex:_cxCopy});
+      }
+    });
+    // إذا الكارديو الأخير ما اتحط بسبب الباقي، نضيفه في النهاية
+    var _cardioAdded=items.filter(function(x){return x.kind==='cardio';}).length;
+    while(_cardioAdded<_clCardioN){items.push({kind:'cardio',ex:Object.assign({},cEx)});_cardioAdded++;}
+  }
+  // ── Sync amount+unit for all cardio items (same value, machine can differ) ──
+  var _allCardio=items.filter(function(x){return x.kind==='cardio';});
+  if(_allCardio.length>1){
+    var _refAmt=_allCardio[0].ex.amount;var _refUnit=_allCardio[0].ex.unit;
+    _allCardio.forEach(function(x){x.ex=Object.assign({},x.ex,{amount:_refAmt,unit:_refUnit});});
+  }
+  var _cardioAdded2=items.filter(function(x){return x.kind==='cardio';}).length;
+  var _clInfoEn='Complete all reps of each movement before moving on — '+strCount+' movements'+(_cardioAdded2?' · '+_cardioAdded2+' cardio':'')+'  |  Time cap: '+time+' min';
+  var _clInfoAr='أكمل كل تكرارات الحركة قبل الانتقال — '+strCount+' حركات'+(_cardioAdded2?' · '+_cardioAdded2+' كارديو':'')+' | الحد الزمني: '+time+' دقيقة';
+  var _clInfo=CFG.lang==='ar'?_clInfoAr:_clInfoEn;
+  return[{type:'Chipper',title:'Chipper — For Time',info:_clInfo,scoreKey:'sc_time',teamKey:team>1?'tm_shared':null,items:items,chipperCfg:cfg}];
 }
 
 function mkTabata(time,lv,team,cfg){
   cfg=cfg||{};
   // ── Time-driven Tabata: each movement ≈ 4 min, capped by level ──
-  var _lvTabMax={beginner:3,intermediate:5,advanced:7,elite:8}[lv]||5;
-  var numMov=cfg.numMov||Math.max(1,Math.min(_lvTabMax,Math.floor(time/4)));
+  var _lvTabOpts={beginner:[1],intermediate:[1,2],advanced:[2,3],elite:[3,4]};
+  var _lvOpts=_lvTabOpts[lv]||[2,3];
+  var _lvTabMax=_lvOpts[_lvOpts.length-1];
+  var numMov=cfg.numMov||_lvOpts[Math.floor(Math.random()*_lvOpts.length)];
   var cardioMode=cfg.withCardio;
   var addCardio=cardioMode===true||(cardioMode===undefined&&Math.random()>.5);
-  var pool=getPool(lv,null,team);
+  var pool=getPool(lv,null,team).filter(function(e){return TABATA_STR_NAMES.indexOf(e.name)>=0;});
+  if(!pool.length)pool=getPool(lv,null,team);
   var regCount=addCardio?numMov-1:numMov;
   var chosen=pkN(pool,regCount);
   var tabataCardioObj=addCardio?pk(TABATA_CARDIO):null;
-  if(addCardio)chosen.splice(Math.floor(chosen.length/2),0,tabataCardioObj);
-  return[{type:'Tabata',title:'Tabata — '+numMov+' Movements',infoKey:'i_tabata',infoVars:{tot:numMov*4},scoreKey:'sc_tabata',teamKey:team>1?'tm_simultaneous':null,items:chosen.map(function(ex){
-    if(ex===tabataCardioObj){
-      return{kind:'cardio',ex:tabataCardioEx(ex),detail:'20s on / 10s off × 8',noEdit:true};
-    }
+  if(addCardio)chosen.push(tabataCardioObj);
+  var _tabItems=chosen.map(function(ex){
+    if(ex===tabataCardioObj){return{kind:'cardio',ex:tabataCardioEx(ex),detail:'20s on / 10s off × 8',noEdit:true};}
     return{kind:'str',ex:ex,detail:'20s on / 10s off × 8',wt:null,noEdit:true};
-  }),tabataCfg:cfg}];
+  });
+  var restMode=cfg.withRest;
+  var addRest=restMode===true;
+  var _tabWithRest=[];
+  _tabItems.forEach(function(it,i){_tabWithRest.push(it);if(addRest&&i<_tabItems.length-1)_tabWithRest.push({kind:'sep',label:'── 1 MIN REST ──'});});
+  var _tabTot=numMov*4+(addRest&&numMov>1?numMov-1:0);
+  return[{type:'Tabata',title:'Tabata — '+numMov+' Movements',infoKey:'i_tabata',infoVars:{tot:_tabTot},scoreKey:'sc_tabata',teamKey:team>1?'tm_simultaneous':null,items:_tabWithRest,tabataCfg:cfg}];
 }
 function mkDeathBy(time,lv,team,cfg){
   cfg=cfg||{};
-  var useDouble=cfg.double!==undefined?cfg.double:(Math.random()>.5);
-  var ex1=pk(getPool(lv,null,team));
-  var ex2=useDouble?pk(getPool(lv,null,team).filter(function(e){return e.name!==ex1.name})):null;
-  var _dbStartPool={beginner:1,intermediate:1,advanced:2,elite:2};
-  var start=cfg.startVal||(team===2?evenRep(_dbStartPool[lv]||2):(_dbStartPool[lv]||1));
-  var increment=cfg.increment||(team===2?evenRep(ri(1,3)):ri(1,3));
-  cfg._genStart=start;cfg._genInc=increment;cfg._genDouble=useDouble;
-  if(cfg.startVal===undefined)cfg.startVal=undefined;
-  if(cfg.increment===undefined)cfg.increment=undefined;
+  var pool=getPool(lv,null,team).filter(function(e){return e.unit!=='time'&&e.unit!=='carry'&&e.unit!=='m';});
+  if(cfg.cat&&cfg.cat!=='all')pool=pool.filter(function(e){return e.cat===cfg.cat;});
+  if(!pool.length)pool=getPool(lv,null,team).filter(function(e){return e.unit!=='time'&&e.unit!=='carry'&&e.unit!=='m';});
+  var ex1=pk(pool);
+  var start=cfg.startVal||(team===2?2:1);
+  var increment=cfg.increment||(team===2?2:1);
+  cfg._genStart=start;cfg._genInc=increment;
   var title='Death By';
-  var fixedRepsMap={beginner:5,intermediate:8,advanced:10,elite:12};
-  var fixedReps=cfg.fixedReps||(fixedRepsMap[lv]||8);
   var items=[{kind:'str',ex:ex1,emomMin:'Each Min',detail:start+' + '+increment+' reps/min',wt:wgt(lv,ex1.cat),noPencil:true}];
-  if(ex2)items.push({kind:'str',ex:ex2,emomMin:'Each Min',isFixed:true,detail:fixedReps+' reps',baseRep:fixedReps,wt:wgt(lv,ex2.cat)});
   return[{type:'Death By',title:title,infoKey:'i_deathby',infoVars:{s:start,inc:increment,t:time},scoreKey:'sc_deathby',teamKey:team>1?'tm_both':null,items:items,deathByCfg:cfg}];
 }
 function buildRoundItems(scheme,chosen,lv,team){
@@ -1674,22 +1689,38 @@ function buildSchemeForRounds(dir,rounds,lv){
   return reps.length?reps:getScheme(dir,lv);
 }
 
+var _BUYIN_CARDIO_TABLE={
+  beginner:    {calMin:20,calMax:20,mMin:400, mMax:400},
+  intermediate:{calMin:20,calMax:30,mMin:400, mMax:800},
+  advanced:    {calMin:30,calMax:50,mMin:800, mMax:1200},
+  elite:       {calMin:50,calMax:60,mMin:1200,mMax:1500}
+};
+function _buyinRandAmt(unit,lv){
+  var bc=_BUYIN_CARDIO_TABLE[lv]||_BUYIN_CARDIO_TABLE.intermediate;
+  if(unit==='Cal'){
+    var steps=[];for(var c=bc.calMin;c<=bc.calMax;c+=10)steps.push(c);
+    return steps[Math.floor(Math.random()*steps.length)]||bc.calMin;
+  }
+  if(unit==='m'){
+    var steps=[];for(var m=bc.mMin;m<=bc.mMax;m+=100)steps.push(m);
+    return steps[Math.floor(Math.random()*steps.length)]||bc.mMin;
+  }
+  return bc.mMin;
+}
 function mkBuyInOut(time,lv,team,cfg){
   cfg=cfg||{};
-  var mode=cfg.mode||'both';
-  // Level defaults
+  var mode=cfg.mode||(Math.random()<0.5?'buyin':'cashout');
+  // Level defaults (no amount — handled by _BUYIN_CARDIO_TABLE)
   var lvDef={
-    beginner:    {exCnt:2,rounds:3,reps:[10,10,10],amount:500},
-    intermediate:{exCnt:2,rounds:3,reps:[21,15,9],amount:1000},
-    advanced:    {exCnt:3,rounds:4,reps:[27,21,15,9],amount:1500},
-    elite:       {exCnt:3,rounds:5,reps:[100,80,60,40,20],amount:2000}
+    beginner:    {exCnt:2,rounds:3,reps:[10,10,10]},
+    intermediate:{exCnt:2,rounds:3,reps:[21,15,9]},
+    advanced:    {exCnt:3,rounds:4,reps:[27,21,15,9]},
+    elite:       {exCnt:3,rounds:5,reps:[100,80,60,40,20]}
   };
   var def=lvDef[lv]||lvDef.intermediate;
   var exCnt=cfg.exCnt||def.exCnt;
   // ── Time-driven rounds (Buy-In/Out takes ~5-8 min, so main WOD rounds are conservative) ──
   var rounds=cfg.rounds||(time<=15?3:time<=30?4:time<=45?6:8);
-  var buyInAmt=cfg.buyInAmt!=null?cfg.buyInAmt:def.amount;
-  var cashOutAmt=cfg.cashOutAmt!=null?cfg.cashOutAmt:def.amount;
   // Build rep array: if user set uniform baseReps use that, else use level default
   var reps;
   if(cfg.baseReps){
@@ -1702,20 +1733,40 @@ function mkBuyInOut(time,lv,team,cfg){
   }
   if(team===2&&!cfg.baseReps)reps=reps.map(function(r){return evenRep(r*1.5);});
   var chosen=pkN(getPool(lv,null,team),exCnt);
-  var bIn=cfg.buyInName?(CARDIO.find(function(c){return c.name===cfg.buyInName;})||pk(CARDIO)):pk(CARDIO);
-  var bOut=cfg.cashOutName?(CARDIO.find(function(c){return c.name===cfg.cashOutName;})||pk(CARDIO.filter(function(c){return c!==bIn;}))):pk(CARDIO.filter(function(c){return c!==bIn;}));
+  // ── Cardio pool: no Double-Unders ──
+  var _biPool=CARDIO.filter(function(c){return c.unit!=='reps';});
+  var bIn,bOut,buyInAmt,cashOutAmt;
+  if(mode==='both'){
+    // same amount, different machines (same unit)
+    bIn=cfg.buyInName?(_biPool.find(function(c){return c.name===cfg.buyInName;})||pk(_biPool)):pk(_biPool);
+    buyInAmt=cfg.buyInAmt!=null?cfg.buyInAmt:_buyinRandAmt(bIn.unit,lv);
+    var _sameUnit=_biPool.filter(function(c){return c.unit===bIn.unit&&c.name!==bIn.name;});
+    bOut=cfg.cashOutName?(_biPool.find(function(c){return c.name===cfg.cashOutName;})||pk(_sameUnit.length?_sameUnit:_biPool.filter(function(c){return c!==bIn;}))):pk(_sameUnit.length?_sameUnit:_biPool.filter(function(c){return c!==bIn;}));
+    cashOutAmt=cfg.cashOutAmt!=null?cfg.cashOutAmt:buyInAmt;
+  }else{
+    bIn=cfg.buyInName?(_biPool.find(function(c){return c.name===cfg.buyInName;})||pk(_biPool)):pk(_biPool);
+    buyInAmt=cfg.buyInAmt!=null?cfg.buyInAmt:_buyinRandAmt(bIn.unit,lv);
+    bOut=cfg.cashOutName?(_biPool.find(function(c){return c.name===cfg.cashOutName;})||pk(_biPool.filter(function(c){return c!==bIn;}))):pk(_biPool.filter(function(c){return c!==bIn;}));
+    cashOutAmt=cfg.cashOutAmt!=null?cfg.cashOutAmt:_buyinRandAmt(bOut.unit,lv);
+  }
+  bIn=Object.assign({},bIn,{amount:buyInAmt});
+  bOut=Object.assign({},bOut,{amount:cashOutAmt});
+  // ── Main WOD: مرتبط مباشرة بـ mkRFT ──
+  var _rftSec=mkRFT(time,lv,team,{rounds:cfg.rounds,exCnt:cfg.exCnt,withCardio:false})[0];
+  var reps=_rftSec.scheme||[];
+  var rounds=reps.length||3;
   var items=[];
   if(mode==='both'||mode==='buyin'){
     items.push({kind:'sep',label:'── BUY-IN ──'});
     items.push({kind:'buyin',label:'BUY-IN — '+bIn.name,which:'buyin',exName:bIn.name,ex:bIn,tag:'BUY-IN',detail:buyInAmt});
   }
-  items.push({kind:'sep',label:'── Main: '+rounds+' Rounds ──'});
-  chosen.forEach(function(ex){items.push({kind:'str',ex:ex,detail:schemeLabel(ex,reps),wt:wgt(lv,ex.cat)});});
+  _rftSec.items.forEach(function(it){items.push(it);});
   if(mode==='both'||mode==='cashout'){
     items.push({kind:'sep',label:'── CASH-OUT ──'});
     items.push({kind:'buyin',label:'CASH-OUT — '+bOut.name,which:'cashout',exName:bOut.name,ex:bOut,tag:'CASH-OUT',detail:cashOutAmt});
   }
-  return[{type:'Buy-In / Cash-Out',title:'Buy-In + WOD + Cash-Out',infoKey:'i_buyin',infoVars:{r:rounds,t:time},scoreKey:'sc_time',teamKey:team>1?'tm_buyin':null,items:items,buyInCfg:cfg,scheme:reps,noLongForm:true}];
+  var _biTitle=mode==='buyin'?'Buy-In + WOD':mode==='cashout'?'WOD + Cash-Out':'Buy-In + WOD + Cash-Out';
+  return[{type:'Buy-In / Cash-Out',title:_biTitle,infoKey:'i_buyin',infoVars:{r:rounds,t:time},scoreKey:'sc_time',teamKey:team>1?'tm_buyin':null,items:items,buyInCfg:cfg,scheme:reps,noLongForm:true}];
 }
 function mkYGIG(time,lv,team,cfg){
   cfg=cfg||{};
@@ -1741,7 +1792,7 @@ function mkYGIG(time,lv,team,cfg){
   var exCnt=cfg.exCnt||d.exCnt;
   var strCnt=doCardio?Math.max(1,exCnt-1):exCnt;
   var chosen=pkN(getPool(lv,null,team),strCnt);
-  var _yLims=_exLims(chosen,lv,team);
+  var _yLims=_exLims(chosen,lv,1); // each athlete completes full rounds solo — no ×2
   var baseReps=cfg.baseReps||_repSnap(ri(_yLims.min,_yLims.max),_yLims.min,_yLims.max);
   // Cardio with shared limits
   var _ygigCL=_cardioLimits(team,false,lv);
@@ -1768,97 +1819,179 @@ function mkIntervalAmrap(time,lv,team,cfg){
   cfg=cfg||{};
   var workTime=cfg.workTime, restTime=cfg.restTime, numIntervals=cfg.numIntervals;
   var _set=[workTime!=null,restTime!=null,numIntervals!=null].filter(Boolean).length;
+  var _intNMin, _intNMax;
   if(_set>=2){
     if(numIntervals==null){numIntervals=Math.floor((time+restTime)/(workTime+restTime));}
     else if(workTime==null){workTime=Math.max(1,Math.round(((time-(numIntervals-1)*(restTime||1))/numIntervals)*10)/10);}
     else if(restTime==null){restTime=numIntervals>1?Math.max(0.5,Math.round(((time-numIntervals*workTime)/(numIntervals-1))*10)/10):1;}
     workTime=workTime||3; restTime=restTime||1; numIntervals=numIntervals||3;
+    _intNMin=numIntervals; _intNMax=numIntervals;
   } else {
-    // ── Time-driven work/rest windows ──
-    workTime=workTime||(time<=15?pk([2,3]):time<=30?pk([3,4]):pk([4,5,6]));
-    restTime=restTime||(time<=30?pk([1,2]):pk([2,3]));
-    numIntervals=Math.floor((time+restTime)/(workTime+restTime));
+    // ── Time-driven intervals ──
+    var _itbl;
+    if(time<=10)_itbl={nMin:2,nMax:3,rest:1};
+    else if(time<=15)_itbl={nMin:2,nMax:3,rest:1};
+    else if(time<=20)_itbl={nMin:3,nMax:4,rest:1};
+    else if(time<=25)_itbl={nMin:3,nMax:4,rest:1};
+    else if(time<=30)_itbl={nMin:4,nMax:5,rest:1};
+    else if(time<=35)_itbl={nMin:4,nMax:5,rest:2};
+    else if(time<=40)_itbl={nMin:5,nMax:6,rest:2};
+    else if(time<=45)_itbl={nMin:5,nMax:6,rest:2};
+    else if(time<=50)_itbl={nMin:6,nMax:7,rest:2};
+    else if(time<=55)_itbl={nMin:6,nMax:7,rest:2};
+    else _itbl={nMin:6,nMax:7,rest:3};
+    _intNMin=_itbl.nMin; _intNMax=_itbl.nMax;
+    if(!numIntervals||!restTime){
+      numIntervals=numIntervals||ri(_intNMin,_intNMax);
+      restTime=restTime||_itbl.rest;
+    }
+    workTime=workTime||Math.max(1,Math.floor((time-(numIntervals-1)*restTime)/numIntervals));
   }
-  var _iexCntMap={beginner:2,intermediate:ri(2,3),advanced:ri(2,3),elite:3};
-  var exCnt=cfg.exCnt||(_iexCntMap[lv]||ri(2,3));
-  var repMap={beginner:5,intermediate:8,advanced:10,elite:null};
-  var baseReps=cfg.baseReps||(lv==='elite'?ri(12,15):(repMap[lv]||8));
-  var numIntervals=cfg.numIntervals||Math.floor((time+restTime)/(workTime+restTime));
-  var strCount=Math.max(1,exCnt-1);
+  if(cfg.numIntervals){_intNMin=numIntervals;_intNMax=numIntervals;}
+  var strCount=cfg.exCnt||(time<=15?2:time<=30?ri(2,3):time<=45?3:ri(3,4));
+  var addCardio=cfg.withCardio===true||(cfg.withCardio===undefined&&Math.random()>0.5);
   var chosen=pkN(getPool(lv,null,team),strCount);
+  var _intExLims=_exLims(chosen,lv,team);
   var _intCL=_cardioLimits(team,false,lv);
   var _intCalAmt=cfg.cardioAmt||_intCL.calMin;
   var _intCalPool=CARDIO.filter(function(c){return c.unit==='Cal';});
-  var _intEx=Object.assign({},pk(_intCalPool.length?_intCalPool:CARDIO),{amount:_intCalAmt,unit:'Cal'});
-  // ── Auto-Scale: 3-step priority → reps → exCnt → cardio ──
-  if(!cfg.baseReps&&chosen.length){
-    var _intBudget=workTime*60*0.85;
-    var _intMaxR=_exLims(chosen,lv,team).max;
-    var _intMaxEx={beginner:2,intermediate:3,advanced:3,elite:3}[lv]||3;
-    var _rArr=chosen.map(function(){return baseReps;});
-    var _est=_wodEstTime(_rArr,chosen,_intEx,exCnt,team);
-    var _sf=_intBudget/_est;
-    if(_sf<0.95||_sf>1.05){
-      // STEP 1: Scale reps (bidirectional)
-      baseReps=_scaleRep(baseReps,_sf,team,_intMaxR);
-    }
-    // STEP 2 (scale-up): add movement if reps hit ceiling and exCnt can grow
-    if(_sf>1.1&&baseReps>=_intMaxR&&exCnt<_intMaxEx&&!cfg.exCnt){
-      var _intXPool=getPool(lv,null,team).filter(function(e){return!chosen.some(function(c){return c.name===e.name;});});
-      if(_intXPool.length){chosen.push(pk(_intXPool));strCount++;exCnt++;}
-    }
-    // STEP 3 (scale-up): scale cardio Cal if still under budget
-    if(_sf>1.1&&_intEx&&!cfg.cardioAmt){
-      var _est3=_wodEstTime(chosen.map(function(){return baseReps;}),chosen,_intEx,chosen.length+1,team);
-      var _sf3=_intBudget/_est3;
-      if(_sf3>1.1){_intEx=Object.assign({},_intEx,{amount:Math.min(_intCL.calMax,_roundCal(_intEx.amount*_sf3,team))});}
+  var _intEx=addCardio?Object.assign({},pk(_intCalPool.length?_intCalPool:CARDIO),{amount:_intCalAmt,unit:'Cal'}):null;
+  // ── Pattern selection ──
+  var _intPats=['flat_2','flat_5_25','flat_5','flat_10','flat_20','desc_2','desc_10','desc_20'];
+  var _intPat=cfg.pat||pk(_intPats);
+  var _intIsFlat=_intPat.indexOf('flat')===0;
+  var _intStep=({'flat_2':2,'flat_5_25':5,'flat_5':5,'flat_10':10,'flat_20':20,'desc_2':2,'desc_10':10,'desc_20':20})[_intPat]||5;
+  var _intCap=({'flat_2':24,'flat_5_25':25,'desc_2':24})[_intPat]||_intExLims.max;
+  _intCap=Math.min(_intCap,_intExLims.max);
+  // ── Desc viability ──
+  if(!_intIsFlat){
+    var _intMaxDescEx=Math.max(1,Math.floor(_intCap/_intStep));
+    if(chosen.length>_intMaxDescEx){
+      if(_intMaxDescEx<2){_intPat='flat_2';_intIsFlat=true;_intStep=2;_intCap=Math.min(24,_intExLims.max);}
+      else{chosen=chosen.slice(0,_intMaxDescEx);strCount=chosen.length;}
     }
   }
+  var _intSnap=function(v,cap){var s=Math.round(v/_intStep)*_intStep;s=Math.max(_intExLims.min,Math.max(_intStep,s));return Math.min(cap||_intExLims.max,s);};
+  // ── Initial repsArr ──
+  var _intBase,_intDTop,_intRepsArr;
+  if(_intIsFlat){
+    _intBase=_intSnap(Math.max(_intExLims.min,_intStep),_intCap);
+    _intRepsArr=chosen.map(function(){return _intBase;});
+  }else{
+    _intDTop=Math.min(_intCap,_intStep*chosen.length);
+    _intDTop=Math.max(_intStep,Math.round(_intDTop/_intStep)*_intStep);
+    _intRepsArr=chosen.map(function(e,i){return Math.max(_intExLims.min,_intDTop-i*_intStep);});
+  }
+  // ── Fill loop ──
+  if(!cfg.baseReps&&chosen.length){
+    // Exact 100% chip target: per-round est = (total*60 - rest*60*(n-1)) / n
+    var _intTarget=Math.floor((time*60-restTime*60*(numIntervals-1))/numIntervals);
+    var _intFullPool=getPool(lv,null,team);
+    var _intPool=_intFullPool.filter(function(e){return chosen.indexOf(e)<0;});
+    var _intDescGen=function(top){return chosen.map(function(e,i){return Math.max(_intExLims.min,top-i*_intStep);});};
+    var _intFlatUp=function(v){return Math.min(_intCap,_intSnap(v+_intStep,_intCap));};
+    var _intFlatDn=function(v){return Math.max(_intExLims.min,_intSnap(v-_intStep,_intCap));};
+    // Best-state tracking: save snapshot closest to 100% (prefer over, then under)
+    var _intSnapState=function(){return{repsArr:_intRepsArr.slice(),base:_intBase,dTop:_intDTop,chosen:chosen.slice(),addCardio:addCardio,intEx:_intEx?Object.assign({},_intEx):null,n:numIntervals,wt:workTime,tgt:_intTarget,est:0};};
+    var _intRestoreState=function(s){_intRepsArr=s.repsArr;_intBase=s.base;_intDTop=s.dTop;chosen=s.chosen;addCardio=s.addCardio;_intEx=s.intEx;numIntervals=s.n;workTime=s.wt;_intTarget=s.tgt;_intPool=_intFullPool.filter(function(e){return chosen.indexOf(e)<0;});_intExLims=_exLims(chosen,lv,team);};
+    var _intBestOver=null,_intBestUnder=null;
+    var _intConverged=false;
+    for(var _intLoop=0;_intLoop<20;_intLoop++){
+      var _intItemCnt=chosen.length+(addCardio&&_intEx?1:0);
+      var _intEst=_wodEstTime(_intRepsArr,chosen,_intEx,_intItemCnt,team);
+      if(_intEst>=_intTarget*0.90&&_intEst<=_intTarget*1.00){_intConverged=true;break;}
+      // Track best over/under
+      if(_intEst>_intTarget){if(!_intBestOver||_intEst<_intBestOver.est){var _bs=_intSnapState();_bs.est=_intEst;_intBestOver=_bs;}}
+      else{if(!_intBestUnder||_intEst>_intBestUnder.est){var _bs=_intSnapState();_bs.est=_intEst;_intBestUnder=_bs;}}
+      var _intKnobs=[];
+      if(_intEst>_intTarget*1.00){
+        if(_intIsFlat?(_intFlatDn(_intBase)!==_intBase):((_intDTop-_intStep)>=_intStep))_intKnobs.push('repDn');
+        if(addCardio&&_intEx&&!cfg.cardioAmt&&!_cardioAtMin(_intEx,_intCL))_intKnobs.push('calDn');
+        if(cfg.withCardio===undefined&&addCardio&&_intEx)_intKnobs.push('cardioOff');
+        if(!cfg.exCnt&&chosen.length>2)_intKnobs.push('exDn');
+        if(!cfg.numIntervals&&numIntervals>_intNMin)_intKnobs.push('nDn');
+      }else{
+        if(_intIsFlat?(_intFlatUp(_intBase)!==_intBase):((_intDTop+_intStep)<=_intCap))_intKnobs.push('repUp');
+        if(addCardio&&_intEx&&!cfg.cardioAmt&&!_cardioAtMax(_intEx,_intCL))_intKnobs.push('calUp');
+        if(cfg.withCardio===undefined&&!addCardio)_intKnobs.push('cardioOn');
+        if(!cfg.exCnt&&chosen.length<4&&_intPool.length)_intKnobs.push('exUp');
+        if(!cfg.numIntervals&&numIntervals<_intNMax)_intKnobs.push('nUp');
+      }
+      if(!_intKnobs.length)break;
+      var _intKnob=pk(_intKnobs);
+      if(_intKnob==='repDn'){
+        if(_intIsFlat){_intBase=_intFlatDn(_intBase);_intRepsArr=chosen.map(function(){return _intBase;});}
+        else{_intDTop-=_intStep;_intRepsArr=_intDescGen(_intDTop);}
+      }else if(_intKnob==='repUp'){
+        if(_intIsFlat){_intBase=_intFlatUp(_intBase);_intRepsArr=chosen.map(function(){return _intBase;});}
+        else{_intDTop+=_intStep;_intRepsArr=_intDescGen(_intDTop);}
+      }else if(_intKnob==='calDn'){
+        _intEx=_cardioDn(_intEx,_intCL);
+      }else if(_intKnob==='calUp'){
+        _intEx=_cardioUp(_intEx,_intCL);
+      }else if(_intKnob==='cardioOff'){
+        addCardio=false;_intEx=null;
+      }else if(_intKnob==='cardioOn'){
+        addCardio=true;_intEx=Object.assign({},pk(_intCalPool.length?_intCalPool:CARDIO),{amount:_intCalAmt,unit:'Cal'});
+      }else if(_intKnob==='exDn'){
+        chosen=chosen.slice(0,-1);_intPool=_intFullPool.filter(function(e){return chosen.indexOf(e)<0;});
+        _intExLims=_exLims(chosen,lv,team);
+        _intRepsArr=_intIsFlat?chosen.map(function(){return _intBase;}):_intDescGen(_intDTop);
+      }else if(_intKnob==='nDn'){
+        numIntervals--;
+        workTime=Math.max(1,Math.floor((time-(numIntervals-1)*restTime)/numIntervals));
+        _intTarget=Math.floor((time*60-restTime*60*(numIntervals-1))/numIntervals);
+      }else if(_intKnob==='nUp'){
+        numIntervals++;
+        workTime=Math.max(1,Math.floor((time-(numIntervals-1)*restTime)/numIntervals));
+        _intTarget=Math.floor((time*60-restTime*60*(numIntervals-1))/numIntervals);
+      }else if(_intKnob==='exUp'){
+        var _newEx=pk(_intPool);chosen.push(_newEx);_intPool=_intFullPool.filter(function(e){return chosen.indexOf(e)<0;});
+        _intExLims=_exLims(chosen,lv,team);
+        if(_intIsFlat){_intRepsArr.push(_intBase);}
+        else{
+          var _newMaxDescEx=Math.max(1,Math.floor(_intCap/_intStep));
+          if(chosen.length>_newMaxDescEx){chosen.pop();_intPool=_intFullPool.filter(function(e){return chosen.indexOf(e)<0;});_intExLims=_exLims(chosen,lv,team);}
+          else{_intRepsArr=_intDescGen(_intDTop);}
+        }
+      }
+    }
+    // Restore best state if loop didn't converge
+    if(!_intConverged){
+      var _candidates=[];
+      if(_intBestOver)_candidates.push(_intBestOver);
+      if(_intBestUnder)_candidates.push(_intBestUnder);
+      if(_candidates.length){
+        _candidates.sort(function(a,b){return Math.abs(a.est-a.tgt)-Math.abs(b.est-b.tgt);});
+        _intRestoreState(_candidates[0]);
+      }
+    }
+  }
+  var baseReps=cfg.baseReps||(_intRepsArr[0]||_intExLims.min);
   var items=[];
-  chosen.forEach(function(ex){items.push({kind:'str',ex:ex,detail:getDetail(ex,baseReps,null,lv,team),baseRep:baseReps,wt:wgt(lv,ex.cat)})});
-  items.push({kind:'cardio',ex:_intEx});
+  chosen.forEach(function(ex,i){items.push({kind:'str',ex:ex,detail:getDetail(ex,_intRepsArr[i]||baseReps,null,lv,team),baseRep:_intRepsArr[i]||baseReps,wt:wgt(lv,ex.cat)});});
+  if(addCardio&&_intEx)items.push({kind:'cardio',ex:_intEx});
   return[{type:'Interval AMRAP',title:numIntervals+' × '+workTime+'-Min AMRAP',infoKey:'i_interval',infoVars:{n:numIntervals,w:workTime,rest:restTime},scoreKey:'sc_total',teamKey:team>1?'tm_simultaneous':null,items:items,intervalCfg:cfg,_numIntervals:numIntervals}];
+}
+function _syncGabCardio(secA,secB){
+  var cA=secA.items&&secA.items.filter(function(x){return x.kind==='cardio';})[0];
+  var cB=secB.items&&secB.items.filter(function(x){return x.kind==='cardio';})[0];
+  if(cA&&cB&&cA.ex)cB.ex=Object.assign({},cB.ex,{amount:cA.ex.amount,unit:cA.ex.unit});
 }
 function mkGroupAB(time,lv,team,cfg){
   cfg=cfg||{};
-  // Level defaults — random ranges per level
-  var lvRanges={
-    beginner:    {exMin:1,exMax:2,repMin:8, repMax:12},
-    intermediate:{exMin:2,exMax:3,repMin:12,repMax:18},
-    advanced:    {exMin:3,exMax:4,repMin:15,repMax:25},
-    elite:       {exMin:3,exMax:5,repMin:20,repMax:35}
-  };
-  var lvR=lvRanges[lv]||lvRanges.intermediate;
-  var blockTime=cfg.blockTime||Math.floor(time/2);
-  var exCnt=cfg.exCnt||ri(lvR.exMin,lvR.exMax);
-  var cardioMode=cfg.withCardio;
-  var doCardioA=cardioMode===true||(cardioMode===undefined&&Math.random()>0.5);
-  var doCardioB=cardioMode===true||(cardioMode===undefined&&Math.random()>0.5);
-  var poolAll=getPool(lv,null,team);
-  // Cardio counts as one slot — subtract from str count
-  var strCntA=doCardioA?Math.max(1,exCnt-1):exCnt;
-  var strCntB=doCardioB?Math.max(1,exCnt-1):exCnt;
-  var exA=pkN(poolAll,strCntA);
-  var exB=pkN(poolAll.filter(function(e){return exA.indexOf(e)<0;}),strCntB);
-  var _gabLims=_exLims(exA.concat(exB),lv,team);
-  var baseRep=cfg.baseReps||_repSnap(ri(_gabLims.min,_gabLims.max),_gabLims.min,_gabLims.max);
-  // Pick A's cardio first, then B picks a different machine to avoid equipment clash
-  var _gabCL=_cardioLimits(team,false,lv);
-  function _gabCEx(ex){if(!ex)return null;var a=ex.unit==='Cal'?_gabCL.calMin:ex.unit==='m'?_gabCL.mtrMin:(ex.amount||30);return Object.assign({},ex,{amount:a});}
-  var cExA=doCardioA?_gabCEx(pk(CARDIO)):null;
-  var _cPoolB=cExA?CARDIO.filter(function(c){return c.name!==cExA.name;}):CARDIO;
-  var cExB=doCardioB?_gabCEx(pk(_cPoolB.length?_cPoolB:CARDIO)):null;
-  // A starts with cardio, B ends with cardio — they swap the machine without overlap
-  function mkI(exArr,withC,cEx){
-    var its=[];
-    exArr.forEach(function(ex){its.push({kind:'str',ex:ex,detail:getDetail(ex,baseRep,null,lv,team),baseRep:baseRep,wt:wgt(lv,ex.cat)});});
-    if(withC)its.push({kind:'cardio',ex:cEx});
-    return its;
-  }
-  return[
-    {type:'Group A',title:'Group A — AMRAP '+blockTime+' Min',infoKey:'i_groupA',infoVars:{t:blockTime},scoreKey:'sc_rounds_ab',teamKey:team>1?'tm_halfA':null,items:mkI(exA,doCardioA,cExA),groupAbCfg:cfg},
-    {type:'Group B',title:'Group B — AMRAP '+blockTime+' Min',items:mkI(exB,doCardioB,cExB)},
-  ];
+  var blockTime=Math.floor(time/2);
+  var secA=mkAmrap(blockTime,lv,team,cfg)[0];
+  var secB=mkAmrap(blockTime,lv,team,cfg)[0];
+  _syncGabCardio(secA,secB);
+  secA.type='Group A';secA.title='Group A — AMRAP '+blockTime+' Min';
+  secA.infoKey='i_groupA';secA.infoVars=Object.assign({},secA.infoVars,{t:blockTime});
+  secA.scoreKey='sc_rounds_ab';secA.teamKey=team>1?'tm_halfA':null;
+  secA.groupAbCfg=cfg;
+  secB.type='Group B';secB.title='Group B — AMRAP '+blockTime+' Min';
+  secB.infoKey='i_groupA';secB.infoVars=Object.assign({},secB.infoVars,{t:blockTime});
+  secB.groupAbCfg=cfg;
+  return[secA,secB];
 }
 
 // ── Named Rep Schemes ──
@@ -1954,7 +2087,7 @@ var TYPE_SCHEMES={
 var AMRAP_SCHEMES={
   ascending: {ar:'السلم التصاعدي', en:'Ascending Ladder', dynamic:true, dType:'ascending'},
 };
-var GEN={amrap:mkAmrap,'for-time':mkRFT,emom:mkEmom,chipper:mkChipper,tabata:mkTabata,'death-by':mkDeathBy,ladder:mkLadder,'buy-in-cashout':mkBuyInOut,ygig:mkYGIG,'interval-amrap':mkIntervalAmrap,'group-ab':mkGroupAB};
+var GEN={amrap:mkAmrap,'for-time':mkRFT,emom:mkEmom,chipper:mkChipper,tabata:mkTabata,'death-by':mkDeathBy,ladder:mkLadder,'buy-in-cashout':mkBuyInOut,ygig:mkYGIG,'group-ab':mkGroupAB};
 // ── حساب fill ratio لأي section (نفس منطق _secChip) ──
 function _secFillRatio(sec,lv,team){
   if(!sec||!sec.items)return 0;
@@ -1975,7 +2108,7 @@ function _secFillRatio(sec,lv,team){
     gateExArr.forEach(function(gx){if(gx.unit==='Cal')est+=gx.amount*5.5;else if(gx.unit==='m')est+=(gx.amount/10)*3.0;else if(gx.unit==='reps')est+=gx.amount*3.0;});
     est+=(totalItems-1)*tTime;
   }catch(e){return 0;}
-  if(sec.type==='For Time / RFT'&&iv.r)est=est*iv.r;
+  if((sec.type==='For Time / RFT'||sec.type==='Buy-In / Cash-Out')&&iv.r)est=est*iv.r;
   if(sec.type==='EMOM'&&iv.n){var _em=0;for(var _j=0;_j<Math.min(repsArr.length,exArr.length);_j++)_em+=repsArr[_j]*getSecondsPerRep(exArr[_j],lvl,team);gateExArr.forEach(function(gx){if(gx.unit==='Cal')_em+=gx.amount*5.5;else if(gx.unit==='m')_em+=(gx.amount/10)*3.0;else if(gx.unit==='reps')_em+=gx.amount*3.0;});est=_em;budget=(iv.n+(gateExArr.length||0))*45;}
   if(sec.type==='AMRAP'&&iv.rnd&&iv.rnd>0){var _am=0;for(var _k=0;_k<Math.min(repsArr.length,exArr.length);_k++)_am+=repsArr[_k]*getSecondsPerRep(exArr[_k],lvl,team);gateExArr.forEach(function(gx){if(gx.unit==='Cal')_am+=gx.amount*5.5;else if(gx.unit==='m')_am+=(gx.amount/10)*3.0;else if(gx.unit==='reps')_am+=gx.amount*3.0;});est=_am;budget=iv.rnd*60;}
   return budget>0?est/budget:0;
@@ -1991,7 +2124,7 @@ function generate(cfg){
     if(!_fills.length)break;
     var _worst=_fills.reduce(function(m,f){return Math.max(m,Math.abs(f-1));},0);
     if(_worst<_bestScore){_bestSecs=secs;_bestScore=_worst;}
-    if(_fills.every(function(f){return f>=0.80&&f<=1.10;}))break;
+    if(_fills.every(function(f){return f>=0.90&&f<=1.00;}))break;
   }
   return{type:type,sections:_bestSecs||secs,cfg:cfg};
 }
@@ -2040,16 +2173,15 @@ function setTeam(n,el){
   setTimeout(function(){S.step=3;render();},220);
 }
 var TYPES=[
-  {id:'amrap',icon:'🔄',name:'AMRAP',desc:'As many rounds as possible',desc_ar:'أكبر عدد جولات ممكن'},
-  {id:'interval-amrap',icon:'🔁',name:'Interval AMRAP',desc:'AMRAP sets with rest between',desc_ar:'جولات AMRAP مع راحة بينها'},
-  {id:'emom',icon:'🔔',name:'EMOM',desc:'Every minute on the minute',desc_ar:'حركة كل دقيقة'},
-  {id:'for-time',icon:'⏰',name:'For Time / RFT',desc:'Complete all rounds AFAP',desc_ar:'أكمل الجولات بأسرع وقت'},
-  {id:'chipper',icon:'🪓',name:'Chipper',desc:'One pass through, for time',desc_ar:'مرة واحدة عبر كل الحركات'},
+  {id:'for-time',icon:'⏰',name:'Round For Time / RFT',desc:'Rounds For Time',desc_ar:'أكمل الجولات بأسرع وقت'},
+  {id:'amrap',icon:'🔄',name:'AMRAP',desc:'As Many Rounds/Reps As Possible',desc_ar:'أكبر عدد جولات ممكن'},
+  {id:'emom',icon:'🔔',name:'EMOM',desc:'Every Minute On the Minute',desc_ar:'حركة كل دقيقة'},
+  {id:'chipper',icon:'🪓',name:'Chipper',desc:'high-intensity interval training (HIIT)',desc_ar:'مرة واحدة عبر كل الحركات'},
   {id:'ladder',icon:'📈',name:'Ladder',desc:'Ascending or descending reps',desc_ar:'تكرارات تصاعدية أو تنازلية'},
   {id:'buy-in-cashout',icon:'💰',name:'Buy-In / Cash-Out',desc:'Cardio bookends the WOD',desc_ar:'كارديو في البداية والنهاية'},
   {id:'tabata',icon:'💥',name:'Tabata',desc:'20s on / 10s off × 8 rounds',desc_ar:'٢٠ث عمل / ١٠ث راحة × ٨ جولات'},
   {id:'death-by',icon:'💀',name:'Death By',desc:'+1 rep each minute until failure',desc_ar:'يضاف تكرار كل دقيقة حتى الفشل'},
-  {id:'group-ab',icon:'🅰️',name:'Group A / B',desc:'Two groups, alternate stations',desc_ar:'مجموعتان يتبادلان المحطات'},
+  {id:'group-ab',icon:'🅰️',name:'Group A / B',desc:'Two groups, alternate stations',desc_ar:'مجموعتان يتبادلان المحطات',teamOnly:true},
   {id:'ygig',icon:'🔀',name:'You Go I Go',desc:'Partners alternate movements',desc_ar:'الشريكان يتبادلان الحركات',teamOnly:true},
 ];
 function step3(){
@@ -2068,7 +2200,7 @@ function step4(){
   app.innerHTML=dots(4)+'<div class="loading"><div class="spinner"></div><div class="lt">'+t('generating')+'</div></div>';
   setTimeout(function(){if(!S.wod){S.wod=generate(S);S.wodName=todayStr();}renderWod();},600);
 }
-var TL={amrap:'AMRAP','for-time':'For Time/RFT',emom:'EMOM',chipper:'Chipper',tabata:'Tabata','death-by':'Death By',ladder:'Ladder','buy-in-cashout':'Buy-In/Cash-Out',ygig:'YGIG','interval-amrap':'Interval AMRAP','group-ab':'Group A/B'};
+var TL={amrap:'AMRAP','for-time':'For Time/RFT',emom:'EMOM',chipper:'Chipper',tabata:'Tabata','death-by':'Death By',ladder:'Ladder','buy-in-cashout':'Buy-In/Cash-Out',ygig:'YGIG','group-ab':'Group A/B'};
 var LL={beginner:'Beginner',intermediate:'Intermediate',advanced:'Advanced',elite:'Elite'};
 function renderWod(){
   var w=S.wod;
@@ -2080,48 +2212,39 @@ function renderWod(){
 }
 function renderChipperCfg(sec,si){
   var cfg=sec.chipperCfg||{};
-  var mode=cfg.stationMode||null;
+  var cv=cfg.withCardio; // undefined=AUTO, true=ON, false=OFF
+  var cc=cfg.cardioCount||0; // 1/2/3/4 only when ON
   var S_btn='background:var(--bg2);border:0.5px solid var(--bdr);border-radius:7px;padding:5px 10px;font-size:13px;color:var(--txt2);cursor:pointer;font-weight:600;font-family:inherit;min-height:30px';
   var S_sel='background:var(--or);border:0.5px solid var(--or);border-radius:7px;padding:5px 10px;font-size:13px;color:#000;cursor:pointer;font-weight:600;font-family:inherit;min-height:30px';
   var S_lbl='display:block;font-size:11px;font-weight:700;color:var(--txt3);text-transform:uppercase;letter-spacing:0.8px;margin-bottom:6px';
-  var cv=cfg.withCardio;
-  // Mode toggle
-  var S_mBtn='width:100px;text-align:center;padding:7px 0;font-size:12px;font-weight:700;border:0.5px solid var(--bdr);border-radius:8px;cursor:pointer;min-height:34px';
-  var modeBtns='<div style="display:flex;gap:8px;margin-bottom:14px">'
-    +'<button onclick="setChipperMode('+si+',\'classic\')" style="'+S_mBtn+';'+(mode==='classic'?'background:var(--or);border-color:var(--or);color:#000':'background:var(--bg2);color:var(--txt2)')+'">'+t('chip_classic')+'</button>'
-    +'<button onclick="setChipperMode('+si+',\'stations\')" style="'+S_mBtn+';'+(mode==='stations'?'background:var(--or);border-color:var(--or);color:#000':'background:var(--bg2);color:var(--txt2)')+'">'+t('chip_stations')+'</button>'
+  var _validMov=(cc>=2&&_CARDIO_CNT_MOV&&_CARDIO_CNT_MOV[cc])||null;
+  var _movPool=_validMov||[3,4,5,6,7,8,9,10,11,12];
+  var movBtns=_movPool.map(function(n){
+    var _locked=_validMov&&cfg.exCnt===n;
+    var _st=_locked?S_sel:(cfg.exCnt===n?S_sel:S_btn);
+    return'<button onclick="setChipperExCnt('+si+','+n+',this)" style="'+_st+(_locked?';box-shadow:0 0 0 2px var(--or)':'')+'">'+n+'</button>';
+  }).join('');
+  var _cLabel=cv===true?'ON':cv===false?'OFF':'AUTO';
+  var _cStyle=cv===true?S_sel:S_btn;
+  var cardioStateBtns='<div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:'+(cv===true?'8':'12')+'px;direction:'+(CFG.lang==='ar'?'rtl':'ltr')+'">'
+    +'<button id="chipper-cardio-'+si+'" onclick="setChipperCardio('+si+')" style="'+_cStyle+'">'+_cLabel+'</button>'
     +'</div>';
-  var body='';
-  if(mode==='stations'){
-    // Station size
-    var sz=cfg.stationSize||2;
-    var S_szBtn='width:100px;text-align:center;padding:7px 0;font-size:12px;font-weight:700;border:0.5px solid var(--bdr);border-radius:8px;cursor:pointer;min-height:34px';
-    var szBtns='<div style="display:flex;gap:6px;margin-bottom:12px;direction:'+(CFG.lang==='ar'?'rtl':'ltr')+'">'
-      +'<button onclick="setChipperStationSize('+si+',2,this)" style="'+S_szBtn+';'+(cfg.stationSize===2?'background:var(--or);border-color:var(--or);color:#000':'background:var(--bg2);color:var(--txt2)')+'">'+t('chip_st_cop')+'</button>'
-      +'<button onclick="setChipperStationSize('+si+',3,this)" style="'+S_szBtn+';'+(cfg.stationSize===3?'background:var(--or);border-color:var(--or);color:#000':'background:var(--bg2);color:var(--txt2)')+'">'+t('chip_st_trip')+'</button>'
-      +'</div>';
-    // Movement count filtered by size
-    var validCounts=sz===2?[4,6,8]:[3,6,9];
-    var defCnt=sz===2?6:6;
-    var movBtns=validCounts.map(function(n){return'<button onclick="setChipperExCnt('+si+','+n+',this)" style="'+(cfg.exCnt===n?S_sel:S_btn)+'">'+n+'</button>';}).join('');
-    // Station rep presets
-    // Stations panel — size + movements only (reps auto-scaled to time)
-    body='<span style="'+S_lbl+'">'+t('chip_st_size')+'</span>'
-      +szBtns
-      +'<span style="'+S_lbl+'">'+t('rft_mov')+'</span>'
-      +'<div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px;direction:'+(CFG.lang==='ar'?'rtl':'ltr')+'">'+movBtns+'</div>'
-      ;
-  }else if(mode==='classic'){
-    // Classic panel — movements + cardio only (reps auto-scaled to time)
-    var movBtns=[3,4,5,6,7,8,9].map(function(n){return'<button onclick="setChipperExCnt('+si+','+n+',this)" style="'+(cfg.exCnt===n?S_sel:S_btn)+'">'+n+'</button>';}).join('');
-    body='<span style="'+S_lbl+'">'+t('rft_mov')+'</span>'
-      +'<div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px;direction:'+(CFG.lang==='ar'?'rtl':'ltr')+'">'+movBtns+'</div>'
-      +'<span style="'+S_lbl+'">'+t('chip_cardio')+'</span>'
-      +'<div style="display:flex;gap:6px;margin-bottom:14px;direction:'+(CFG.lang==='ar'?'rtl':'ltr')+'"><button id="chipper-cardio-'+si+'" onclick="setChipperCardio('+si+')" style="'+(cv===true?S_sel:S_btn)+'">'+(cv===true?'ON':cv===false?'OFF':'AUTO')+'</button></div>';
+  var cardioCountRow='';
+  if(cv===true){
+    var ccBtns=[1,2,3,4].map(function(n){return'<button onclick="setChipperCardioCount('+si+','+n+')" style="'+(cc===n?S_sel:S_btn)+'">'+n+'</button>';}).join('');
+    cardioCountRow='<div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px;direction:'+(CFG.lang==='ar'?'rtl':'ltr')+'">'+ccBtns+'</div>';
   }
+  var _team=S.wod&&S.wod.team||1;
+  var _patOpts=_team===2?['flat_10','flat_20','desc_10','desc_20','asc_10','asc_20']:['flat_5','flat_10','flat_20','desc_10','desc_20','asc_10','asc_20'];
+  var _patLabels={'flat_5':'Flat ×5','flat_10':'Flat ×10','flat_20':'Flat ×20','desc_10':'↓ Desc ×10','desc_20':'↓ Desc ×20','asc_10':'↑ Asc ×10','asc_20':'↑ Asc ×20'};
+  var _curPat=cfg.pat||'';
+  var patBtns=_patOpts.map(function(p){return'<button onclick="setChipperPat('+si+',\''+p+'\')" style="'+(_curPat===p?S_sel:S_btn)+'">'+(_patLabels[p]||p)+'</button>';}).join('');
   return'<div id="chipper-cfg-'+si+'" style="display:none;background:var(--bg3);border:0.5px solid var(--bdr);border-radius:10px;padding:12px;margin-top:6px">'
   +'<div style="display:flex;justify-content:flex-end;margin-bottom:10px"><button onclick="randomChipper('+si+')" style="background:rgba(99,102,241,0.12);border:0.5px solid #6366f1;border-radius:20px;padding:4px 12px;font-size:11px;color:#6366f1;cursor:pointer;font-weight:600">'+t('random')+'</button></div>'
-  +modeBtns+body
+  +'<span style="'+S_lbl+'">'+t('rft_mov')+'</span>'
+  +'<div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px;direction:'+(CFG.lang==='ar'?'rtl':'ltr')+'">'+movBtns+'</div>'
+  +'<span style="'+S_lbl+'">'+t('chip_cardio')+'</span>'
+  +cardioStateBtns+cardioCountRow
   +'<button onclick="regenChipper('+si+')" style="width:100%;background:var(--or);color:#000;border:none;border-radius:10px;padding:11px;font-size:14px;font-weight:700;cursor:pointer;min-height:42px">⟳ '+t('chip_regen')+'</button>'
   +'</div>';
 }
@@ -2133,13 +2256,18 @@ function setChipperRepsKey(si,key){
   var fr=document.getElementById('chipper-frep-row-'+si);
   if(fr){fr.style.opacity=locked?'0.35':'1';fr.style.pointerEvents=locked?'none':'auto';}
 }
+function setChipperPat(si,p){
+  var sec=S.wod.sections[si];if(!sec.chipperCfg)sec.chipperCfg={};
+  if(sec.chipperCfg.pat===p){delete sec.chipperCfg.pat;}else{sec.chipperCfg.pat=p;}
+  var el=document.getElementById('chipper-cfg-'+si);
+  if(el){var wasVisible=el.style.display!=='none';el.outerHTML=renderChipperCfg(sec,si);if(wasVisible){var nel=document.getElementById('chipper-cfg-'+si);if(nel)nel.style.display='block';}}
+}
 function setChipperExCnt(si,n,btn){
   var sec=S.wod.sections[si];if(!sec.chipperCfg)sec.chipperCfg={};
-  var parent=btn.parentElement;
-  Array.from(parent.children).forEach(function(b){b.style.background='var(--bg2)';b.style.borderColor='var(--bdr)';b.style.color='var(--txt2)';});
-  if(sec.chipperCfg.exCnt===n){delete sec.chipperCfg.exCnt;_updateChipperSchemeDropdown(si,5);return;}
-  sec.chipperCfg.exCnt=n;btn.style.background='var(--or)';btn.style.borderColor='var(--or)';btn.style.color='#000';
-  _updateChipperSchemeDropdown(si,n);
+  if(sec.chipperCfg.exCnt===n){delete sec.chipperCfg.exCnt;}else{sec.chipperCfg.exCnt=n;}
+  _updateChipperSchemeDropdown(si,sec.chipperCfg.exCnt||5);
+  var el=document.getElementById('chipper-cfg-'+si);
+  if(el){var wasVisible=el.style.display!=='none';el.outerHTML=renderChipperCfg(sec,si);if(wasVisible){var nel=document.getElementById('chipper-cfg-'+si);if(nel)nel.style.display='block';}}
 }
 function _updateChipperSchemeDropdown(si,cnt){
   var sel=document.getElementById('chipper-scheme-sel-'+si);if(!sel)return;
@@ -2164,6 +2292,14 @@ function setChipperStationSize(si,sz,btn){
   var sec=S.wod.sections[si];if(!sec.chipperCfg)sec.chipperCfg={};
   sec.chipperCfg.stationSize=sz;
   delete sec.chipperCfg.exCnt;
+  var el=document.getElementById('chipper-cfg-'+si);
+  if(el){var wasVisible=el.style.display!=='none';el.outerHTML=renderChipperCfg(sec,si);if(wasVisible){var nel=document.getElementById('chipper-cfg-'+si);if(nel)nel.style.display='block';}}
+}
+function setChipperStationCount(si,n,btn){
+  var sec=S.wod.sections[si];if(!sec.chipperCfg)sec.chipperCfg={};
+  // toggle
+  if(sec.chipperCfg.stationCount===n){delete sec.chipperCfg.stationCount;delete sec.chipperCfg.exCnt;}
+  else{sec.chipperCfg.stationCount=n;delete sec.chipperCfg.exCnt;}
   var el=document.getElementById('chipper-cfg-'+si);
   if(el){var wasVisible=el.style.display!=='none';el.outerHTML=renderChipperCfg(sec,si);if(wasVisible){var nel=document.getElementById('chipper-cfg-'+si);if(nel)nel.style.display='block';}}
 }
@@ -2210,13 +2346,12 @@ function renderSecInfo(sec,si,infoTxt){
   if(sec.type==='AMRAP')return cfgGearRow(infoTxt,'toggleAmrapCfg',si)+renderAmrapCfg(sec,si);
   if(sec.type==='For Time / RFT')return cfgGearRow(infoTxt,'toggleRftCfg',si)+renderRftCfg(sec,si);
   if(sec.type==='EMOM')return cfgGearRow(infoTxt,'toggleEmomCfg',si)+renderEmomCfg(sec,si);
-  if(sec.type==='Interval AMRAP')return cfgGearRow(infoTxt,'toggleIntervalCfg',si)+renderIntervalCfg(sec,si);
   if(sec.type==='Tabata')return cfgGearRow(infoTxt,'toggleTabataCfg',si)+renderTabataCfg(sec,si);
   if(sec.type==='Death By')return cfgGearRow(infoTxt,'toggleDeathByCfg',si)+renderDeathByCfg(sec,si);
   if(sec.type==='YGIG / Partner WOD')return cfgGearRow(infoTxt,'toggleYgigCfg',si)+renderYgigCfg(sec,si);
   if(sec.type==='Buy-In / Cash-Out')return cfgGearRow(infoTxt,'toggleBuyInCfg',si)+renderBuyInCfg(sec,si);
   if(sec.type==='Ladder')return cfgGearRow(infoTxt||'','toggleLadderCfg',si)+renderLadderCfg(sec,si);
-  if(sec.type==='Group A')return cfgGearRow(infoTxt,'toggleGroupAbCfg',si)+renderGroupAbCfg(sec,si);
+  if(sec.type==='Group A')return cfgGearRow(infoTxt,'toggleAmrapCfg',si)+renderGroupAbAmrapCfg(sec,si);
   if(sec.type==='Group B')return '';
   if(sec.scheme){
     var schHtml=sec.scheme.join(' → ');
@@ -2245,57 +2380,34 @@ function toggleLongForm(si){
   sec.longForm=!sec.longForm;
   reRenderSec(si);
 }
-function _secChip(sec){
-  if(!sec||!sec.items)return'';
+function _secFill(sec){
+  if(!sec||!sec.items)return null;
   var strItems=sec.items.filter(function(x){return x.kind==='str'&&x.baseRep&&!x.isRest;});
-  if(!strItems.length)return'';
+  if(!strItems.length)return null;
   var team=S.teamSize||1;
   var iv=sec.infoVars||{};
   var budget=(iv.t||S.time)*60;
   var lvl=S.level||'intermediate';
-  // Collect ALL cardio/gate items (not just last one)
   var gateExArr=[];
-  var cEx=null;
-  sec.items.forEach(function(x){
-    if((x.kind==='cardio'||x.kind==='station-gate')&&x.ex&&x.ex.amount){
-      gateExArr.push(x.ex);
-      cEx=x.ex; // keep last for non-stations WODs
-    }
-  });
+  sec.items.forEach(function(x){if((x.kind==='cardio'||x.kind==='station-gate')&&x.ex&&x.ex.amount)gateExArr.push(x.ex);});
   var repsArr=strItems.map(function(it){return it.baseRep;});
   var exArr=strItems.map(function(it){return it.ex;});
   var tTime=team===2?30:({beginner:45,intermediate:30,advanced:20,elite:15}[lvl]||20);
   var totalItems=strItems.length+gateExArr.length;
   var est;
   try{
-    // Sum str time
     est=0;
     for(var _ci=0;_ci<Math.min(repsArr.length,exArr.length);_ci++)est+=repsArr[_ci]*getSecondsPerRep(exArr[_ci],lvl,team);
-    // Sum ALL gate times
-    gateExArr.forEach(function(gx){
-      if(gx.unit==='Cal')est+=gx.amount*5.5;
-      else if(gx.unit==='m')est+=(gx.amount/10)*3.0;
-      else if(gx.unit==='reps')est+=gx.amount*3.0;
-    });
-    // Transitions
+    gateExArr.forEach(function(gx){if(gx.unit==='Cal')est+=gx.amount*5.5;else if(gx.unit==='m')est+=(gx.amount/10)*3.0;else if(gx.unit==='reps')est+=gx.amount*3.0;});
     est+=(totalItems-1)*tTime;
-  }catch(e){return'';}
-  if(sec.type==='For Time / RFT'&&iv.r)est=est*iv.r;
-  // EMOM: pure work per cycle / (numSlots × 60s) — no transitions
-  if(sec.type==='EMOM'&&iv.n){
-    var _emPW=0;
-    for(var _ci2=0;_ci2<Math.min(repsArr.length,exArr.length);_ci2++)_emPW+=repsArr[_ci2]*getSecondsPerRep(exArr[_ci2],lvl,team);
-    gateExArr.forEach(function(gx){if(gx.unit==='Cal')_emPW+=gx.amount*5.5;else if(gx.unit==='m')_emPW+=(gx.amount/10)*3.0;else if(gx.unit==='reps')_emPW+=gx.amount*3.0;});
-    est=_emPW;budget=(iv.n+(gateExArr.length||0))*60;
-  }
-  // AMRAP: pure work per round / target round time — no transitions (ارقام طبيعية بدون تعقيد)
-  if(sec.type==='AMRAP'&&iv.rnd&&iv.rnd>0){
-    var _amrPW=0;
-    for(var _ci3=0;_ci3<Math.min(repsArr.length,exArr.length);_ci3++)_amrPW+=repsArr[_ci3]*getSecondsPerRep(exArr[_ci3],lvl,team);
-    gateExArr.forEach(function(gx){if(gx.unit==='Cal')_amrPW+=gx.amount*5.5;else if(gx.unit==='m')_amrPW+=(gx.amount/10)*3.0;else if(gx.unit==='reps')_amrPW+=gx.amount*3.0;});
-    est=_amrPW;budget=iv.rnd*60;
-  }
-  var fill=est/budget;
+  }catch(e){return null;}
+  if((sec.type==='For Time / RFT'||sec.type==='Buy-In / Cash-Out')&&iv.r)est=est*iv.r;
+  if(sec.type==='EMOM'&&iv.n){var _emPW=0;for(var _ci2=0;_ci2<Math.min(repsArr.length,exArr.length);_ci2++)_emPW+=repsArr[_ci2]*getSecondsPerRep(exArr[_ci2],lvl,team);gateExArr.forEach(function(gx){if(gx.unit==='Cal')_emPW+=gx.amount*5.5;else if(gx.unit==='m')_emPW+=(gx.amount/10)*3.0;else if(gx.unit==='reps')_emPW+=gx.amount*3.0;});est=_emPW;budget=(iv.n+(gateExArr.length||0))*60;}
+  if((sec.type==='AMRAP'||sec.type==='Group A'||sec.type==='Group B')&&iv.rnd&&iv.rnd>0){var _amrPW=0;for(var _ci3=0;_ci3<Math.min(repsArr.length,exArr.length);_ci3++)_amrPW+=repsArr[_ci3]*getSecondsPerRep(exArr[_ci3],lvl,team);gateExArr.forEach(function(gx){if(gx.unit==='Cal')_amrPW+=gx.amount*5.5;else if(gx.unit==='m')_amrPW+=(gx.amount/10)*3.0;else if(gx.unit==='reps')_amrPW+=gx.amount*3.0;});est=_amrPW;budget=iv.rnd*60;}
+  return est/budget;
+}
+function _fillChip(fill){
+  if(fill===null||fill===undefined||isNaN(fill))return'';
   var pct=Math.round(fill*100);
   var color,bg;
   if(fill>=0.90&&fill<=1.00){color='#2e7d32';bg='rgba(46,125,50,0.18)';}
@@ -2303,6 +2415,28 @@ function _secChip(sec){
   else{color='#6a1b9a';bg='rgba(106,27,154,0.16)';}
   return'<span style="background:'+bg+';color:'+color+';font-size:11px;font-weight:800;padding:3px 10px;border-radius:20px">'+pct+'%</span>';
 }
+function _secChip(sec){return _fillChip(_secFill(sec));}
+function _gabChip(si){
+  var secA=S.wod&&S.wod.sections[si];
+  var secB=S.wod&&S.wod.sections[si+1];
+  var fA=_secFill(secA);
+  var fB=_secFill(secB);
+  function _labeled(f,lbl){
+    if(f===null||isNaN(f))return'';
+    var pct=Math.round(f*100);
+    var color,bg;
+    if(f>=0.90&&f<=1.00){color='#2e7d32';bg='rgba(46,125,50,0.18)';}
+    else if(f>1.00){color='#c62828';bg='rgba(198,40,40,0.14)';}
+    else{color='#6a1b9a';bg='rgba(106,27,154,0.16)';}
+    return'<span style="background:'+bg+';color:'+color+';font-size:11px;font-weight:800;padding:3px 10px;border-radius:20px">'+lbl+' '+pct+'%</span>';
+  }
+  var chipA=_labeled(fA,'A');
+  var chipB=_labeled(fB,'B');
+  if(!chipA&&!chipB)return'';
+  var sep='<span style="font-size:11px;color:var(--bdr);margin:0 1px">|</span>';
+  return chipA+sep+chipB;
+}
+
 function renderSec(sec,si){
   var infoTxt=sec.infoKey?ti(sec.infoKey,sec.infoVars||{}):sec.info;
   var scoreTxt=sec.scoreKey?t(sec.scoreKey):sec.score;
@@ -2313,7 +2447,9 @@ function renderSec(sec,si){
   var _renderIt=function(s,i){return'<div>'+(s.scheme&&s.scheme.length?(s.longForm?renderItemsByRound(s,i):renderItems(s.items,i)):renderItems(s.items,i))+'</div>';};
   var _subHdr=function(lbl){return'<div style="font-size:11px;font-weight:700;color:var(--txt3);letter-spacing:1.5px;text-transform:uppercase;margin:8px 0 6px">── '+lbl+' ──</div>';};
   if(sec.type==='Group A'){
-    var gabInner='Group A / B'+(hasDesc?'<button class="wdi-btn" onclick="showWodDesc(\'Group A\')">ⓘ</button>':'');
+    var _gabBadges=_gabChip(si);
+    var gabInner='<span>Group A / B</span>'
+      +'<span style="display:flex;align-items:center;gap:4px">'+_gabBadges+(hasDesc?'<button class="wdi-btn" onclick="showWodDesc(\'Group A\')">ⓘ</button>':'')+'</span>';
     return'<div class="ws ani" id="sec-'+si+'" style="border-bottom-left-radius:0;border-bottom-right-radius:0;margin-bottom:0">'
       +'<div class="st" style="display:flex;align-items:center;justify-content:space-between">'+gabInner+'</div>'
       +'<div class="stt">Group A/B — AMRAP</div>'
@@ -2386,7 +2522,7 @@ function renderItems(items,si){var sn=0;return items.map(function(it,ii){
   if(it.kind==='buyin')return renderCardio(it,si,ii);
   if(it.kind==='cardio')return renderCardio(it,si,ii);
   if(it.kind==='station-header'){
-    return'<div class="rsep">── STATION '+it.stationNum+' / '+it.stationTotal+' ──</div>';
+    return'';
   }
   if(it.kind==='station-gate'){return renderCardio(it,si,ii);}
   sn++;return renderStr(it,si,ii,sn);
@@ -2443,7 +2579,14 @@ function renderStr(it,si,ii,num,roundIdx){
   var _secType=S.wod&&S.wod.sections&&S.wod.sections[si]&&S.wod.sections[si].type;
   var _actN2=_secIt.filter(function(it2,i){return it2.kind==='str'&&i!==ii&&it2.ex;}).map(function(it2){return it2.ex.name;});
   var _chipperBan=_secType==='Chipper'?STR.filter(function(e){return e.unit==='time'||e.unit==='carry';}).map(function(e){return e.name;}):[];
-  var _altF=(ex.alts||[]).filter(function(a){return _actN2.indexOf(a)<0&&_chipperBan.indexOf(a)<0;}).slice(0,4);
+  var _dbCatFilter=null;
+  if(_secType==='Death By'){var _dbC=S.wod.sections[si].deathByCfg;if(_dbC&&_dbC.cat&&_dbC.cat!=='all')_dbCatFilter=_dbC.cat;}
+  var _altF=(ex.alts||[]).filter(function(a){
+    if(_actN2.indexOf(a)>=0||_chipperBan.indexOf(a)>=0)return false;
+    if(_secType==='Death By'){var _ae=STR.filter(function(e){return e.name===a;})[0];if(!_ae||_ae.unit==='time'||_ae.unit==='carry'||_ae.unit==='m')return false;if(_dbCatFilter&&(!_ae||_ae.cat!==_dbCatFilter))return false;}
+    if(_secType==='Tabata'){if(TABATA_STR_NAMES.indexOf(a)<0)return false;}
+    return true;
+  }).slice(0,4);
   return'<div class="er" id="ex-'+si+'-'+ii+'"><div class="en">'+num+'</div><div class="eb"><div class="ename">'+ex.name+emTag+'</div>'+(it.noEdit?'<div class="edet" style="display:inline-flex;align-items:center;gap:4px">'+fmtDetail(it.detail)+'</div>':'<span style="font-size:14px;color:var(--or);font-weight:700">'+fmtDetail(it.detail)+'</span>'+(it.noPencil?'':'<button onclick="openEditDetail('+si+','+ii+(roundIdx!==undefined?','+roundIdx:'')+')" style="background:none;border:none;padding:0 0 0 3px;font-size:11px;cursor:pointer;line-height:1;vertical-align:middle">&#x270F;&#xFE0F;</button>'))+'</div><div class="ea"><button class="esb" onclick="toggleSwap(\''+si+'\',\''+ii+'\')">'+t('swap')+'</button><button class="esb re" onclick="regenEx('+si+','+ii+',\'str\')">'+t('new_ex')+'</button></div></div>'
   +'<div class="sp" id="sp-'+si+'-'+ii+'"><div class="sh" style="display:flex;align-items:center;justify-content:space-between">'+t('similar')+'<button onclick="toggleSwap(\''+si+'\',\''+ii+'\')" style="background:none;border:none;cursor:pointer;font-size:16px;color:var(--txt3);line-height:1;padding:0;margin-left:8px">✕</button></div><div class="so">'
   +_altF.map(function(a){return'<div class="soi" onclick="swapStr('+si+','+ii+',\''+a.replace(/'/g,"\\'")+'\')">'+'<span class="sn">'+a+'</span><span class="stag">→ '+t('use')+'</span></div>'}).join('')
@@ -2663,7 +2806,9 @@ function manualSwap(si,ii){
   // rebuild detail based on unit
   var manualDetail=dEl&&dEl.value.trim();
   var newDetail;
-  if(manualDetail){
+  if(S.wod.sections[si].type==='Tabata'){
+    newDetail='20s on / 10s off × 8';
+  }else if(manualDetail){
     newDetail=manualDetail;
   }else{
     var oldUnit=old.ex?old.ex.unit||'reps':'reps';
@@ -2682,7 +2827,7 @@ function swapStr(si,ii,name){
   var oldUnit=old.ex?old.ex.unit||'reps':'reps';
   var newUnit=found.unit||'reps';
   var oldNum=parseInt(((old.detail||'').match(/\d+/)||['10'])[0],10)||10;
-  var newDetail=buildStrDetail(found,old,S.wod.sections[si]);
+  var newDetail=S.wod.sections[si].type==='Tabata'?'20s on / 10s off × 8':buildStrDetail(found,old,S.wod.sections[si]);
   S.wod.sections[si].items[ii]=Object.assign({},old,{ex:found,detail:newDetail,wt:wgt(S.level,found.cat)});
   reRenderSec(si);toast('✅ Swapped!');
 }
@@ -2691,6 +2836,8 @@ function buildStrDetail(newEx,old,sec){
   var oldUnit=old&&old.ex?old.ex.unit||'reps':'reps';
   // time/carry: fixed sensible value from pool, repeated per round — never uses rep count
   if(newUnit==='time'||newUnit==='carry'){
+    // اذا القديم نفس الوحدة، احتفظ بنفس المسافة/الوقت من old.detail
+    if(oldUnit===newUnit&&old&&old.detail)return old.detail;
     return(sec&&sec.scheme&&sec.scheme.length)?schemeLabel(newEx,sec.scheme,S.level,S.team):getDetail(newEx,0,null,S.level,S.team);
   }
   // reps/side: use scheme values if available — but if all scheme values equal (Sweet Spot), use old.baseRep instead
@@ -2705,6 +2852,8 @@ function buildStrDetail(newEx,old,sec){
     if(!repNum){var _m=old&&old.detail&&old.detail.match(/\d+/);repNum=_m?parseInt(_m[0],10):null;}
   }
   if(!repNum)repNum=(sec&&sec.baseRep)||10;
+  var _lims=_repLimits(newEx.cat,S.level,S.team);
+  repNum=_repSnap(Math.max(_lims.min,Math.min(_lims.max,repNum)),_lims.min,_lims.max);
   if(newUnit==='side')return repNum+' reps each side';
   return repNum+' reps';
 }
@@ -2763,9 +2912,23 @@ function regenEx(si,ii,kind){
     }
   }else{
     var _basePool=(sec.type==='Ladder'||sec.type==='Chipper')?getChipperPool(S.level,S.teamSize):getPool(S.level,null,S.teamSize);
+    if(sec.type==='Death By'){
+      _basePool=_basePool.filter(function(e){return e.unit!=='time'&&e.unit!=='carry'&&e.unit!=='m';});
+      var _dbCat=sec.deathByCfg&&sec.deathByCfg.cat;
+      if(_dbCat&&_dbCat!=='all')_basePool=_basePool.filter(function(e){return e.cat===_dbCat;});
+      if(!_basePool.length)_basePool=getPool(S.level,null,S.teamSize).filter(function(e){return e.unit!=='time'&&e.unit!=='carry'&&e.unit!=='m';});
+    }
+    if(sec.type==='Tabata'){
+      _basePool=_basePool.filter(function(e){return TABATA_STR_NAMES.indexOf(e.name)>=0;});
+      if(!_basePool.length)_basePool=getPool(S.level,null,S.teamSize).filter(function(e){return TABATA_STR_NAMES.indexOf(e.name)>=0;});
+    }
     if(!_basePool.length)_basePool=getPool(S.level);
-    var _actN=sec.items.filter(function(it,i){return it.kind==='str'&&i!==ii&&it.ex;}).map(function(it){return it.ex.name;});
-    var _strPool=_basePool.filter(function(e){return _actN.indexOf(e.name)<0;});
+    var _actItems=sec.items.filter(function(it,i){return it.kind==='str'&&i!==ii&&it.ex;});
+    var _actN=_actItems.map(function(it){return it.ex.name;});
+    // استثني كذلك الـ alts للتمارين الحاليه لتجنب المتشابهين
+    var _simN=_actItems.reduce(function(acc,it){return acc.concat(it.ex.alts||[]);}, []);
+    var _strPool=_basePool.filter(function(e){return _actN.indexOf(e.name)<0&&_simN.indexOf(e.name)<0;});
+    if(!_strPool.length)_strPool=_basePool.filter(function(e){return _actN.indexOf(e.name)<0;});
     if(!_strPool.length)_strPool=_basePool;
     do{newEx=pk(_strPool);}while(newEx.name===old.ex.name&&_strPool.length>1);
     if(isTabata){
@@ -2782,6 +2945,7 @@ function regenEx(si,ii,kind){
       }else if(sec.type==='Ladder'){
         // ladder: rebuild detail with correct unit (time/carry already filtered from pool)
         var _lu=newEx.unit||'reps';var _ln=parseInt(((old.detail||'').match(/\d+/)||['10'])[0],10)||10;
+        var _lLims=_repLimits(newEx.cat,S.level,S.team);_ln=_repSnap(Math.max(_lLims.min,Math.min(_lLims.max,_ln)),_lLims.min,_lLims.max);
         var _isLScheme=old.detail&&old.detail.indexOf(' - ')>-1;
         if(_isLScheme)newDetail=old.detail;
         else if(_lu==='time')newDetail=_ln+'s';
@@ -2789,7 +2953,8 @@ function regenEx(si,ii,kind){
         else if(_lu==='side')newDetail=_ln+' reps each side';
         else newDetail=_ln+' reps';
       }else if(old.isShared){
-        newDetail=getDetail(newEx,old.baseRep||10,null,S.level,S.team);
+        var _shRep=old.baseRep||10;var _shLims=_repLimits(newEx.cat,S.level,S.team);_shRep=_repSnap(Math.max(_shLims.min,Math.min(_shLims.max,_shRep)),_shLims.min,_shLims.max);
+        newDetail=getDetail(newEx,_shRep,null,S.level,S.team);
       }else if(sec.scheme&&sec.scheme.length){
         newDetail=buildStrDetail(newEx,old,sec);
       }else{
@@ -2903,9 +3068,9 @@ function setChipperCardio(si){
   if(!sec.chipperCfg)sec.chipperCfg={};
   var c=sec.chipperCfg.withCardio;
   sec.chipperCfg.withCardio=c===undefined?true:c===true?false:undefined;
-  var v=sec.chipperCfg.withCardio;
-  var btn=document.getElementById('chipper-cardio-'+si);
-  if(btn){btn.textContent=v===true?'ON':v===false?'OFF':'AUTO';btn.style.background=v===true?'var(--or)':'var(--bg2)';btn.style.borderColor=v===true?'var(--or)':'var(--bdr)';btn.style.color=v===true?'#000':v===false?'var(--txt2)':'var(--txt3)';}
+  if(sec.chipperCfg.withCardio!==true){sec.chipperCfg.cardioCount=0;sec.chipperCfg.stationMode='classic';delete sec.chipperCfg.stationCount;}
+  var el=document.getElementById('chipper-cfg-'+si);
+  if(el){var wasVisible=el.style.display!=='none';el.outerHTML=renderChipperCfg(sec,si);if(wasVisible){var nel=document.getElementById('chipper-cfg-'+si);if(nel)nel.style.display='block';}}
 }
 function toggleChipperPyramid(si){
   var sec=S.wod.sections[si];
@@ -2921,6 +3086,15 @@ function toggleChipperPyramid(si){
   }
   var el=document.getElementById('sec-'+si);
   if(el)el.outerHTML=renderSec(S.wod.sections[si],si);
+}
+function setChipperCardioCount(si,n){
+  var sec=S.wod.sections[si];if(!sec.chipperCfg)sec.chipperCfg={};
+  sec.chipperCfg.cardioCount=n;
+  sec.chipperCfg.stationMode='classic';
+  delete sec.chipperCfg.stationCount;
+  delete sec.chipperCfg.exCnt;
+  var el=document.getElementById('chipper-cfg-'+si);
+  if(el){var wasVisible=el.style.display!=='none';el.outerHTML=renderChipperCfg(sec,si);if(wasVisible){var nel=document.getElementById('chipper-cfg-'+si);if(nel)nel.style.display='block';}}
 }
 function regenChipper(si){
   var sec=S.wod.sections[si];
@@ -3013,6 +3187,7 @@ function toggleAmrapCardio(si){
 }
 function regenAmrap(si){
   var sec=S.wod.sections[si];
+  if(sec.type==='Group A'){regenGroupAb(si);return;}
   var cfg=sec.amrapCfg||{};
   var newSecs=mkAmrap(S.wod.cfg.time,S.level,S.teamSize,cfg);
   S.wod.sections[si]=newSecs[0];
@@ -3181,33 +3356,19 @@ function renderRftCfg(sec,si){
   var cfg=sec.rftCfg||{};
   var S_btn='background:var(--bg2);border:0.5px solid var(--bdr);border-radius:7px;padding:5px 10px;font-size:13px;color:var(--txt2);cursor:pointer;font-weight:600;font-family:inherit;min-height:30px';
   var S_sel='background:var(--or);border:0.5px solid var(--or);border-radius:7px;padding:5px 10px;font-size:13px;color:#000;cursor:pointer;font-weight:600;font-family:inherit;min-height:30px';
-  var noScheme=!cfg.schemeKey;
   var roundBtns=[2,3,4,5].map(function(n){
-    return'<button onclick="setRftVal('+si+',\'rounds\','+n+',this)" style="'+(cfg.rounds===n&&noScheme?S_sel:S_btn)+'">'+n+'</button>';
+    return'<button onclick="setRftVal('+si+',\'rounds\','+n+',this)" style="'+(cfg.rounds===n?S_sel:S_btn)+'">'+n+'</button>';
   }).join('');
   var movBtns=[2,3,4,5].map(function(n){
     return'<button onclick="setRftVal('+si+',\'exCnt\','+n+',this)" style="'+(cfg.exCnt===n?S_sel:S_btn)+'">'+n+'</button>';
   }).join('');
-  var repPresets=[10,20,30,40,50];
-  var repBtns=repPresets.map(function(n){
-    return'<button onclick="setRftReps('+si+','+n+',this)" style="'+(cfg.baseReps===n&&noScheme?S_sel:S_btn)+'">'+n+'</button>';
-  }).join('')
-  +'<input id="rft-reps-'+si+'" type="number" min="1" max="999" placeholder="'+t('chip_custom')+'" value="'+(noScheme&&cfg.baseReps&&repPresets.indexOf(cfg.baseReps)<0?cfg.baseReps:'')+'" oninput="setRftRepsCustom('+si+',this)" style="width:90px;background:var(--bg2);border:0.5px solid var(--bdr);border-radius:7px;padding:5px 10px;font-size:13px;font-weight:600;color:var(--txt);outline:none;min-height:30px;font-family:inherit">';
-  var _isPyr=!!(cfg.pyramidP||cfg.pyramidS);
-  var _hasCustomReps=!!(cfg.customReps&&cfg.customReps.length);
-  var _lockRounds=!!(cfg.schemeKey||_isPyr||_hasCustomReps);
-  var _schStyle='width:100%;background:var(--bg2);border:0.5px solid var(--bdr);border-radius:7px;padding:7px 10px;font-size:13px;color:var(--txt);outline:none;min-height:36px;font-family:inherit;cursor:pointer;direction:'+(CFG.lang==='ar'?'rtl':'ltr');
-  var _schOpts='<option value="">'+t('scheme_sel')+'</option>'
-    +TYPE_SCHEMES.rft.map(function(k){var sch=SCHEMES[k];var lbl=sch.dynamic?(CFG.lang==='ar'?sch.ar:sch.en):(sch.reps.join(' - ')+' reps');return'<option dir="'+(sch.dynamic?'auto':'ltr')+'" value="'+k+'"'+(cfg.schemeKey===k?' selected':'')+'>'+lbl+'</option>';}).join('')
-    +'<option value="__pyramid__"'+(_isPyr?' selected':'>')+(CFG.lang==='ar'?'هرمي':'Pyramid')+'</option>';
-  var schemeBtns='<select onchange="setRftSchemeSelect('+si+',this.value)" style="'+_schStyle+'">'+_schOpts+'</select>';
   var cv=cfg.withCardio;
   return'<div id="rft-cfg-'+si+'" style="display:none;background:var(--bg3);border:0.5px solid var(--bdr);border-radius:10px;padding:12px;margin-top:6px">'
   +'<div style="display:flex;justify-content:flex-end;margin-bottom:10px"><button onclick="randomRft('+si+')" style="background:rgba(99,102,241,0.12);border:0.5px solid #6366f1;border-radius:20px;padding:4px 12px;font-size:11px;color:#6366f1;cursor:pointer;font-weight:600">'+t('random')+'</button></div>'
   +'<div style="font-size:13px;font-weight:600;color:var(--txt2);text-transform:uppercase;margin-bottom:6px">'+t('rft_rounds')+'</div>'
-  +'<div id="rft-rounds-'+si+'" style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px;direction:'+(CFG.lang==='ar'?'rtl':'ltr')+';opacity:'+(_lockRounds?'0.35':'1')+';pointer-events:'+(_lockRounds?'none':'auto')+'">'+roundBtns+'</div>'
+  +'<div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px;direction:'+(CFG.lang==='ar'?'rtl':'ltr')+'">'+roundBtns+'</div>'
   +'<div style="font-size:13px;font-weight:600;color:var(--txt2);text-transform:uppercase;margin-bottom:6px">'+t('rft_mov')+'</div>'
-  +'<div id="rft-mov-row-'+si+'" style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px;direction:'+(CFG.lang==='ar'?'rtl':'ltr')+'">'+movBtns+'</div>'
+  +'<div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px;direction:'+(CFG.lang==='ar'?'rtl':'ltr')+'">'+movBtns+'</div>'
   +'<div style="font-size:13px;font-weight:600;color:var(--txt2);text-transform:uppercase;margin-bottom:6px">'+t('chip_cardio')+'</div>'
   +'<div style="display:flex;gap:6px;margin-bottom:14px;direction:'+(CFG.lang==='ar'?'rtl':'ltr')+'"><button id="rft-cardio-'+si+'" onclick="toggleRftCardio('+si+')" style="'+(cv===true?S_sel:S_btn)+'">'+(cv===true?'ON':cv===false?'OFF':'AUTO')+'</button></div>'
   +'<button onclick="regenRft('+si+')" style="width:100%;background:var(--or);color:#000;border:none;border-radius:10px;padding:11px;font-size:14px;font-weight:700;cursor:pointer;min-height:42px">⟳ '+t('chip_regen')+'</button>'
@@ -3328,19 +3489,19 @@ function renderIntervalCfg(sec,si){
   var cfg=sec.intervalCfg||{};
   var S_btn='background:var(--bg2);border:0.5px solid var(--bdr);border-radius:7px;padding:5px 10px;font-size:13px;color:var(--txt2);cursor:pointer;font-weight:600;font-family:inherit;min-height:30px';
   var S_sel='background:var(--or);border:0.5px solid var(--or);border-radius:7px;padding:5px 10px;font-size:13px;color:#000;cursor:pointer;font-weight:600;font-family:inherit;min-height:30px';
-  var S_dd='width:130px;background:var(--bg2);border:0.5px solid var(--bdr);border-radius:8px;padding:5px 10px;font-size:13px;color:var(--txt);outline:none;height:34px;font-family:inherit;cursor:pointer';
+  var S_dd='width:90px;background:var(--bg2);border:0.5px solid var(--bdr);border-radius:8px;padding:5px 8px;font-size:13px;color:var(--txt);outline:none;height:34px;font-family:inherit;cursor:pointer';
   var workDd='<select onchange="setIntervalDropdown('+si+',\'workTime\',this)" style="'+S_dd+'">'
     +'<option value="">—</option>'
-    +[1,2,3,4,5,6,7].map(function(n){return'<option value="'+n+'"'+(cfg.workTime===n?' selected':'')+'>'+n+' min</option>';}).join('')
+    +[3,4,5,6,7].map(function(n){return'<option value="'+n+'"'+(cfg.workTime===n?' selected':'')+'>'+n+' min</option>';}).join('')
     +'</select>';
-  var _restOpts=[{v:0.5,l:'30 sec'},{v:1,l:'1 min'},{v:1.5,l:'1.5 min'},{v:2,l:'2 min'},{v:2.5,l:'2.5 min'},{v:3,l:'3 min'}];
+  var _restOpts=[{v:1,l:'1 min'},{v:2,l:'2 min'},{v:3,l:'3 min'}];
   var restDd='<select onchange="setIntervalDropdown('+si+',\'restTime\',this)" style="'+S_dd+'">'
     +'<option value="">—</option>'
     +_restOpts.map(function(o){return'<option value="'+o.v+'"'+(cfg.restTime===o.v?' selected':'')+'>'+o.l+'</option>';}).join('')
     +'</select>';
   var w=cfg.workTime,rt=cfg.restTime,tot=S.wod.cfg.time;
   var calcR=(w&&rt)?Math.floor((tot+rt)/(w+rt)):null;
-  var movBtns=[1,2,3,4].map(function(n){return'<button onclick="setIntervalVal('+si+',\'exCnt\','+n+',this)" style="'+(cfg.exCnt===n?S_sel:S_btn)+'">'+n+'</button>';}).join('');
+  var movBtns=[2,3,4].map(function(n){return'<button onclick="setIntervalVal('+si+',\'exCnt\','+n+',this)" style="'+(cfg.exCnt===n?S_sel:S_btn)+'">'+n+'</button>';}).join('');
   var _repPresets=[10,20,30,40,50];
   var repBtns=_repPresets.map(function(n){return'<button onclick="setIntervalVal('+si+',\'baseReps\','+n+',this)" style="'+(cfg.baseReps===n?S_sel:S_btn)+'">'+n+'</button>';}).join('')
   +'<input type="number" min="1" max="50" placeholder="'+t('chip_custom')+'" value="'+(cfg.baseReps&&_repPresets.indexOf(cfg.baseReps)===-1?cfg.baseReps:'')+'" oninput="setIntervalManualReps('+si+',this.value)" style="width:90px;background:var(--bg2);border:0.5px solid var(--bdr);border-radius:7px;padding:5px 10px;font-size:13px;font-weight:600;color:var(--txt2);outline:none;min-height:30px;text-align:center;font-family:inherit">';
@@ -3355,8 +3516,6 @@ function renderIntervalCfg(sec,si){
   +'<div id="interval-rounds-display-'+si+'" style="font-size:13px;font-weight:600;color:var(--txt2);margin-bottom:12px;direction:'+dir+'">'+(calcR?t('int_intervals')+': <span style="color:var(--or);font-weight:700">'+calcR+'</span>':'')+'</div>'
   +'<div style="'+S_lbl+'">'+t('int_mov')+'</div>'
   +'<div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px;direction:'+dir+'">'+movBtns+'</div>'
-  +'<div style="'+S_lbl+'">'+t('int_reps')+'</div>'
-  +'<div id="interval-rep-btns-'+si+'" style="display:flex;gap:6px;flex-wrap:wrap;align-items:center;margin-bottom:14px;direction:'+dir+'">'+repBtns+'</div>'
   +'<button onclick="regenInterval('+si+')" style="width:100%;background:var(--or);color:#000;border:none;border-radius:10px;padding:11px;font-size:14px;font-weight:700;cursor:pointer;min-height:42px">⟳ '+t('chip_regen')+'</button>'
   +'</div>';
 }
@@ -3378,6 +3537,13 @@ function toggleTabataCardio(si){
   var v=sec.tabataCfg.withCardio;var btn=document.getElementById('tabata-cardio-'+si);
   if(btn){btn.textContent=v===true?'ON':v===false?'OFF':'AUTO';btn.style.background=v===true?'var(--or)':'var(--bg2)';btn.style.borderColor=v===true?'var(--or)':'var(--bdr)';btn.style.color=v===true?'#000':v===false?'var(--txt2)':'var(--txt3)';}
 }
+function toggleTabataRest(si){
+  var sec=S.wod.sections[si];if(!sec.tabataCfg)sec.tabataCfg={};
+  sec.tabataCfg.withRest=sec.tabataCfg.withRest===true?false:true;
+  var v=sec.tabataCfg.withRest;var btn=document.getElementById('tabata-rest-'+si);
+  if(btn){btn.textContent=v?'ON':'OFF';btn.style.background=v?'var(--or)':'var(--bg2)';btn.style.borderColor=v?'var(--or)':'var(--bdr)';btn.style.color=v?'#000':'var(--txt2)';}
+  regenTabata(si);
+}
 function regenTabata(si){
   var sec=S.wod.sections[si];var cfg=sec.tabataCfg||{};
   var newSecs=mkTabata(S.wod.cfg.time,S.level,S.teamSize,cfg);S.wod.sections[si]=newSecs[0];
@@ -3392,14 +3558,16 @@ function renderTabataCfg(sec,si){
   var cfg=sec.tabataCfg||{};
   var S_btn='background:var(--bg2);border:0.5px solid var(--bdr);border-radius:7px;padding:5px 10px;font-size:13px;color:var(--txt2);cursor:pointer;font-weight:600;font-family:inherit;min-height:30px';
   var S_sel='background:var(--or);border:0.5px solid var(--or);border-radius:7px;padding:5px 10px;font-size:13px;color:#000;cursor:pointer;font-weight:600;font-family:inherit;min-height:30px';
-  var movBtns=[1,2,3,4,5,6].map(function(n){return'<button onclick="setTabataVal('+si+',\'numMov\','+n+',this)" style="'+(cfg.numMov===n?S_sel:S_btn)+'">'+n+'</button>';}).join('');
-  var cv=cfg.withCardio;
+  var movBtns=[1,2,3,4].map(function(n){return'<button onclick="setTabataVal('+si+',\'numMov\','+n+',this)" style="'+(cfg.numMov===n?S_sel:S_btn)+'">'+n+'</button>';}).join('');
+  var cv=cfg.withCardio;var rv=cfg.withRest;
   return'<div id="tabata-cfg-'+si+'" style="display:none;background:var(--bg3);border:0.5px solid var(--bdr);border-radius:10px;padding:12px;margin-top:6px">'
   +'<div style="display:flex;justify-content:flex-end;margin-bottom:10px"><button onclick="randomTabata('+si+')" style="background:rgba(99,102,241,0.12);border:0.5px solid #6366f1;border-radius:20px;padding:4px 12px;font-size:11px;color:#6366f1;cursor:pointer;font-weight:600">'+t('random')+'</button></div>'
   +'<div style="font-size:13px;font-weight:600;color:var(--txt2);letter-spacing:0.5px;text-transform:uppercase;margin-bottom:6px">'+t('tab_mov')+'</div>'
   +'<div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px;direction:'+(CFG.lang==='ar'?'rtl':'ltr')+'">'+movBtns+'</div>'
   +'<div style="font-size:13px;font-weight:600;color:var(--txt2);letter-spacing:0.5px;text-transform:uppercase;margin-bottom:6px">'+t('em_cardio')+'</div>'
-  +'<div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:14px;direction:'+(CFG.lang==='ar'?'rtl':'ltr')+'"><button id="tabata-cardio-'+si+'" onclick="toggleTabataCardio('+si+')" style="background:'+(cv===true?'var(--or)':'var(--bg2)')+';border:0.5px solid '+(cv===true?'var(--or)':'var(--bdr)')+';border-radius:20px;padding:5px 16px;font-size:12px;color:'+(cv===true?'#000':cv===false?'var(--txt2)':'var(--txt3)')+';cursor:pointer;font-weight:700;min-height:30px">'+(cv===true?'ON':cv===false?'OFF':'AUTO')+'</button></div>'
+  +'<div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px;direction:'+(CFG.lang==='ar'?'rtl':'ltr')+'"><button id="tabata-cardio-'+si+'" onclick="toggleTabataCardio('+si+')" style="background:'+(cv===true?'var(--or)':'var(--bg2)')+';border:0.5px solid '+(cv===true?'var(--or)':'var(--bdr)')+';border-radius:20px;padding:5px 16px;font-size:12px;color:'+(cv===true?'#000':cv===false?'var(--txt2)':'var(--txt3)')+';cursor:pointer;font-weight:700;min-height:30px">'+(cv===true?'ON':cv===false?'OFF':'AUTO')+'</button></div>'
+  +'<div style="font-size:13px;font-weight:600;color:var(--txt2);letter-spacing:0.5px;text-transform:uppercase;margin-bottom:6px">REST</div>'
+  +'<div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:14px;direction:'+(CFG.lang==='ar'?'rtl':'ltr')+'"><button id="tabata-rest-'+si+'" onclick="toggleTabataRest('+si+')" style="background:'+(rv===true?'var(--or)':'var(--bg2)')+';border:0.5px solid '+(rv===true?'var(--or)':'var(--bdr)')+';border-radius:20px;padding:5px 16px;font-size:12px;color:'+(rv===true?'#000':'var(--txt2)')+';cursor:pointer;font-weight:700;min-height:30px">'+(rv===true?'ON':'OFF')+'</button></div>'
   +'<button onclick="regenTabata('+si+')" style="width:100%;background:var(--or);color:#000;border:none;border-radius:10px;padding:11px;font-size:14px;font-weight:700;cursor:pointer;min-height:42px">⟳ '+t('chip_regen')+'</button>'
   +'</div>';
 }
@@ -3413,19 +3581,20 @@ function _dbDetail(sec){
   if(unit==='carry')return s+'m + '+inc+'m/min';
   return s+' + '+inc+' reps/min';
 }
+function setDeathByCat(si,cat,btn){
+  var sec=S.wod.sections[si];if(!sec.deathByCfg)sec.deathByCfg={};
+  sec.deathByCfg.cat=cat;
+  var newSecs=mkDeathBy(S.wod.cfg.time,S.level,S.teamSize,sec.deathByCfg);
+  S.wod.sections[si]=newSecs[0];
+  var el=document.getElementById('sec-'+si);if(el)el.outerHTML=renderSec(S.wod.sections[si],si);
+  var cfg2=document.getElementById('deathby-cfg-'+si);if(cfg2)cfg2.style.display='block';
+}
 function setDeathByVal(si,key,val,btn){
   var sec=S.wod.sections[si];if(!sec.deathByCfg)sec.deathByCfg={};
   var cfg=sec.deathByCfg;
   var parent=btn.parentElement;
   Array.from(parent.children).forEach(function(b){b.style.background='var(--bg2)';b.style.borderColor='var(--bdr)';b.style.color='var(--txt2)';});
-  if(key==='double'){
-    if(cfg._userDouble===val){delete cfg._userDouble;delete cfg.double;}
-    else{cfg._userDouble=val;cfg.double=val;btn.style.background='var(--or)';btn.style.borderColor='var(--or)';btn.style.color='#000';}
-    var el=document.getElementById('deathby-cfg-'+si);
-    if(el){var newHtml=renderDeathByCfg(sec,si);el.outerHTML=newHtml;}
-    var el2=document.getElementById('deathby-cfg-'+si);
-    if(el2)el2.style.display='block';
-  } else if(key==='increment'){
+  if(key==='increment'){
     if(cfg._userInc===val){delete cfg._userInc;delete cfg.increment;}
     else{cfg._userInc=val;cfg.increment=val;btn.style.background='var(--or)';btn.style.borderColor='var(--or)';btn.style.color='#000';}
     if(sec.items&&sec.items[0]){
@@ -3472,25 +3641,22 @@ function randomDeathBy(si){
   if(!S.cfgStore)S.cfgStore={};S.cfgStore['death-by']={};
   var newSecs=mkDeathBy(S.wod.cfg.time,S.level,S.teamSize,{});S.wod.sections[si]=newSecs[0];
   var cfg=S.wod.sections[si].deathByCfg||{};
-  delete cfg._userStart;delete cfg._userInc;delete cfg._userDouble;
-  delete cfg.startVal;delete cfg.increment;delete cfg.double;
+  delete cfg._userStart;delete cfg._userInc;delete cfg.startVal;delete cfg.increment;
   var el=document.getElementById('sec-'+si);if(el)el.outerHTML=renderSec(S.wod.sections[si],si);
 }
 function renderDeathByCfg(sec,si){
   var cfg=sec.deathByCfg||{};
   var S_btn='background:var(--bg2);border:0.5px solid var(--bdr);border-radius:7px;padding:5px 10px;font-size:13px;color:var(--txt2);cursor:pointer;font-weight:600;font-family:inherit;min-height:30px';
   var S_sel='background:var(--or);border:0.5px solid var(--or);border-radius:7px;padding:5px 10px;font-size:13px;color:#000;cursor:pointer;font-weight:600;font-family:inherit;min-height:30px';
-  var modeBtns=[['false',false,t('db_single')],['true',true,t('db_double')]].map(function(arr){var sel=cfg._userDouble===arr[1];return'<button onclick="setDeathByVal('+si+',\'double\','+arr[0]+',this)" style="'+(sel?S_sel:S_btn)+'">'+arr[2]+'</button>';}).join('');
+  var cats=[['all','All'],['barbell','Barbell'],['gymnastics','Gymnastics'],['kettlebell','Kettlebell'],['dumbbell','Dumbbell']];
+  var curCat=cfg.cat||'all';
+  var catBtns=cats.map(function(arr){return'<button onclick="setDeathByCat('+si+',\''+arr[0]+'\',this)" style="'+(curCat===arr[0]?S_sel:S_btn)+'">'+arr[1]+'</button>';}).join('');
   var incBtns=[1,2,3].map(function(n){return'<button onclick="setDeathByVal('+si+',\'increment\','+n+',this)" style="'+(cfg._userInc===n?S_sel:S_btn)+'">+'+n+'</button>';}).join('');
   var startBtns=[1,2,3].map(function(n){return'<button onclick="setDeathByStart('+si+','+n+',this)" style="'+(cfg._userStart===n?S_sel:S_btn)+'">'+n+'</button>';}).join('');
   return'<div id="deathby-cfg-'+si+'" style="display:none;background:var(--bg3);border:0.5px solid var(--bdr);border-radius:10px;padding:12px;margin-top:6px">'
   +'<div style="display:flex;justify-content:flex-end;margin-bottom:10px"><button onclick="randomDeathBy('+si+')" style="background:rgba(99,102,241,0.12);border:0.5px solid #6366f1;border-radius:20px;padding:4px 12px;font-size:11px;color:#6366f1;cursor:pointer;font-weight:600">'+t('random')+'</button></div>'
-  +'<div style="font-size:13px;font-weight:600;color:var(--txt2);letter-spacing:0.5px;text-transform:uppercase;margin-bottom:6px">'+t('db_mode')+'</div>'
-  +'<div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:14px;direction:'+(CFG.lang==='ar'?'rtl':'ltr')+'">'+modeBtns+'</div>'
-  +'<div style="font-size:13px;font-weight:600;color:var(--txt2);letter-spacing:0.5px;text-transform:uppercase;margin-bottom:6px">'+(CFG.lang==='ar'?'تكرارات البداية (تمرين ١)':'Start Reps (Ex 1)')+'</div>'
-  +'<div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px;direction:'+(CFG.lang==='ar'?'rtl':'ltr')+'">'+startBtns+'</div>'
-  +'<div style="font-size:13px;font-weight:600;color:var(--txt2);letter-spacing:0.5px;text-transform:uppercase;margin-bottom:6px">'+(CFG.lang==='ar'?'الزيادة (تمرين ١)':t('db_inc')+' (Ex 1)')+'</div>'
-  +'<div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px;direction:'+(CFG.lang==='ar'?'rtl':'ltr')+'">'+incBtns+'</div>'
+  +'<div style="font-size:13px;font-weight:600;color:var(--txt2);letter-spacing:0.5px;text-transform:uppercase;margin-bottom:6px">'+(CFG.lang==='ar'?'الفئة':'Category')+'</div>'
+  +'<div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:14px;direction:'+(CFG.lang==='ar'?'rtl':'ltr')+'">'+catBtns+'</div>'
   +'<button onclick="regenDeathBy('+si+')" style="width:100%;background:var(--or);color:#000;border:none;border-radius:10px;padding:11px;font-size:14px;font-weight:700;cursor:pointer;min-height:42px">⟳ '+t('chip_regen')+'</button>'
   +'</div>';
 }
@@ -3653,29 +3819,18 @@ function renderBuyInCfg(sec,si){
   var cfg=sec.buyInCfg||{};
   var S_btn='background:var(--bg2);border:0.5px solid var(--bdr);border-radius:7px;padding:5px 10px;font-size:13px;color:var(--txt2);cursor:pointer;font-weight:600;font-family:inherit;min-height:30px';
   var S_sel='background:var(--or);border:0.5px solid var(--or);border-radius:7px;padding:5px 10px;font-size:13px;color:#000;cursor:pointer;font-weight:600;font-family:inherit;min-height:30px';
-  var movBtns=[1,2,3,4].map(function(n){return'<button onclick="setBuyInVal('+si+',\'exCnt\','+n+',this)" style="'+(cfg.exCnt===n?S_sel:S_btn)+'">'+n+'</button>';}).join('');
-  var roundBtns=[1,2,3,4,5,6,7,8,9,10].map(function(n){return'<button onclick="setBuyInVal('+si+',\'rounds\','+n+',this)" style="'+(cfg.rounds===n?S_sel:S_btn)+'">'+n+'</button>';}).join('');
-  var repBtns=[10,20,30,40,50].map(function(n){return'<button onclick="setBuyInVal('+si+',\'baseReps\','+n+',this)" style="'+(cfg.baseReps===n?S_sel:S_btn)+'">'+n+'</button>';}).join('')
-  +'<input type="number" min="1" max="100" placeholder="'+t('chip_custom')+'" value="'+(cfg.baseReps&&[10,20,30,40,50].indexOf(cfg.baseReps)===-1?cfg.baseReps:'')+'" oninput="setBuyInManualReps('+si+',this.value)" style="width:90px;background:var(--bg2);border:0.5px solid var(--bdr);border-radius:7px;padding:5px 10px;font-size:13px;font-weight:600;color:var(--txt2);outline:none;min-height:30px;text-align:center;font-family:inherit">';
-  var S_inp='width:100%;background:var(--bg2);border:0.5px solid var(--bdr);border-radius:7px;padding:7px 10px;font-size:14px;font-weight:700;color:var(--or);outline:none;min-height:36px;text-align:center;font-family:inherit;box-sizing:border-box;direction:ltr';
-  var buyInAmtInput='<input type="number" min="1" max="10000" placeholder="500" value="'+(cfg.buyInAmt!=null?cfg.buyInAmt:'')+'" oninput="setBuyInAmt('+si+',this.value)" style="'+S_inp+'">';
-  var cashOutAmtInput='<input type="number" min="1" max="10000" placeholder="500" value="'+(cfg.cashOutAmt!=null?cfg.cashOutAmt:'')+'" oninput="setCashOutAmt('+si+',this.value)" style="'+S_inp+'">';
-  var S_ddl='width:100%;background:var(--bg2);border:0.5px solid var(--bdr);border-radius:7px;padding:7px 10px;font-size:13px;color:var(--txt);outline:none;min-height:36px;font-family:inherit;cursor:pointer;direction:'+(CFG.lang==='ar'?'rtl':'ltr');
-  var modeDdl='<select onchange="setBuyInMode('+si+',this.value)" style="'+S_ddl+'">'
-    +'<option value="both"'+((!cfg.mode||cfg.mode==='both')?' selected':'')+'>'+t('bi_both')+'</option>'
-    +'<option value="buyin"'+(cfg.mode==='buyin'?' selected':'')+'>'+t('bi_buyin')+'</option>'
-    +'<option value="cashout"'+(cfg.mode==='cashout'?' selected':'')+'>'+t('bi_cashout')+'</option>'
-    +'</select>';
+  var roundBtns=[2,3,4,5].map(function(n){return'<button onclick="setBuyInVal('+si+',\'rounds\','+n+',this)" style="'+(cfg.rounds===n?S_sel:S_btn)+'">'+n+'</button>';}).join('');
+  var movBtns=[2,3,4,5].map(function(n){return'<button onclick="setBuyInVal('+si+',\'exCnt\','+n+',this)" style="'+(cfg.exCnt===n?S_sel:S_btn)+'">'+n+'</button>';}).join('');
   return'<div id="buyin-cfg-'+si+'" style="display:none;background:var(--bg3);border:0.5px solid var(--bdr);border-radius:10px;padding:12px;margin-top:6px">'
-  +'<div style="display:flex;justify-content:flex-end;margin-bottom:10px"><button onclick="randomBuyIn('+si+')" style="background:rgba(99,102,241,0.12);border:0.5px solid #6366f1;border-radius:20px;padding:4px 12px;font-size:11px;color:#6366f1;cursor:pointer;font-weight:600">' + t('random')+'</button></div>'
-  +'<div style="font-size:13px;font-weight:600;color:var(--txt2);letter-spacing:0.5px;text-transform:uppercase;margin-bottom:6px">'+t('bi_mode')+'</div>'
-  +'<div style="margin-bottom:12px">'+modeDdl+'</div>'
-  +'<div style="font-size:13px;font-weight:600;color:var(--txt2);letter-spacing:0.5px;text-transform:uppercase;margin-bottom:6px">'+t('bi_rounds')+'</div>'
+  +'<div style="display:flex;justify-content:flex-end;margin-bottom:10px"><button onclick="randomBuyIn('+si+')" style="background:rgba(99,102,241,0.12);border:0.5px solid #6366f1;border-radius:20px;padding:4px 12px;font-size:11px;color:#6366f1;cursor:pointer;font-weight:600">'+t('random')+'</button></div>'
+  +'<div style="font-size:13px;font-weight:600;color:var(--txt2);text-transform:uppercase;margin-bottom:6px">'+t('bi_mode')+'</div>'
+  +'<div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px;direction:'+(CFG.lang==='ar'?'rtl':'ltr')+'">'
+  +['buyin','cashout','both'].map(function(m){var lbl=m==='buyin'?t('bi_buyin'):m==='cashout'?t('bi_cashout'):t('bi_both');return'<button onclick="setBuyInVal('+si+',\'mode\',\''+m+'\',this)" style="'+(cfg.mode===m?S_sel:S_btn)+'">'+lbl+'</button>';}).join('')
+  +'</div>'
+  +'<div style="font-size:13px;font-weight:600;color:var(--txt2);text-transform:uppercase;margin-bottom:6px">'+t('bi_rounds')+'</div>'
   +'<div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px;direction:'+(CFG.lang==='ar'?'rtl':'ltr')+'">'+roundBtns+'</div>'
-  +'<div style="font-size:13px;font-weight:600;color:var(--txt2);letter-spacing:0.5px;text-transform:uppercase;margin-bottom:6px">'+t('bi_mov')+'</div>'
+  +'<div style="font-size:13px;font-weight:600;color:var(--txt2);text-transform:uppercase;margin-bottom:6px">'+t('bi_mov')+'</div>'
   +'<div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px;direction:'+(CFG.lang==='ar'?'rtl':'ltr')+'">'+movBtns+'</div>'
-  +'<div style="font-size:13px;font-weight:600;color:var(--txt2);letter-spacing:0.5px;text-transform:uppercase;margin-bottom:6px">'+t('bi_reps')+'</div>'
-  +'<div id="buyin-rep-btns-'+si+'" style="display:flex;gap:6px;flex-wrap:wrap;align-items:center;margin-bottom:12px;direction:'+(CFG.lang==='ar'?'rtl':'ltr')+'">'+repBtns+'</div>'
   +'<button onclick="regenBuyIn('+si+')" style="width:100%;background:var(--or);color:#000;border:none;border-radius:10px;padding:11px;font-size:14px;font-weight:700;cursor:pointer;min-height:42px">⟳ '+t('chip_regen')+'</button>'
   +'</div>';
 }
@@ -3878,79 +4033,57 @@ function setYgigScheme(si,key,btn){
   btn.style.background='var(--or)';btn.style.borderColor='var(--or)';btn.style.color='#000';
 }
 
-function toggleGroupAbCfg(si){var el=document.getElementById('groupab-cfg-'+si);if(el)el.style.display=el.style.display==='none'?'block':'none';}
-function setGroupAbVal(si,key,val,btn){
-  var sec=S.wod.sections[si];if(!sec.groupAbCfg)sec.groupAbCfg={};
-  var parent=btn.parentElement;
-  Array.from(parent.children).forEach(function(b){b.style.background='var(--bg2)';b.style.borderColor='var(--bdr)';b.style.color='var(--txt2)';});
-  if(sec.groupAbCfg[key]===val){delete sec.groupAbCfg[key];return;}
-  sec.groupAbCfg[key]=val;btn.style.background='var(--or)';btn.style.borderColor='var(--or)';btn.style.color='#000';
-}
-function setGroupAbManualReps(si,val){
-  var v=parseInt(val);if(!v||v<1)return;
-  var sec=S.wod.sections[si];if(!sec.groupAbCfg)sec.groupAbCfg={};
-  sec.groupAbCfg.baseReps=v;
-  var btns=document.querySelectorAll('#groupab-rep-btns-'+si+' button');
-  btns.forEach(function(b){b.style.background='var(--bg2)';b.style.borderColor='var(--bdr)';b.style.color='var(--txt2)';});
-}
-function setGroupAbManualRepsA(si,val){setGroupAbManualReps(si,val);}
-function setGroupAbManualRepsB(si,val){setGroupAbManualReps(si,val);}
-function setGroupAbSchemeSelect(si,key){
-  var sec=S.wod.sections[si];if(!sec.groupAbCfg)sec.groupAbCfg={};
-  var cfg=sec.groupAbCfg;
-  if(!key){delete cfg.schemeKey;return;}
-  cfg.schemeKey=key;delete cfg.baseReps;delete cfg.rounds;
-  regenGroupAb(si);
+function renderGroupAbAmrapCfg(sec,si){
+  var cfg=sec.amrapCfg||{};
+  var S_btn='background:var(--bg2);border:0.5px solid var(--bdr);border-radius:7px;padding:5px 10px;font-size:13px;color:var(--txt2);cursor:pointer;font-weight:600;font-family:inherit;min-height:30px';
+  var S_sel='background:var(--or);border:0.5px solid var(--or);border-radius:7px;padding:5px 10px;font-size:13px;color:#000;cursor:pointer;font-weight:600;font-family:inherit;min-height:30px';
+  var movBtns=[1,2,3,4,5].map(function(n){
+    return'<button onclick="setAmrapVal('+si+',\'exCnt\','+n+',this)" style="'+(cfg.exCnt===n?S_sel:S_btn)+'">'+n+'</button>';
+  }).join('');
+  var cv=cfg.withCardio;
+  return'<div id="amrap-cfg-'+si+'" style="display:none;background:var(--bg3);border:0.5px solid var(--bdr);border-radius:10px;padding:12px;margin-top:6px">'
+  +'<div style="display:flex;justify-content:flex-end;margin-bottom:10px"><button onclick="randomGroupAb('+si+')" style="background:rgba(99,102,241,0.12);border:0.5px solid #6366f1;border-radius:20px;padding:4px 12px;font-size:11px;color:#6366f1;cursor:pointer;font-weight:600">'+t('random')+'</button></div>'
+  +'<div style="font-size:13px;font-weight:600;color:var(--txt2);text-transform:uppercase;margin-bottom:6px">'+t('am_mov')+'</div>'
+  +'<div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px;direction:'+(CFG.lang==='ar'?'rtl':'ltr')+'">'+movBtns+'</div>'
+  +'<div style="font-size:13px;font-weight:600;color:var(--txt2);text-transform:uppercase;margin-bottom:6px">'+t('chip_cardio')+'</div>'
+  +'<div style="display:flex;gap:6px;margin-bottom:14px;direction:'+(CFG.lang==='ar'?'rtl':'ltr')+'"><button id="amrap-cardio-'+si+'" onclick="toggleAmrapCardio('+si+')" style="'+(cv===true?S_sel:S_btn)+'">'+(cv===true?'ON':cv===false?'OFF':'AUTO')+'</button></div>'
+  +'<button onclick="regenGroupAb('+si+')" style="width:100%;background:var(--or);color:#000;border:none;border-radius:10px;padding:11px;font-size:14px;font-weight:700;cursor:pointer;min-height:42px">⟳ '+t('chip_regen')+'</button>'
+  +'</div>';
 }
 function regenGroupAb(si){
-  var sec=S.wod.sections[si];var cfg=sec.groupAbCfg||{};
-  var newSecs=mkGroupAB(S.wod.cfg.time,S.level,S.teamSize,cfg);
-  S.wod.sections[si]=newSecs[0];if(S.wod.sections[si+1])S.wod.sections[si+1]=newSecs[1]||S.wod.sections[si+1];
-  var el=document.getElementById('sec-'+si);if(el)el.outerHTML=renderSec(S.wod.sections[si],si);
-  var el2=document.getElementById('sec-'+(si+1));if(el2)el2.outerHTML=renderSec(S.wod.sections[si+1],si+1);
-}
-function toggleGroupAbCardio(si,grp){
-  var sec=S.wod.sections[si];
-  if(!sec.groupAbCfg)sec.groupAbCfg={};
-  var v=sec.groupAbCfg.withCardio;
-  sec.groupAbCfg.withCardio=v===undefined?true:v===true?false:undefined;
-  var nv=sec.groupAbCfg.withCardio;
-  var btn=document.getElementById('gab-c-'+si);
-  if(btn){
-    btn.textContent=nv===true?'ON':nv===false?'OFF':'–';
-    btn.style.background=nv===true?'var(--or)':'var(--bg2)';
-    btn.style.borderColor=nv===true?'var(--or)':'var(--bdr)';
-    btn.style.color=nv===true?'#000':nv===false?'var(--txt2)':'var(--txt3)';
-  }
+  var sec=S.wod.sections[si];var cfg=sec.amrapCfg||{};
+  var blockTime=Math.floor(S.wod.cfg.time/2);
+  var secA=mkAmrap(blockTime,S.level,S.teamSize,cfg)[0];
+  var secB=mkAmrap(blockTime,S.level,S.teamSize,cfg)[0];
+  _syncGabCardio(secA,secB);
+  secA.type='Group A';secA.title='Group A — AMRAP '+blockTime+' Min';
+  secA.infoKey='i_groupA';secA.infoVars=Object.assign({},secA.infoVars,{t:blockTime});
+  secA.scoreKey='sc_rounds_ab';secA.teamKey=S.teamSize>1?'tm_halfA':null;
+  secA.groupAbCfg=cfg;
+  secB.type='Group B';secB.title='Group B — AMRAP '+blockTime+' Min';
+  secB.infoKey='i_groupA';secB.infoVars=Object.assign({},secB.infoVars,{t:blockTime});
+  secB.groupAbCfg=cfg;
+  S.wod.sections[si]=secA;if(S.wod.sections[si+1])S.wod.sections[si+1]=secB;
+  var el=document.getElementById('sec-'+si);if(el)el.outerHTML=renderSec(secA,si);
+  var el2=document.getElementById('sec-'+(si+1));if(el2)el2.outerHTML=renderSec(secB,si+1);
 }
 function randomGroupAb(si){
   if(!S.cfgStore)S.cfgStore={};S.cfgStore['group-ab']={};
-  var newSecs=mkGroupAB(S.wod.cfg.time,S.level,S.teamSize,{});
-  S.wod.sections[si]=newSecs[0];if(S.wod.sections[si+1])S.wod.sections[si+1]=newSecs[1]||S.wod.sections[si+1];
-  var el=document.getElementById('sec-'+si);if(el)el.outerHTML=renderSec(S.wod.sections[si],si);
-  var el2=document.getElementById('sec-'+(si+1));if(el2)el2.outerHTML=renderSec(S.wod.sections[si+1],si+1);
-}
-function renderGroupAbCfg(sec,si){
-  var cfg=sec.groupAbCfg||{};
-  var S_btn='background:var(--bg2);border:0.5px solid var(--bdr);border-radius:7px;padding:5px 10px;font-size:13px;color:var(--txt2);cursor:pointer;font-weight:600;font-family:inherit;min-height:30px';
-  var S_sel='background:var(--or);border:0.5px solid var(--or);border-radius:7px;padding:5px 10px;font-size:13px;color:#000;cursor:pointer;font-weight:600;font-family:inherit;min-height:30px';
-  var cv=cfg.withCardio;
-  var togStyle='background:'+(cv===true?'var(--or)':'var(--bg2)')+';border:0.5px solid '+(cv===true?'var(--or)':'var(--bdr)')+';border-radius:20px;padding:5px 16px;font-size:12px;color:'+(cv===true?'#000':cv===false?'var(--txt2)':'var(--txt3)')+';cursor:pointer;font-weight:700;min-height:30px';
-  var movBtns=[1,2,3,4,5].map(function(n){return'<button onclick="setGroupAbVal('+si+',\'exCnt\','+n+',this)" style="'+(cfg.exCnt===n?S_sel:S_btn)+'">'+n+'</button>';}).join('');
-  var roundBtns=[1,2,3,4,5,6,7,8,9,10].map(function(n){return'<button onclick="setGroupAbVal('+si+',\'rounds\','+n+',this)" style="'+(cfg.rounds===n?S_sel:S_btn)+'">'+n+'</button>';}).join('');
-  var repsPreset=[10,20,30,40,50];
-  var repBtns=repsPreset.map(function(n){return'<button onclick="setGroupAbVal('+si+',\'baseReps\','+n+',this)" style="'+(cfg.baseReps===n?S_sel:S_btn)+'">'+n+'</button>';}).join('')
-  +'<input type="number" min="1" max="100" placeholder="'+t('chip_custom')+'" value="'+(cfg.baseReps&&repsPreset.indexOf(cfg.baseReps)===-1?cfg.baseReps:'')+'" oninput="setGroupAbManualReps('+si+',this.value)" style="width:90px;background:var(--bg2);border:0.5px solid var(--bdr);border-radius:7px;padding:5px 10px;font-size:13px;font-weight:600;color:var(--txt2);outline:none;min-height:30px;text-align:center;font-family:inherit">';
-  return'<div id="groupab-cfg-'+si+'" style="display:none;background:var(--bg3);border:0.5px solid var(--bdr);border-radius:10px;padding:12px;margin-top:6px">'
-  +'<div style="display:flex;justify-content:flex-end;margin-bottom:12px"><button onclick="randomGroupAb('+si+')" style="background:rgba(99,102,241,0.12);border:0.5px solid #6366f1;border-radius:20px;padding:4px 12px;font-size:11px;color:#6366f1;cursor:pointer;font-weight:600">'+t('random')+'</button></div>'
-  +'<div style="font-size:13px;font-weight:600;color:var(--txt2);letter-spacing:0.5px;text-transform:uppercase;margin-bottom:6px">'+t('bi_mov')+'</div>'
-  +'<div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px;direction:'+(CFG.lang==='ar'?'rtl':'ltr')+'">'+movBtns+'</div>'
-  +'<div style="font-size:13px;font-weight:600;color:var(--txt2);letter-spacing:0.5px;text-transform:uppercase;margin-bottom:6px">'+t('bi_reps')+'</div>'
-  +'<div id="groupab-rep-btns-'+si+'" style="display:flex;gap:6px;flex-wrap:wrap;align-items:center;margin-bottom:12px;direction:'+(CFG.lang==='ar'?'rtl':'ltr')+'">'+repBtns+'</div>'
-  +'<div style="font-size:13px;font-weight:600;color:var(--txt2);letter-spacing:0.5px;text-transform:uppercase;margin-bottom:6px">'+t('chip_cardio')+'</div>'
-  +'<div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:14px;direction:'+(CFG.lang==='ar'?'rtl':'ltr')+'"><button id="gab-c-'+si+'" onclick="toggleGroupAbCardio('+si+',\'A\')" style="'+togStyle+'">'+(cv===true?'ON':cv===false?'OFF':'AUTO')+'</button></div>'
-  +'<button onclick="regenGroupAb('+si+')" style="width:100%;background:var(--or);color:#000;border:none;border-radius:10px;padding:11px;font-size:14px;font-weight:700;cursor:pointer;min-height:42px">⟳ '+t('chip_regen')+'</button>'
-  +'</div>';
+  var cfg={};
+  var blockTime=Math.floor(S.wod.cfg.time/2);
+  var secA=mkAmrap(blockTime,S.level,S.teamSize,cfg)[0];
+  var secB=mkAmrap(blockTime,S.level,S.teamSize,cfg)[0];
+  _syncGabCardio(secA,secB);
+  secA.type='Group A';secA.title='Group A — AMRAP '+blockTime+' Min';
+  secA.infoKey='i_groupA';secA.infoVars=Object.assign({},secA.infoVars,{t:blockTime});
+  secA.scoreKey='sc_rounds_ab';secA.teamKey=S.teamSize>1?'tm_halfA':null;
+  secA.groupAbCfg=cfg;
+  secB.type='Group B';secB.title='Group B — AMRAP '+blockTime+' Min';
+  secB.infoKey='i_groupA';secB.infoVars=Object.assign({},secB.infoVars,{t:blockTime});
+  secB.groupAbCfg=cfg;
+  S.wod.sections[si]=secA;if(S.wod.sections[si+1])S.wod.sections[si+1]=secB;
+  var el=document.getElementById('sec-'+si);if(el)el.outerHTML=renderSec(secA,si);
+  var el2=document.getElementById('sec-'+(si+1));if(el2)el2.outerHTML=renderSec(secB,si+1);
 }
 function openSchemeEdit(si){
   var sec=S.wod&&S.wod.sections[si];
@@ -4365,7 +4498,6 @@ function openSchemeDetailEdit(si){
   var sheet=document.getElementById('edit-sheet');
   sheet.innerHTML=
     '<div style="width:36px;height:4px;background:var(--bdr);border-radius:2px;margin:0 auto 16px"></div>'
-    +'<div style="font-size:10px;color:var(--or);text-transform:uppercase;letter-spacing:2px;margin-bottom:16px;font-weight:700">✏️ '+t('rft_scheme')+'</div>'
     +'<div style="display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-bottom:24px">'+inputs+'</div>'
     +'<div style="display:flex;gap:8px">'
     +'<button onclick="closeEditDetail()" style="flex:1;background:var(--bg3);border:0.5px solid var(--bdr);border-radius:10px;padding:13px;font-size:13px;color:var(--txt2);cursor:pointer;font-weight:600;min-height:46px">'+t('cancel')+'</button>'
@@ -4498,10 +4630,6 @@ function copyCode(c){
 loadCfg();
 checkAccess();
 function setTripletVal(si,key,val,btn){
-  var sec=S.wod.sections[si];if(!sec.tripletCfg)sec.tripletCfg={};
-  var parent=btn.parentElement;
-  Array.from(parent.children).forEach(function(b){b.style.background='var(--bg2)';b.style.borderColor='var(--bdr)';b.style.color='var(--txt2)';});
-  if(sec.tripletCfg[key]===val){delete sec.tripletCfg[key];return;}
   sec.tripletCfg[key]=val;btn.style.background='var(--or)';btn.style.borderColor='var(--or)';btn.style.color='#000';
 }
 </script>
