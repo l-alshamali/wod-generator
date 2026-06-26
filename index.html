@@ -2756,16 +2756,29 @@ function _renderCardioSchemeSheet(item){
   var inputArea;
   var _cardioVal=item.cardioAmounts[0]||item.ex.amount||0;
   if(n>1){
-    inputArea='<div style="display:flex;flex-direction:column;align-items:center;gap:2px">'
-      +'<div style="font-size:9px;color:var(--txt3);font-weight:700">R × '+n+'</div>'
-      +'<input id="car-r-0" type="number" value="'+_cardioVal+'" inputmode="numeric" min="1" max="9999"'
-      +' onfocus="lastFocusedInput=this.id" style="width:72px;background:var(--bg3);border:2px solid var(--ca);border-radius:9px;padding:8px 2px;font-size:16px;font-weight:900;color:var(--ca);text-align:center;outline:none">'
-      +'</div>';
+    var _cToggleLbl='<div onclick="toggleCardioExpand()" style="font-size:9px;color:var(--txt3);font-weight:700;cursor:pointer;padding:2px 8px;border-radius:5px;border:1px dashed var(--bdr);margin-bottom:4px;display:inline-block">R × '+n+(_edCardioExpanded?' ▴':' ▾')+'</div>';
+    if(_edCardioExpanded){
+      inputArea='<div style="display:flex;flex-direction:column;align-items:center;gap:4px">'
+        +_cToggleLbl
+        +'<div style="display:flex;flex-wrap:wrap;gap:6px;justify-content:center">'
+        +item.cardioAmounts.map(function(v,i){return'<div style="display:flex;flex-direction:column;align-items:center;gap:2px">'
+          +'<div style="font-size:8px;color:var(--txt3);font-weight:600">R'+(i+1)+'</div>'
+          +'<input id="car-r-'+i+'" type="number" value="'+v+'" inputmode="numeric" min="1" max="9999"'
+          +' onfocus="lastFocusedInput=this.id" style="width:50px;background:var(--bg3);border:1.5px solid var(--ca);border-radius:8px;padding:6px 2px;font-size:14px;font-weight:900;color:var(--ca);text-align:center;outline:none">'
+          +'</div>';}).join('')
+        +'</div></div>';
+    }else{
+      inputArea='<div style="display:flex;flex-direction:column;align-items:center;gap:2px">'
+        +_cToggleLbl
+        +'<input id="car-r-0" type="number" value="'+_cardioVal+'" inputmode="numeric" min="1" max="9999"'
+        +' onfocus="lastFocusedInput=this.id" style="width:72px;background:var(--bg3);border:2px solid var(--ca);border-radius:9px;padding:8px 2px;font-size:16px;font-weight:900;color:var(--ca);text-align:center;outline:none">'
+        +'</div>';
+    }
   }else{
     inputArea='<input id="car-r-0" type="number" value="'+_cardioVal+'" inputmode="numeric" min="1" max="9999"'
       +' onfocus="lastFocusedInput=this.id" style="width:72px;background:var(--bg3);border:2px solid var(--ca);border-radius:9px;padding:8px 2px;font-size:16px;font-weight:900;color:var(--ca);text-align:center;outline:none">';
   }
-  var inputWrapper=n>1
+  var inputWrapper=(n>1&&_edCardioExpanded)
     ?'<div style="display:flex;align-items:flex-start;gap:12px;margin-bottom:14px"><div style="flex:1">'+inputArea+'</div>'+unitCol+'</div>'
     :'<div style="display:flex;align-items:center;gap:14px;justify-content:center;margin-bottom:14px">'+inputArea+unitCol+'</div>';
   sheet.innerHTML=
@@ -2784,14 +2797,33 @@ function _renderCardioSchemeSheet(item){
   ov.style.display='block';
   setTimeout(function(){document.getElementById('edit-sheet').style.transform='translateX(-50%) translateY(0)';},10);
 }
+function toggleCardioExpand(){
+  var ed=editingDetail;if(!ed||!ed.cardioScheme)return;
+  var item=S.wod.sections[ed.si].items[ed.ii];
+  if(_edCardioExpanded){
+    var rds=item.cardioAmounts.map(function(v,i){var inp=document.getElementById('car-r-'+i);return inp?parseInt(inp.value,10)||v:v;});
+    item.cardioAmounts=rds;_edCardioExpanded=false;
+    _renderCardioSchemeSheet(item);
+    setTimeout(function(){var inp=document.getElementById('car-r-0');if(inp){inp.focus();inp.select();}},30);
+  }else{
+    var cur=parseInt((document.getElementById('car-r-0')||{}).value||item.cardioAmounts[0],10)||item.cardioAmounts[0];
+    item.cardioAmounts=item.cardioAmounts.map(function(){return cur;});_edCardioExpanded=true;
+    _renderCardioSchemeSheet(item);
+    setTimeout(function(){var inp0=document.getElementById('car-r-0');if(inp0)inp0.focus();},30);
+  }
+}
 function switchCardioUnitScheme(u){
   cardioEditUnit=u;
   var ed=editingDetail;
   var item=S.wod.sections[ed.si].items[ed.ii];
-  // Save current input values before re-render
-  var _sc0=document.getElementById('car-r-0');
-  var _sv=_sc0?parseInt(_sc0.value,10):NaN;
-  if(!isNaN(_sv)&&_sv>=1)item.cardioAmounts=item.cardioAmounts.map(function(){return _sv;});
+  if(_edCardioExpanded){
+    var rds=item.cardioAmounts.map(function(v,i){var inp=document.getElementById('car-r-'+i);return inp?parseInt(inp.value,10)||v:v;});
+    item.cardioAmounts=rds;
+  }else{
+    var _sc0=document.getElementById('car-r-0');
+    var _sv=_sc0?parseInt(_sc0.value,10):NaN;
+    if(!isNaN(_sv)&&_sv>=1)item.cardioAmounts=item.cardioAmounts.map(function(){return _sv;});
+  }
   _renderCardioSchemeSheet(item);
 }
 function openEditCardioRound(si,ii,r){
@@ -4222,6 +4254,8 @@ function pickSwapAC(iid,name,acId){
 var cardioEditUnit='m';
 var strEditUnit='reps';
 var lastFocusedInput=null;
+var _edRoundsExpanded=false;
+var _edCardioExpanded=false;
 function openEditCardioName(si,ii){
   var item=S.wod&&S.wod.sections[si]&&S.wod.sections[si].items[ii];
   if(!item)return;
@@ -4378,18 +4412,30 @@ function _renderEditDetailSheet(name,num,label,presets,fixedUnit,showUnitPicker,
     }).join('')+'</div>';
   var inputArea;
   if(rounds&&rounds.length>1){
-    var _allSame=rounds.every(function(v){return v===rounds[0];});
-    var _singleVal=_allSame?rounds[0]:rounds[0];
-    inputArea='<div style="display:flex;flex-direction:column;align-items:center;gap:2px">'
-      +'<div style="font-size:9px;color:var(--txt3);font-weight:700">R × '+rounds.length+'</div>'
-      +'<input id="ed-num" type="number" value="'+_singleVal+'" inputmode="numeric" min="1" max="999"'
-      +' onfocus="lastFocusedInput=this.id" style="width:72px;background:var(--bg3);border:2px solid var(--or);border-radius:9px;padding:8px 2px;font-size:16px;font-weight:900;color:var(--or);text-align:center;outline:none">'
-      +'</div>';
+    var _singleVal=rounds[0];
+    var _toggleLbl='<div onclick="toggleEditRoundsExpand()" style="font-size:9px;color:var(--txt3);font-weight:700;cursor:pointer;padding:2px 8px;border-radius:5px;border:1px dashed var(--bdr);margin-bottom:4px;display:inline-block">R × '+rounds.length+(_edRoundsExpanded?' ▴':' ▾')+'</div>';
+    if(_edRoundsExpanded){
+      inputArea='<div style="display:flex;flex-direction:column;align-items:center;gap:4px">'
+        +_toggleLbl
+        +'<div style="display:flex;flex-wrap:wrap;gap:6px;justify-content:center">'
+        +rounds.map(function(v,i){return'<div style="display:flex;flex-direction:column;align-items:center;gap:2px">'
+          +'<div style="font-size:8px;color:var(--txt3);font-weight:600">R'+(i+1)+'</div>'
+          +'<input id="ed-r-'+i+'" type="number" value="'+v+'" inputmode="numeric" min="1" max="999"'
+          +' onfocus="lastFocusedInput=this.id" style="width:50px;background:var(--bg3);border:1.5px solid var(--or);border-radius:8px;padding:6px 2px;font-size:14px;font-weight:900;color:var(--or);text-align:center;outline:none">'
+          +'</div>';}).join('')
+        +'</div></div>';
+    }else{
+      inputArea='<div style="display:flex;flex-direction:column;align-items:center;gap:2px">'
+        +_toggleLbl
+        +'<input id="ed-num" type="number" value="'+_singleVal+'" inputmode="numeric" min="1" max="999"'
+        +' onfocus="lastFocusedInput=this.id" style="width:72px;background:var(--bg3);border:2px solid var(--or);border-radius:9px;padding:8px 2px;font-size:16px;font-weight:900;color:var(--or);text-align:center;outline:none">'
+        +'</div>';
+    }
   }else{
     inputArea='<input id="ed-num" type="number" value="'+num+'" inputmode="numeric" min="1" max="999"'
       +' onfocus="lastFocusedInput=this.id" style="width:72px;background:var(--bg3);border:2px solid var(--or);border-radius:9px;padding:8px 2px;font-size:16px;font-weight:900;color:var(--or);text-align:center;outline:none">';
   }
-  var inputWrapper=rounds&&rounds.length>1
+  var inputWrapper=(rounds&&rounds.length>1&&_edRoundsExpanded)
     ?'<div style="display:flex;align-items:flex-start;gap:12px;margin-bottom:14px"><div style="flex:1">'+inputArea+'</div>'+unitCol+'</div>'
     :'<div style="display:flex;align-items:center;gap:14px;justify-content:center;margin-bottom:14px">'+inputArea+unitCol+'</div>';
   var sheet=document.getElementById('edit-sheet');
@@ -4421,10 +4467,15 @@ function switchStrUnit(u){
   var ed=editingDetail;
   var item=S.wod.sections[ed.si].items[ed.ii];
   if(ed.multiRound){
-    var rds=ed.rounds.map(function(_,i){var inp=document.getElementById('ed-r-'+i);return inp?parseInt(inp.value,10)||10:10;});
+    var rds;
+    if(_edRoundsExpanded){rds=ed.rounds.map(function(v,i){var inp=document.getElementById('ed-r-'+i);return inp?parseInt(inp.value,10)||v:v;});}
+    else{var _cv=parseInt((document.getElementById('ed-num')||{}).value||ed.rounds[0],10)||ed.rounds[0];rds=ed.rounds.map(function(){return _cv;});}
     ed.rounds=rds;
     _renderEditDetailSheet(item.ex.name,rds[0],t('edit_reps'),null,null,false,rds);
-    setTimeout(function(){var inp0=document.getElementById('ed-r-0');if(inp0){inp0.focus();}},30);
+    setTimeout(function(){
+      if(_edRoundsExpanded){var inp0=document.getElementById('ed-r-0');if(inp0)inp0.focus();}
+      else{var inpN=document.getElementById('ed-num');if(inpN){inpN.focus();inpN.select();}}
+    },30);
   }else{
     var cur=parseInt((document.getElementById('ed-num')||{}).value||'10',10)||10;
     _renderEditDetailSheet(item.ex.name,cur,t('edit_reps'),null,null,false,null);
@@ -4442,7 +4493,22 @@ function setEditNum(n){
   var r0=document.getElementById('ed-r-0');
   if(r0)r0.value=n;
 }
-function closeEditDetail(){lastFocusedInput=null;
+function toggleEditRoundsExpand(){
+  var ed=editingDetail;if(!ed||!ed.multiRound)return;
+  var item=S.wod.sections[ed.si].items[ed.ii];
+  if(_edRoundsExpanded){
+    var rds=ed.rounds.map(function(v,i){var inp=document.getElementById('ed-r-'+i);return inp?parseInt(inp.value,10)||v:v;});
+    ed.rounds=rds;_edRoundsExpanded=false;
+    _renderEditDetailSheet(item.ex.name,rds[0],t('edit_reps'),null,null,false,rds);
+    setTimeout(function(){var inp=document.getElementById('ed-num');if(inp){inp.focus();inp.select();}},30);
+  }else{
+    var cur=parseInt((document.getElementById('ed-num')||{}).value||ed.rounds[0],10)||ed.rounds[0];
+    ed.rounds=ed.rounds.map(function(){return cur;});_edRoundsExpanded=true;
+    _renderEditDetailSheet(item.ex.name,ed.rounds[0],t('edit_reps'),null,null,false,ed.rounds);
+    setTimeout(function(){var inp0=document.getElementById('ed-r-0');if(inp0){inp0.focus();}},30);
+  }
+}
+function closeEditDetail(){lastFocusedInput=null;_edRoundsExpanded=false;_edCardioExpanded=false;
   var sheet=document.getElementById('edit-sheet');
   var ov=document.getElementById('edit-overlay');
   sheet.style.transform='translateX(-50%) translateY(100%)';
@@ -4454,10 +4520,17 @@ function saveEditDetail(){
   // Multi-round strength (short form)
   if(ed&&ed.multiRound){
     var _item=S.wod.sections[ed.si].items[ed.ii];
-    var _inp=document.getElementById('ed-num');
-    var _rv=_inp?parseInt(_inp.value,10):NaN;
-    if(isNaN(_rv)||_rv<1)return toast('Enter a valid number','#ff6600');
-    var _vals=new Array(ed.roundCount).fill(_rv);
+    var _vals,_rv;
+    if(_edRoundsExpanded){
+      _vals=ed.rounds.map(function(v,i){var inp=document.getElementById('ed-r-'+i);return inp?parseInt(inp.value,10)||v:v;});
+      if(_vals.some(function(v){return isNaN(v)||v<1;}))return toast('Enter a valid number','#ff6600');
+      _rv=_vals[0];
+    }else{
+      var _inp=document.getElementById('ed-num');
+      _rv=_inp?parseInt(_inp.value,10):NaN;
+      if(isNaN(_rv)||_rv<1)return toast('Enter a valid number','#ff6600');
+      _vals=new Array(ed.roundCount).fill(_rv);
+    }
     var _uSuffix=strEditUnit==='m'?' m':strEditUnit==='s'?' s':' reps';
     var _detail=_vals.join(' - ')+_uSuffix;
     S.wod.sections[ed.si].items[ed.ii]=Object.assign({},_item,{detail:_detail,detailEdited:true,savedUnit:strEditUnit,baseRep:_rv});
@@ -4467,11 +4540,18 @@ function saveEditDetail(){
   // Cardio scheme (all rounds at once)
   if(ed.cardioScheme){
     var _item=S.wod.sections[ed.si].items[ed.ii];
-    var _cinp=document.getElementById('car-r-0');
-    var _cv=_cinp?parseInt(_cinp.value,10):NaN;
-    if(isNaN(_cv)||_cv<1)return toast('Enter a valid number','#ff6600');
-    _item.cardioAmounts=_item.cardioAmounts.map(function(){return _cv;});
-    _item.ex=Object.assign({},_item.ex,{amount:_cv,unit:cardioEditUnit});
+    var _cVals;
+    if(_edCardioExpanded){
+      _cVals=_item.cardioAmounts.map(function(v,i){var inp=document.getElementById('car-r-'+i);return inp?parseInt(inp.value,10)||v:v;});
+      if(_cVals.some(function(v){return isNaN(v)||v<1;}))return toast('Enter a valid number','#ff6600');
+    }else{
+      var _cinp=document.getElementById('car-r-0');
+      var _cv=_cinp?parseInt(_cinp.value,10):NaN;
+      if(isNaN(_cv)||_cv<1)return toast('Enter a valid number','#ff6600');
+      _cVals=_item.cardioAmounts.map(function(){return _cv;});
+    }
+    _item.cardioAmounts=_cVals;
+    _item.ex=Object.assign({},_item.ex,{amount:_cVals[0],unit:cardioEditUnit});
     closeEditDetail();
     reRenderSec(ed.si);
     toast('✅ Updated!');
