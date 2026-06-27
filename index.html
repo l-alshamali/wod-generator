@@ -723,13 +723,12 @@ function _cardioClamp(unit,amt,lv,team,isChipper){
 }
 function _cardioAtMax(cEx,CL){return cEx.unit==='Cal'?cEx.amount>=CL.calMax:cEx.unit==='m'?cEx.amount>=CL.mtrMax:cEx.amount>=CL.duMax;}
 function _cardioAtMin(cEx,CL){return cEx.unit==='Cal'?cEx.amount<=CL.calMin:cEx.unit==='m'?cEx.amount<=CL.mtrMin:cEx.amount<=CL.duMin;}
-function _calSnapStep(v){return v<24?2:10;}
 function _mtrStep(amt){return amt>=600?200:100;}
 function _cardioUp(cEx,CL,noSmall){var mn=cEx.unit==='Cal'?CL.calMin:cEx.unit==='m'?CL.mtrMin:CL.duMin;var mx=cEx.unit==='Cal'?CL.calMax:cEx.unit==='m'?CL.mtrMax:CL.duMax;var a=_cardioNextSer(cEx.unit,cEx.amount,1,mn,mx,noSmall);return Object.assign({},cEx,{amount:a});}
 function _cardioDn(cEx,CL,noSmall){var mn=cEx.unit==='Cal'?CL.calMin:cEx.unit==='m'?CL.mtrMin:CL.duMin;var mx=cEx.unit==='Cal'?CL.calMax:cEx.unit==='m'?CL.mtrMax:CL.duMax;var a=_cardioNextSer(cEx.unit,cEx.amount,-1,mn,mx,noSmall);return Object.assign({},cEx,{amount:a});}
 function _cardioSecEst(cEx,lv,team,split){if(!cEx||!cEx.amount)return 0;var spd=({beginner:1.60,intermediate:1.20,advanced:1.00,elite:0.80})[lv||'intermediate']||1.30;var _teamF=(team===2&&split)?({beginner:0.75,intermediate:0.80,advanced:0.85,elite:0.90}[lv||'intermediate']||0.80):1;spd*=_teamF;if(cEx.unit==='Cal')return cEx.amount*5.5*spd;if(cEx.unit==='m')return(cEx.amount/10)*3.0*spd;return cEx.amount*3.0*spd;}
 // يخفض الكارديو حتى ما يتعدى capSec ثانية
-function _cardioCapSec(cEx,capSec,CL,lv,team,split){if(!cEx||!cEx.amount||capSec<=0)return cEx;var s=0;while(_cardioSecEst(cEx,lv,team,split)>capSec&&!_cardioAtMin(cEx,CL)&&s++<30)cEx=_cardioDn(cEx,CL);return cEx;}
+function _cardioCapSec(cEx,capSec,CL,lv,team,split,noSmall){if(!cEx||!cEx.amount||capSec<=0)return cEx;var s=0;while(_cardioSecEst(cEx,lv,team,split)>capSec&&!_cardioAtMin(cEx,CL)&&s++<30)cEx=_cardioDn(cEx,CL,noSmall);return cEx;}
 function _scaleCardio(cx,sf,team){
   if(!cx||!cx.amount)return cx;
   var s=cx.amount*sf;
@@ -1559,12 +1558,12 @@ function mkChipper(time,lv,team,cfg){
     var _clLims=_exLimsForTime(chosen,lv,team,true);
     var _clMinR=_clLims.min;var _clMaxR=_clLims.max;
     // ── Step & cap per pattern ──
-    var _clStep=({'flat_2':2,'flat_5_25':5,'flat_5':5,'flat_10':10,'flat_20':20,'desc_10':10,'desc_20':20,'asc_10':10,'asc_20':20})[_clPat]||10;
+    var _clStep=({'flat_5':5,'flat_10':10,'flat_20':20,'desc_10':10,'desc_20':20,'asc_10':10,'asc_20':20})[_clPat]||10;
     // Re-snap min/max to be exact multiples of the chosen step
     _clMinR=Math.ceil(_clMinR/_clStep)*_clStep;
     _clMaxR=Math.floor(_clMaxR/_clStep)*_clStep;
     if(_clMaxR<_clMinR)_clMaxR=_clMinR;
-    var _clCap=({'flat_2':20,'flat_5_25':25,'flat_5':25,'flat_10':100,'flat_20':200,'desc_10':100,'asc_10':100,'desc_20':200,'asc_20':200})[_clPat]||_clMaxR;
+    var _clCap=({'flat_5':25,'flat_10':100,'flat_20':200,'desc_10':100,'asc_10':100,'desc_20':200,'asc_20':200})[_clPat]||_clMaxR;
     _clCap=Math.min(_clCap,_clMaxR);
     var _clSnap=function(v,cap){var s=Math.round(v/_clStep)*_clStep;s=Math.max(_clMinR,Math.max(_clStep,s));s=Math.ceil(s/_clStep)*_clStep;return Math.min(cap||_clMaxR,s);};
     // ── Safe step for ladder patterns ──
@@ -1649,7 +1648,7 @@ function mkChipper(time,lv,team,cfg){
       }
     }
     // كاب الكارديو عند 40% (يمنح مجال كافي للـ post-loop يسد الفجوة)
-    if(addCardio&&cEx)cEx=_cardioCapSec(cEx,_clBudget*0.40,_clCLInit,lv,team,true);
+    if(addCardio&&cEx)cEx=_cardioCapSec(cEx,_clBudget*0.40,_clCLInit,lv,team,true,true);
   }
   // ── Sort by difficulty: easiest→most reps, hardest→fewest ──
   // DESC: easiest first (most reps) → hardest last (fewest reps)
@@ -1939,19 +1938,6 @@ function mkBuyInOut(time,lv,team,cfg){
   };
   var def=lvDef[lv]||lvDef.intermediate;
   var exCnt=cfg.exCnt||def.exCnt;
-  // ── Time-driven rounds (Buy-In/Out takes ~5-8 min, so main WOD rounds are conservative) ──
-  var rounds=cfg.rounds||(time<=15?3:time<=30?4:time<=45?6:8);
-  // Build rep array: if user set uniform baseReps use that, else use level default
-  var reps;
-  if(cfg.baseReps){
-    var _bRep=team===2?evenRep(cfg.baseReps):cfg.baseReps;
-    reps=[];for(var i=0;i<rounds;i++)reps.push(_bRep);
-  }else{
-    reps=def.reps.slice();
-    while(reps.length<rounds)reps.push(reps[reps.length-1]||10);
-    reps=reps.slice(0,rounds);
-  }
-  if(team===2&&!cfg.baseReps)reps=reps.map(function(r){return evenRep(r*1.5);});
   var chosen=pkN(getPool(lv,null,team),exCnt);
   // ── Cardio pool: no Double-Unders ──
   var _biPool=CARDIO.filter(function(c){return c.unit!=='reps';});
@@ -2059,11 +2045,11 @@ function mkGroupAB(time,lv,team,cfg){
   var secB=mkAmrap(blockTime,lv,1,_bCfg)[0];
   var _aStrSorted=_aStr.slice().sort(function(a,b){return getSecondsPerRep(a.ex,lv,1,false)-getSecondsPerRep(b.ex,lv,1,false);});var _aRepsOrd=_aStrSorted.map(function(it){return it.baseRep;});var _bStrItems=secB.items.filter(function(it){return it.kind==='str'&&!it.isRest;});if(_bStrItems.length===_aRepsOrd.length){var _bSorted=_bStrItems.slice().sort(function(a,b){return getSecondsPerRep(a.ex,lv,1,false)-getSecondsPerRep(b.ex,lv,1,false);});_bSorted.forEach(function(bit,i){bit.baseRep=_aRepsOrd[i];bit.detail=getDetail(bit.ex,_aRepsOrd[i],null,lv,1);});}
   _syncGabCardio(secA,secB);
-  secA.type='Group A';secA.title='Group A — AMRAP '+(time/2)+' Min';
+  secA.type='Group A';secA.title='A — AMRAP '+(time/2)+' Min';
   secA.infoKey='i_groupA';secA.infoVars=Object.assign({},secA.infoVars,{t:(time/2)});
   secA.scoreKey='sc_rounds_ab';secA.teamKey=team>1?'tm_halfA':null;
   secA.groupAbCfg=cfg;
-  secB.type='Group B';secB.title='Group B — AMRAP '+(time/2)+' Min';
+  secB.type='Group B';secB.title='B — AMRAP '+(time/2)+' Min';
   secB.infoKey='i_groupA';secB.infoVars=Object.assign({},secB.infoVars,{t:(time/2)});
   secB.groupAbCfg=cfg;
   return[secA,secB];
@@ -2274,7 +2260,7 @@ var TYPES=[
   {id:'buy-in-cashout',icon:'💰',name:'Buy-In / Cash-Out',desc:'Cardio bookends the WOD',desc_ar:'كارديو في البداية والنهاية'},
   {id:'tabata',icon:'💥',name:'Tabata',desc:'20s on / 10s off × 8 rounds',desc_ar:'٢٠ث عمل / ١٠ث راحة × ٨ جولات'},
   {id:'death-by',icon:'💀',name:'Death By',desc:'+1 rep each minute until failure',desc_ar:'يضاف تكرار كل دقيقة حتى الفشل'},
-  {id:'group-ab',icon:'🅰️',name:'Group A / B',desc:'Two groups, alternate stations',desc_ar:'مجموعتان يتبادلان المحطات',teamOnly:true},
+  {id:'group-ab',icon:'🅰️',name:'A/B AMRAP',desc:'Two groups, alternate stations',desc_ar:'مجموعتان يتبادلان المحطات',teamOnly:true},
   {id:'ygig',icon:'🔀',name:'You Go I Go',desc:'Partners alternate movements',desc_ar:'الشريكان يتبادلان الحركات',teamOnly:true},
 ];
 function step3(){
@@ -2296,7 +2282,7 @@ function step4(){
     _tryGen(1);
   },600);
 }
-var TL={amrap:'AMRAP','for-time':'For Time/RFT',emom:'EMOM',chipper:'Chipper',tabata:'Tabata','death-by':'Death By',ladder:'Ladder','buy-in-cashout':'Buy-In/Cash-Out',ygig:'YGIG','group-ab':'Group A/B'};
+var TL={amrap:'AMRAP','for-time':'For Time/RFT',emom:'EMOM',chipper:'Chipper',tabata:'Tabata','death-by':'Death By',ladder:'Ladder','buy-in-cashout':'Buy-In/Cash-Out',ygig:'YGIG','group-ab':'A/B AMRAP'};
 var LL={beginner:'Beginner',intermediate:'Intermediate',advanced:'Advanced',elite:'Elite'};
 function renderWod(){
   var w=S.wod;
@@ -2462,7 +2448,7 @@ function showWodDesc(type){
   var isAr=CFG.lang==='ar';
   var txt=isAr?d.ar:d.en;
   var dir=isAr?'rtl':'ltr';
-  var label=(type==='Group A'||type==='Group B')?'Group A / B':type;
+  var label=(type==='Group A'||type==='Group B')?'A/B AMRAP':type;
   var ov=document.createElement('div');
   ov.className='wdi-overlay';
   ov.innerHTML='<div class="wdi-modal"><button class="wdi-close" onclick="this.closest(\'.wdi-overlay\').remove()">✕</button>'
@@ -2578,11 +2564,11 @@ function renderSec(sec,si){
   var _subHdr=function(lbl){return'<div style="font-size:11px;font-weight:700;color:var(--txt3);letter-spacing:1.5px;text-transform:uppercase;margin:8px 0 6px">── '+lbl+' ──</div>';};
   if(sec.type==='Group A'){
     var _gabBadges=_gabChip(si);
-    var gabInner='<span>Group A / B</span>'
+    var gabInner='<span>A/B AMRAP</span>'
       +'<span style="display:flex;align-items:center;gap:4px">'+_gabBadges+(hasDesc?'<button class="wdi-btn" onclick="showWodDesc(\'Group A\')">ⓘ</button>':'')+'</span>';
     return'<div class="ws ani" id="sec-'+si+'" style="border-bottom-left-radius:0;border-bottom-right-radius:0;margin-bottom:0">'
       +'<div class="st" style="display:flex;align-items:center;justify-content:space-between">'+gabInner+'</div>'
-      +'<div class="stt">Group A/B — AMRAP</div>'
+      +'<div class="stt">A/B AMRAP</div>'
       +renderSecInfo(sec,si,infoTxt)
       +(teamTxt?'<div class="si team">👥 '+teamTxt+'</div>':'')
       +(scoreTxt?'<div class="si sc">🏆 '+scoreTxt+'</div>':'')
