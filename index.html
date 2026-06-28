@@ -3730,19 +3730,25 @@ function _renderTimerExList(si){
   var sepLabel='';
   for(var _si=0;_si<sec.items.length;_si++){if(sec.items[_si].kind==='sep'&&sec.items[_si].label){sepLabel=sec.items[_si].label;break;}}
   var sepHtml=sepLabel?'<div style="font-size:11px;font-weight:700;letter-spacing:2px;color:rgba(255,255,255,0.28);text-align:center;margin-bottom:14px">'+sepLabel+'</div>':'<div style="margin-bottom:12px"></div>';
+  // Dynamic font — min 13px, scroll if too many
+  var n=exItems.length;
+  var needsScroll=n>8;
+  var fs=n<=3?17:n<=5?15:13;
+  var fsSub=fs-2;
+  var py=n<=4?10:n<=6?8:6;
   // Exercise rows
   var rows=exItems.map(function(it,i){
     var nm=(it.ex&&it.ex.name)||'';
     var dt=it.detail||(it.kind==='cardio'&&it.ex&&it.ex.amount!=null?fmtCa(it.ex):'');
-    var minPfx=it.emomMin?'<span style="color:rgba(255,255,255,0.35);font-size:12px;font-weight:700;margin-right:8px">MIN '+it.emomMin+'  </span>':'';
-    return'<div style="text-align:center;padding:10px 0;'+(i<exItems.length-1?'border-bottom:0.5px solid rgba(255,255,255,0.09)':'')+';">'
+    var minPfx=it.emomMin?'<span style="color:rgba(255,255,255,0.32);font-size:'+fsSub+'px;font-weight:700;margin-right:7px">MIN '+it.emomMin+'</span>':'';
+    return'<div style="text-align:center;padding:'+py+'px 0;'+(i<exItems.length-1?'border-bottom:0.5px solid rgba(255,255,255,0.09)':'')+';">'
       +minPfx
-      +'<span style="color:rgba(255,255,255,0.92);font-size:16px;font-weight:700">'+nm+'</span>'
-      +(dt?'<span style="color:rgba(255,255,255,0.5);font-size:15px;font-weight:500">  '+dt+'</span>':'')
+      +'<span style="color:rgba(255,255,255,0.92);font-size:'+fs+'px;font-weight:700">'+nm+'</span>'
+      +(dt?'<span style="color:rgba(255,255,255,0.48);font-size:'+fsSub+'px;font-weight:500">  '+dt+'</span>':'')
       +'</div>';
   }).join('');
-  return'<div style="overflow-y:auto;flex-shrink:0;background:rgba(0,0,0,0.35);border-top:1px solid rgba(255,255,255,0.1)">'
-    +'<div style="max-width:480px;margin:0 auto;padding:16px 24px 22px;text-align:center">'
+  return'<div style="flex:1;min-height:0;overflow-y:'+(needsScroll?'auto':'hidden')+';background:rgba(0,0,0,0.35);border-top:1px solid rgba(255,255,255,0.1)">'
+    +'<div style="max-width:480px;margin:0 auto;padding:12px 24px 16px;text-align:center;width:100%;box-sizing:border-box">'
     +titleHtml+sepHtml+rows
     +'</div></div>';
 }
@@ -3757,7 +3763,7 @@ function _tabTimerRender(){
   ov.style.background=bg;
   ov.innerHTML=
     '<button onclick="_tabTimerStop()" style="position:absolute;top:16px;right:16px;background:rgba(255,255,255,0.1);border:none;border-radius:50%;width:36px;height:36px;font-size:18px;color:#fff;cursor:pointer;line-height:36px;text-align:center">✕</button>'
-   +'<div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:20px 16px;min-height:0">'
+   +'<div style="flex-shrink:0;min-height:45vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:8px 16px 16px">'
    +'<div style="font-size:13px;font-weight:800;letter-spacing:4px;text-transform:uppercase;color:'+accent+';margin-bottom:12px">'+cur.label+'</div>'
    +(cur.mov?'<div style="font-size:22px;font-weight:700;color:#fff;margin-bottom:6px;text-align:center;padding:0 24px">'+cur.mov+'</div>':'')
    +(cur.sub?'<div style="font-size:13px;color:rgba(255,255,255,0.5);margin-bottom:20px;letter-spacing:1px">'+cur.sub+'</div>':'<div style="margin-bottom:20px"></div>')
@@ -3920,7 +3926,7 @@ function _wodTimerRender(){
   ov.style.background=bg;
   ov.innerHTML=
     '<button onclick="_wodTimerStop()" style="position:absolute;top:16px;right:16px;background:rgba(255,255,255,0.1);border:none;border-radius:50%;width:36px;height:36px;font-size:18px;color:#fff;cursor:pointer;line-height:36px;text-align:center">✕</button>'
-   +'<div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:20px 16px;min-height:0">'
+   +'<div style="flex-shrink:0;min-height:45vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:8px 16px 16px">'
    +'<div style="font-size:13px;font-weight:800;letter-spacing:4px;text-transform:uppercase;color:'+accent+';margin-bottom:12px">'+mainLabel+'</div>'
    +(movName?'<div style="font-size:20px;font-weight:700;color:#fff;margin-bottom:8px;text-align:center;padding:0 24px">'+movName+'</div>':'')
    +'<div style="font-size:11px;letter-spacing:2px;color:rgba(255,255,255,0.4);margin-bottom:20px;text-transform:uppercase">'+subLabel+'</div>'
