@@ -8,7 +8,8 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css?family=Almarai:400,700,800&subset=arabic&display=swap" rel="stylesheet">
 <style>
-*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;scrollbar-width:none;-ms-overflow-style:none}
+*::-webkit-scrollbar{display:none}
 :root{--or:#ff6600;--og:rgba(255,102,0,.12);--gr:#00c853;--re:#ff1744;--ye:#ffd600;--bl:#448aff;--ca:#00bcd4;--cag:rgba(0,188,212,.1);--bg:#0f0f0f;--bg2:#1a1a1a;--bg3:#242424;--bdr:#333;--bdr2:#2a2a2a;--txt:#ffffff;--txt2:#aaaaaa;--txt3:#666}
 body{background:var(--bg);color:var(--txt);font-family:'Segoe UI',sans-serif;min-height:100vh;font-size:15px}
 .app{max-width:480px;margin:0 auto;padding:0 0 80px}
@@ -3722,7 +3723,7 @@ function showTabataTimer(si){
 function _renderTimerExList(si){
   if(si===undefined||si===null||!S.wod)return'';
   var sec=S.wod.sections[si];if(!sec||!sec.items)return'';
-  var exItems=sec.items.filter(function(it){return it.kind==='str'||it.kind==='cardio';});
+  var exItems=sec.items.filter(function(it){return it.kind==='str'||it.kind==='cardio'||it.kind==='station-gate'||it.kind==='buyin';});
   if(!exItems.length)return'';
   // Title
   var titleHtml=sec.title?'<div style="font-size:17px;font-weight:800;color:#fff;text-align:center;margin-bottom:8px;letter-spacing:0.2px">'+sec.title+'</div>':'';
@@ -3739,7 +3740,7 @@ function _renderTimerExList(si){
   // Exercise rows
   var rows=exItems.map(function(it,i){
     var nm=(it.ex&&it.ex.name)||'';
-    var dt=it.detail||(it.kind==='cardio'&&it.ex&&it.ex.amount!=null?fmtCa(it.ex):'');
+    var dt=(it.kind==='buyin'&&it.ex&&it.ex.amount!=null)?fmtCa(it.ex):(it.detail||((it.kind==='cardio'||it.kind==='station-gate')&&it.ex&&it.ex.amount!=null?fmtCa(it.ex):''));
     var minPfx=it.emomMin?'<span style="color:rgba(255,255,255,0.32);font-size:'+fsSub+'px;font-weight:700;margin-right:7px">MIN '+it.emomMin+'</span>':'';
     return'<div style="text-align:center;padding:'+py+'px 0;'+(i<exItems.length-1?'border-bottom:0.5px solid rgba(255,255,255,0.09)':'')+';">'
       +minPfx
@@ -4001,7 +4002,7 @@ function setTabataMode(si,mode){
   }
   // multi ↔ alternating: نحافظ على الحركات
   var _isAlt=(mode==='alternating');
-  var exItems=sec.items.filter(function(it){return it.kind==='str'||it.kind==='cardio';});
+  var exItems=sec.items.filter(function(it){return it.kind==='str'||it.kind==='cardio'||it.kind==='station-gate'||it.kind==='buyin';});
   exItems=exItems.map(function(it){var n=Object.assign({},it);n.detail=_isAlt?'20s on / 10s off':'20s on / 10s off × 8';return n;});
   var totalItems=exItems.length;
   if(_isAlt){
