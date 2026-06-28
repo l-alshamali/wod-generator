@@ -2583,7 +2583,7 @@ function renderSec(sec,si){
     var _gaIdx=si>0?si-1:-1;
     return'<div class="ws ani" id="sec-'+si+'" style="border-top-left-radius:0;border-top-right-radius:0;margin-top:0;border-top:0.5px solid var(--bdr)">'
       +'<div class="rsep">── '+sec.title+' ──</div>'+_renderIt(sec,si)
-      +(_gaIdx>=0?'<div style="margin:14px 0 4px"><button onclick="showWodTimer(\'Group A\','+_gaIdx+')" style="width:100%;background:var(--or);border:none;border-radius:12px;padding:13px;font-size:15px;color:#000;font-weight:700;cursor:pointer">▶ Start Timer</button></div>':'')
+      +(_gaIdx>=0?'<div style="margin:14px 0 4px"><button onclick="showWodTimer(\'Group A\','+_gaIdx+')" style="width:100%;background:rgba(255,120,0,0.1);border:1px solid var(--or);border-radius:12px;padding:13px;font-size:15px;color:var(--or);font-weight:700;cursor:pointer">⏱ Start Timer</button></div>':'')
       +'</div>';
   }
   var _chip=_secChip(sec);
@@ -2593,7 +2593,7 @@ function renderSec(sec,si){
   +(teamTxt?'<div class="si team">👥 '+teamTxt+'</div>':'')
   +(scoreTxt?'<div class="si sc">🏆 '+scoreTxt+'</div>':'')
   +(sec.scheme&&sec.scheme.length&&sec.type!=='Ladder'&&!sec.noLongForm?'<div style="display:flex;justify-content:flex-end;margin:2px 0 6px"><button onclick="toggleLongForm('+si+')" style="background:rgba(255,120,0,'+(sec.longForm?'0.15':'0.06')+');border:1px solid var(--or);border-radius:20px;padding:3px 12px;font-size:11px;color:var(--or);font-weight:700;cursor:pointer">'+(sec.longForm?'Short':'Long')+'</button></div>':'')+'<div>'+(sec.scheme&&sec.scheme.length&&!sec.noLongForm?(sec.longForm?renderItemsByRound(sec,si):renderItems(sec.items,si)):renderItems(sec.items,si))+'</div>'
-  +(['Tabata','AMRAP','For Time / RFT','EMOM','Chipper','Buy-In / Cash-Out','Ladder','Death By','YGIG / Partner WOD'].indexOf(sec.type)>=0?'<div style="margin:14px 0 4px"><button onclick="showWodTimer(\''+sec.type+'\','+si+')" style="width:100%;background:var(--or);border:none;border-radius:12px;padding:13px;font-size:15px;color:#000;font-weight:700;cursor:pointer">▶ Start Timer</button></div>':'')
+  +(['Tabata','AMRAP','For Time / RFT','EMOM','Chipper','Buy-In / Cash-Out','Ladder','Death By','YGIG / Partner WOD'].indexOf(sec.type)>=0?'<div style="margin:14px 0 4px"><button onclick="showWodTimer(\''+sec.type+'\','+si+')" style="width:100%;background:rgba(255,120,0,0.1);border:1px solid var(--or);border-radius:12px;padding:13px;font-size:15px;color:var(--or);font-weight:700;cursor:pointer">⏱ Start Timer</button></div>':'')
   +'</div>';
 }
 function getRoundRep(detail,r){
