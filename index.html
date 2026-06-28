@@ -189,7 +189,7 @@ var T={
     solo:'Individual',team2:'Team of 2',
     step4:'Step 4 / 5',step4q:'WOD Type?',step4s:'Pick one or more — one drawn at random',
     type_hint:'Select multiple types for variety',generate:'Generate WOD',team_only:'Team only',
-    wod_day:'WOD of the Day',new_wod:'🔄 New WOD',copy:'📋 Copy',generating:'Generating your WOD...',
+    wod_day:'WOD of the Day',new_wod:'⟳ New WOD',copy:'📋 Copy',generating:'Generating your WOD...',
     swap:'Swap ↕',new_ex:'New ⟳',similar:'✅ Similar alternatives',cardio_alts:'💨 Cardio alternatives',
     gen_diff:'⟳ Generate completely different exercise',diff_c:'⟳ Different cardio',manual:'✏️ Manual entry',use:'✓ Use This',
     cancel:'Cancel',save:'✓ Save',
@@ -215,6 +215,7 @@ var T={
     i_rft:'Complete {r} rounds AFAP. Time cap: {t} min.',
     i_emom:'Every Minute On the Minute · {n} movements rotating · {s} sets · ~45 s work / min',
     i_chipper:'{n} movements done ONCE through in order. Time cap: {t} min.',i_chipper_st:'{s} Stations · {tot} Total Movements · Time cap: {t} min',
+    i_tabata_classic:'One movement. 20s work / 10s rest × 8 intervals = 4 min. Score = lowest reps in any single interval.',
     i_tabata:'20s work / 10s rest × 8 intervals per movement = 4 min each. Complete all 8 intervals of one movement before moving to the next. Your Tabata score = lowest reps across any single interval. Total: {tot} min.',
     i_tabata_alt:'Rotate through all {n} movements each interval. 20s work / 10s rest × 8 rounds = {tot} min. Score = lowest reps in any single interval.',
     i_deathby:'Min 1: {s} reps. Add {inc} reps each minute until failure. Cap: {t} min.',
@@ -255,7 +256,7 @@ var T={
     solo:'منفرد',team2:'ثنائي',
     step4:'الخطوة ٤ / ٥',step4q:'نوع التمرين؟',step4s:'اختر نوع أو أكثر — يختار عشوائيا',
     type_hint:'اختر أنواع متعددة للتنويع',generate:'ولد التمرين',team_only:'للفريق فقط',
-    wod_day:'تمرين اليوم',new_wod:'🔄 تمرين جديد',copy:'📋 نسخ',generating:'جار توليد تمرينك...',
+    wod_day:'تمرين اليوم',new_wod:'⟳ تمرين جديد',copy:'📋 نسخ',generating:'جار توليد تمرينك...',
     swap:'تبديل ↕',new_ex:'جديد ⟳',similar:'✅ بدائل مشابهة',cardio_alts:'💨 بدائل الكارديو',
     gen_diff:'⟳ ولد تمرينا مختلفا كليا',diff_c:'⟳ كارديو مختلف',manual:'✏️ إدخال يدوي',use:'✓ استخدم هذا',
     cancel:'إلغاء',save:'✓ حفظ',
@@ -281,6 +282,7 @@ var T={
     i_rft:'أكمل {r} جولات بأسرع وقت. الحد الزمني: {t} دقيقة.',
     i_emom:'كل دقيقة على الدقيقة · {n} حركات بالتناوب · {s} جولات · ~٤٥ ث. عمل',
     i_chipper:'{n} حركات تنفذ مرة واحدة بالترتيب. الحد الزمني: {t} دقيقة.',i_chipper_st:'{s} محطات · {tot} حركة إجمالية · الحد الزمني: {t} دقيقة',
+    i_tabata_classic:'حركة واحدة. ٢٠ث عمل / ١٠ث راحة × ٨ جولات = ٤ دقائق. النتيجة = أقل تكرارات في أي جولة واحدة.',
     i_tabata:'٢٠ث عمل / ١٠ث راحة × ٨ جولات لكل حركة = ٤ دقائق. أكمل الـ٨ جولات كاملة لكل حركة قبل الانتقال للتالية. النتيجة = أقل عدد تكرارات حققته في أي جولة واحدة. المجموع: {tot} دقيقة.',
     i_tabata_alt:'تناوب بين {n} حركات في كل فترة. ٢٠ث عمل / ١٠ث راحة × ٨ جولات = {tot} دقيقة. النتيجة = أقل تكرارات في أي فترة واحدة.',
     i_deathby:'الدقيقة 1: {s} تكرارات. تضاف {inc} تكرارات كل دقيقة حتى الفشل. الحد: {t} دقيقة.',
@@ -1640,44 +1642,54 @@ function mkChipper(time,lv,team,cfg){
 
 function mkTabata(time,lv,team,cfg){
   cfg=cfg||{};
-  var _withRestDef=cfg.withRest===true;
-  // نحدد الكارديو أولاً عشان نحسب numMov صح — OFF افتراضي
-  var cardioMode=cfg.withCardio;
-  var addCardio=cardioMode===true;
-  var numMov;
-  if(cfg.numMov){
-    // المستخدم حدد عدد صريح = حركات قوة فقط
-    numMov=cfg.numMov;
-  } else {
-    // auto: نقسم الوقت على 5 (slot واحد = 4 دقيقة + 1 راحة)
-    var totalSlots=Math.max(1,Math.floor(time/5));
-    // لو في كارديو، الكارديو ياخذ slot، فالقوة تاخذ الباقي
-    numMov=addCardio?Math.max(1,totalSlots-1):totalSlots;
-  }
+  var addCardio=cfg.withCardio===true;
   var pool=getPool(lv,null,team).filter(function(e){return TABATA_STR_NAMES.indexOf(e.name)>=0;});
   if(!pool.length)pool=getPool(lv,null,team);
-  var chosen=pkN(pool,numMov); // دايماً numMov حركات قوة
+  // ── اختيار الموود ──
+  // cfg.mode = اختيار المستخدم | cfg._genMode = اختيار النظام (لا يضيء في الستنغ)
+  var _effectiveMode=cfg.mode||(pk(['single','single','multi','alternating']));
+  if(!cfg.mode)cfg._genMode=_effectiveMode;
+  // ── Tabata Single: حركة واحدة دايماً، 4 دقائق ──
+  if(_effectiveMode==='single'){
+    var _classicItem;
+    if(addCardio){
+      var _cObj=pk(TABATA_CARDIO);
+      _classicItem={kind:'cardio',ex:tabataCardioEx(_cObj),detail:'20s on / 10s off × 8',noEdit:true};
+    }else{
+      var _cEx=pk(pool);
+      _classicItem={kind:'str',ex:_cEx,detail:'20s on / 10s off × 8',noEdit:true};
+    }
+    return[{type:'Tabata',title:'Tabata — Single',infoKey:'i_tabata_classic',infoVars:{},scoreKey:'sc_tabata',teamKey:team>1?'tm_simultaneous':null,items:[{kind:'sep',label:'—— 1 MOVEMENT × 8 INTERVALS ——'},_classicItem],tabataCfg:cfg}];
+  }
+  // ── Complex & Alternating: 2-4 حركات ──
+  var _isAlt=(_effectiveMode==='alternating');
+  var numMov;
+  if(cfg.numMov){
+    numMov=cfg.numMov;
+  }else{
+    // Complex(مع راحة): ÷5 | Alternating(بدون راحة): ÷4 — مع حد 2-4
+    var _slotDiv=_isAlt?4:5;
+    var totalSlots=Math.min(4,Math.max(2,Math.floor(time/_slotDiv)));
+    numMov=addCardio?Math.max(1,totalSlots-1):totalSlots;
+  }
+  var chosen=pkN(pool,numMov);
   var tabataCardioObj=addCardio?pk(TABATA_CARDIO):null;
   if(addCardio)chosen.push(tabataCardioObj);
   var _totalItems=numMov+(addCardio?1:0);
-  // اختيار عشوائي للموود لو المستخدم ما حدد
-  if(!cfg.mode)cfg.mode=Math.random()>.5?'alternating':'serial';
-  var _isAlt=(cfg.mode==='alternating');
   var _tabItems=chosen.map(function(ex){
     if(ex===tabataCardioObj){return{kind:'cardio',ex:tabataCardioEx(ex),detail:_isAlt?'20s on / 10s off':'20s on / 10s off × 8',noEdit:true};}
     return{kind:'str',ex:ex,detail:_isAlt?'20s on / 10s off':'20s on / 10s off × 8',noEdit:true};
   });
   if(_isAlt){
-    var _altItems=[{kind:'sep',label:'🔄 ALTERNATING — CYCLE × 8 ROUNDS'}].concat(_tabItems);
+    var _altItems=[{kind:'sep',label:'—— ALTERNATING — CYCLE × 8 ROUNDS ——'}].concat(_tabItems);
     var _altTot=_totalItems*4;
     return[{type:'Tabata',title:'Tabata — Alternating',infoKey:'i_tabata_alt',infoVars:{n:_totalItems,tot:_altTot},scoreKey:'sc_tabata_alt',teamKey:team>1?'tm_simultaneous':null,items:_altItems,tabataCfg:cfg}];
   }
-  // Serial: REST إجباري دايماً بين الحركات
-  var _tabWithRest=[];
+  // Complex: REST إجباري بين الحركات
+  var _tabWithRest=[{kind:'sep',label:'—— '+_totalItems+' MOVEMENTS × 8 INTERVALS ——'}];
   _tabItems.forEach(function(it,i){_tabWithRest.push(it);if(i<_tabItems.length-1)_tabWithRest.push({kind:'sep',label:'── 1 MIN REST ──'});});
   var _tabTot=_totalItems*4+(_totalItems>1?_totalItems-1:0);
-  // العنوان = الكل (قوة + كارديو)
-  return[{type:'Tabata',title:'Tabata — '+_totalItems+' Movements',infoKey:'i_tabata',infoVars:{tot:_tabTot},scoreKey:'sc_tabata',teamKey:team>1?'tm_simultaneous':null,items:_tabWithRest,tabataCfg:cfg}];
+  return[{type:'Tabata',title:'Tabata — Multi',infoKey:'i_tabata',infoVars:{tot:_tabTot},scoreKey:'sc_tabata',teamKey:team>1?'tm_simultaneous':null,items:_tabWithRest,tabataCfg:cfg}];
 }
 function mkDeathBy(time,lv,team,cfg){
   cfg=cfg||{};
@@ -2215,11 +2227,16 @@ function step1(){
   +'<div class="td" id="td">'+S.time+'</div><div class="tu">'+t('minutes')+'</div>'
   +'<input type="range" min="5" max="60" step="5" value="'+S.time+'" oninput="setT(this.value)">'
   +'<div class="tps">'+[10,15,20,25,30,40,45,60].map(function(v){return'<button class="tp" onclick="setTF('+v+')">'+v+'</button>'}).join('')+'</div>'
+  +'<div style="display:flex;align-items:center;gap:8px;margin:12px auto 0;max-width:180px">'
+  +'<input id="manual-time" type="number" min="1" max="120" placeholder="Custom" value="" style="width:100%;padding:8px 12px;border:1.5px solid var(--bdr);border-radius:10px;font-size:16px;font-weight:700;color:var(--txt);background:var(--bg2);text-align:center;font-family:inherit;outline:none" oninput="setTManual(this.value)" onkeydown="if(event.key===\'Enter\'){S.step=2;render()}">'
+  +'<span style="font-size:13px;color:var(--txt2);white-space:nowrap;font-weight:600">min</span>'
+  +'</div>'
   +'<button class="nb" onclick="S.step=2;render()">'+t('next')+'</button>'
   +bkBtn('back_lv',0)+'</div>';
 }
 function setT(v){S.time=+v;var d=document.getElementById('td');if(d)d.textContent=v}
-function setTF(v){S.time=v;var s=document.querySelector('input[type=range]');if(s)s.value=v;setT(v)}
+function setTF(v){S.time=v;var s=document.querySelector('input[type=range]');if(s)s.value=v;var m=document.getElementById('manual-time');if(m)m.value='';setT(v)}
+function setTManual(v){var n=parseInt(v,10);if(n>=1&&n<=120){S.time=n;var d=document.getElementById('td');if(d)d.textContent=n;var s=document.querySelector('input[type=range]');if(s)s.value=Math.min(60,Math.max(5,n));}}
 function step2(){
   app.innerHTML=dots(2)+'<div class="qc ani"><div class="ql">'+t('step3')+'</div><div class="qt">'+t('step3q')+'</div><div class="qs">'+t('step3s')+'</div><div class="og">'
   +[[1,'🧍',t('solo')],[2,'🧍🧍',t('team2')]]
@@ -2269,7 +2286,7 @@ function renderWod(){
   var w=S.wod;
   app.innerHTML=dots(4)+'<div class="wh ani"><div class="wl">'+t('wod_day')+'</div><div class="wn"><bdi dir="ltr">'+S.wodName+'</bdi></div><div class="wm"><span class="wb o">'+(TL[w.type]||w.type)+'</span><span class="wb">'+LL[S.level]+'</span><span class="wb">'+S.time+' min</span>'+(S.teamSize>1?'<span class="wb b">Team '+S.teamSize+'</span>':'')+'</div></div>'
   +'<div id="secs">'+w.sections.map(function(s,i){return renderSec(s,i)}).join('')+'</div>'
-  +'<div class="ar"><button class="ab dan" onclick="regen()">'+t('new_wod')+'</button><button class="ab pri" onclick="copyWod()">'+t('copy')+'</button></div>'
+  +'<div class="ar"><button class="ab pri" onclick="regen()">'+t('new_wod')+'</button><button class="ab dan" onclick="copyWod()">'+t('copy')+'</button></div>'
   +'<button class="bk" style="margin:8px 4px 0" onclick="S.cfgStore={};S.step=3;render()">'+t('back_ty')+'</button>'
   +'<div style="text-align:center;padding:16px 0 8px"><button onclick="showTnC()" style="background:none;border:none;color:var(--txt3);font-size:11px;cursor:pointer;text-decoration:underline">'+t('tnc')+'</button></div>';
 }
@@ -2559,8 +2576,10 @@ function renderSec(sec,si){
       +'</div>';
   }
   if(sec.type==='Group B'){
+    var _gaIdx=si>0?si-1:-1;
     return'<div class="ws ani" id="sec-'+si+'" style="border-top-left-radius:0;border-top-right-radius:0;margin-top:0;border-top:0.5px solid var(--bdr)">'
       +'<div class="rsep">── '+sec.title+' ──</div>'+_renderIt(sec,si)
+      +(_gaIdx>=0?'<div style="margin:14px 0 4px"><button onclick="showWodTimer(\'Group A\','+_gaIdx+')" style="width:100%;background:rgba(255,120,0,0.1);border:1px solid var(--or);border-radius:12px;padding:13px;font-size:15px;color:var(--or);font-weight:700;cursor:pointer">⏱ Start Timer</button></div>':'')
       +'</div>';
   }
   var _chip=_secChip(sec);
@@ -2569,7 +2588,9 @@ function renderSec(sec,si){
   +renderSecInfo(sec,si,infoTxt)
   +(teamTxt?'<div class="si team">👥 '+teamTxt+'</div>':'')
   +(scoreTxt?'<div class="si sc">🏆 '+scoreTxt+'</div>':'')
-  +(sec.scheme&&sec.scheme.length&&sec.type!=='Ladder'&&!sec.noLongForm?'<div style="display:flex;justify-content:flex-end;margin:2px 0 6px"><button onclick="toggleLongForm('+si+')" style="background:rgba(255,120,0,'+(sec.longForm?'0.15':'0.06')+');border:1px solid var(--or);border-radius:20px;padding:3px 12px;font-size:11px;color:var(--or);font-weight:700;cursor:pointer">'+(sec.longForm?'Short':'Long')+'</button></div>':'')+'<div>'+(sec.scheme&&sec.scheme.length&&!sec.noLongForm?(sec.longForm?renderItemsByRound(sec,si):renderItems(sec.items,si)):renderItems(sec.items,si))+'</div></div>';
+  +(sec.scheme&&sec.scheme.length&&sec.type!=='Ladder'&&!sec.noLongForm?'<div style="display:flex;justify-content:flex-end;margin:2px 0 6px"><button onclick="toggleLongForm('+si+')" style="background:rgba(255,120,0,'+(sec.longForm?'0.15':'0.06')+');border:1px solid var(--or);border-radius:20px;padding:3px 12px;font-size:11px;color:var(--or);font-weight:700;cursor:pointer">'+(sec.longForm?'Short':'Long')+'</button></div>':'')+'<div>'+(sec.scheme&&sec.scheme.length&&!sec.noLongForm?(sec.longForm?renderItemsByRound(sec,si):renderItems(sec.items,si)):renderItems(sec.items,si))+'</div>'
+  +(['Tabata','AMRAP','For Time / RFT','EMOM','Chipper','Buy-In / Cash-Out','Ladder','Death By','YGIG / Partner WOD'].indexOf(sec.type)>=0?'<div style="margin:14px 0 4px"><button onclick="showWodTimer(\''+sec.type+'\','+si+')" style="width:100%;background:rgba(255,120,0,0.1);border:1px solid var(--or);border-radius:12px;padding:13px;font-size:15px;color:var(--or);font-weight:700;cursor:pointer">⏱ Start Timer</button></div>':'')
+  +'</div>';
 }
 function getRoundRep(detail,r){
   // Standard format: "21 - 15 - 9 reps" / "21 - 15 - 9 s"
@@ -2965,7 +2986,8 @@ function manualSwap(si,ii){
   var manualDetail=dEl&&dEl.value.trim();
   var newDetail;
   if(S.wod.sections[si].type==='Tabata'){
-    newDetail='20s on / 10s off × 8';
+    var _msCfg=S.wod.sections[si].tabataCfg||{};
+    newDetail=_msCfg.mode==='alternating'?'20s on / 10s off':'20s on / 10s off × 8';
   }else if(manualDetail){
     newDetail=manualDetail;
   }else{
@@ -2985,7 +3007,8 @@ function swapStr(si,ii,name){
   var oldUnit=old.ex?old.ex.unit||'reps':'reps';
   var newUnit=found.unit||'reps';
   var oldNum=parseInt(((old.detail||'').match(/\d+/)||['10'])[0],10)||10;
-  var newDetail=S.wod.sections[si].type==='Tabata'?'20s on / 10s off × 8':buildStrDetail(found,old,S.wod.sections[si]);
+  var _ssCfg=S.wod.sections[si].tabataCfg||{};
+  var newDetail=S.wod.sections[si].type==='Tabata'?(_ssCfg.mode==='alternating'?'20s on / 10s off':'20s on / 10s off × 8'):buildStrDetail(found,old,S.wod.sections[si]);
   S.wod.sections[si].items[ii]=Object.assign({},old,{ex:found,detail:newDetail});
   reRenderSec(si);toast('✅ Swapped!');
 }
@@ -3114,7 +3137,8 @@ function regenEx(si,ii,kind){
     if(!_strPool.length)_strPool=_basePool;
     do{newEx=pk(_strPool);}while(newEx.name===old.ex.name&&_strPool.length>1);
     if(isTabata){
-      S.wod.sections[si].items[ii]=Object.assign({},old,{ex:newEx,detail:'20s on / 10s off × 8',noEdit:true});
+      var _tabDetail=(sec.tabataCfg&&sec.tabataCfg.mode==='alternating')?'20s on / 10s off':'20s on / 10s off × 8';
+      S.wod.sections[si].items[ii]=Object.assign({},old,{ex:newEx,detail:_tabDetail,noEdit:true});
     }else{
       var newDetail;
       if(sec.type==='Death By'&&ii===0){
@@ -3619,6 +3643,303 @@ function renderEmomCfg(sec,si){
 
 // ─── TABATA PANEL ─────────────────────────────────────────────────────────────
 function toggleTabataCfg(si){var el=document.getElementById('tabata-cfg-'+si);if(el)el.style.display=el.style.display==='none'?'block':'none';}
+
+// ─── TABATA TIMER ────────────────────────────────────────────────────────────
+var _tabTimer={iv:null,seq:[],idx:0,rem:0,paused:false};
+function _tabBeep(freq,dur,vol){
+  try{var ctx=new(window.AudioContext||window.webkitAudioContext)();var o=ctx.createOscillator();var g=ctx.createGain();o.connect(g);g.connect(ctx.destination);o.frequency.value=freq;g.gain.setValueAtTime(vol||0.4,ctx.currentTime);g.gain.exponentialRampToValueAtTime(0.001,ctx.currentTime+dur);o.start();o.stop(ctx.currentTime+dur);}catch(e){}
+}
+function _tabBeepWork(){_tabBeep(880,0.12);setTimeout(function(){_tabBeep(880,0.12);},130);}
+function _tabBeepRest(){_tabBeep(440,0.3);}
+function _tabBeepDone(){_tabBeep(660,0.15);setTimeout(function(){_tabBeep(880,0.15);},200);setTimeout(function(){_tabBeep(1100,0.4);},400);}
+function _tabBeepCountdown(){_tabBeep(660,0.08);}
+
+function showTabataTimer(si){
+  var sec=S.wod.sections[si];
+  var cfg=sec.tabataCfg||{};
+  var _mode=cfg.mode||cfg._genMode||'single';
+  var movs=sec.items.filter(function(it){return it.kind==='str'||it.kind==='cardio';});
+  var seq=[];
+  // GET READY
+  seq.push({phase:'ready',dur:10,label:'GET READY',sub:'',mov:'',intv:0,tot:0});
+  if(_mode==='single'){
+    var nm=movs[0]?(movs[0].ex&&movs[0].ex.name)||'':'' ;
+    for(var i=1;i<=8;i++){
+      seq.push({phase:'work',dur:20,label:'WORK',sub:'Interval '+i+' / 8',mov:nm,intv:i,tot:8});
+      seq.push({phase:'rest',dur:10,label:'REST',sub:'Interval '+i+' / 8',mov:nm,intv:i,tot:8});
+    }
+  }else if(_mode==='multi'){
+    var n=movs.length;
+    for(var m=0;m<n;m++){
+      var nm=movs[m]?(movs[m].ex&&movs[m].ex.name)||'':'';
+      var nmNext=m+1<n?(movs[m+1].ex&&movs[m+1].ex.name)||'':'';
+      for(var i=1;i<=8;i++){
+        seq.push({phase:'work',dur:20,label:'WORK',sub:'Interval '+i+' / 8',mov:nm,intv:i,tot:8});
+        seq.push({phase:'rest',dur:10,label:'REST',sub:'Interval '+i+' / 8',mov:nm,intv:i,tot:8});
+      }
+      if(m<n-1)seq.push({phase:'between',dur:60,label:'REST',sub:'1 MIN — Next: '+nmNext,mov:'',intv:0,tot:0});
+    }
+  }else{ // alternating
+    var n=movs.length;
+    for(var r=1;r<=8;r++){
+      for(var m=0;m<n;m++){
+        var nm=movs[m]?(movs[m].ex&&movs[m].ex.name)||'':'';
+        seq.push({phase:'work',dur:20,label:'WORK',sub:'Round '+r+' / 8 · '+( m+1)+'/'+n,mov:nm,intv:r,tot:8});
+        seq.push({phase:'rest',dur:10,label:'REST',sub:'Round '+r+' / 8 · '+(m+1)+'/'+n,mov:nm,intv:r,tot:8});
+      }
+    }
+  }
+  seq.push({phase:'done',dur:0,label:'DONE!',sub:'',mov:'',intv:0,tot:0});
+  _tabTimer.seq=seq;_tabTimer.idx=0;_tabTimer.rem=seq[0].dur;_tabTimer.paused=false;_tabTimer.si=si;
+  if(_tabTimer.iv)clearInterval(_tabTimer.iv);
+
+  // Build overlay
+  var ov=document.createElement('div');
+  ov.id='tab-timer-ov';
+  ov.style.cssText='position:fixed;inset:0;z-index:9999;display:flex;flex-direction:column;font-family:inherit;overflow:hidden;';
+  document.body.appendChild(ov);
+  _tabTimerRender();
+
+  _tabTimer.iv=setInterval(function(){
+    if(_tabTimer.paused)return;
+    var cur=_tabTimer.seq[_tabTimer.idx];
+    if(cur.phase==='done'){_tabTimerStop();return;}
+    _tabTimer.rem--;
+    // countdown beeps at 3,2,1
+    if(_tabTimer.rem<=3&&_tabTimer.rem>0)_tabBeepCountdown();
+    if(_tabTimer.rem<=0){
+      _tabTimer.idx++;
+      if(_tabTimer.idx>=_tabTimer.seq.length){_tabTimerStop();return;}
+      var next=_tabTimer.seq[_tabTimer.idx];
+      _tabTimer.rem=next.dur;
+      if(next.phase==='done'){_tabBeepDone();}
+      else if(next.phase==='work')_tabBeepWork();
+      else _tabBeepRest();
+    }
+    _tabTimerRender();
+  },1000);
+}
+function _renderTimerExList(si){
+  if(si===undefined||si===null||!S.wod)return'';
+  var sec=S.wod.sections[si];if(!sec||!sec.items)return'';
+  var exItems=sec.items.filter(function(it){return it.kind==='str'||it.kind==='cardio';});
+  if(!exItems.length)return'';
+  // Title
+  var titleHtml=sec.title?'<div style="font-size:17px;font-weight:800;color:#fff;text-align:center;margin-bottom:8px;letter-spacing:0.2px">'+sec.title+'</div>':'';
+  // First sep label (e.g. "── 4 ROUNDS ──")
+  var sepLabel='';
+  for(var _si=0;_si<sec.items.length;_si++){if(sec.items[_si].kind==='sep'&&sec.items[_si].label){sepLabel=sec.items[_si].label;break;}}
+  var sepHtml=sepLabel?'<div style="font-size:11px;font-weight:700;letter-spacing:2px;color:rgba(255,255,255,0.28);text-align:center;margin-bottom:14px">'+sepLabel+'</div>':'<div style="margin-bottom:12px"></div>';
+  // Exercise rows
+  var rows=exItems.map(function(it,i){
+    var nm=(it.ex&&it.ex.name)||'';
+    var dt=it.detail||(it.kind==='cardio'&&it.ex&&it.ex.amount!=null?fmtCa(it.ex):'');
+    var minPfx=it.emomMin?'<span style="color:rgba(255,255,255,0.35);font-size:12px;font-weight:700;margin-right:8px">MIN '+it.emomMin+'  </span>':'';
+    return'<div style="text-align:center;padding:10px 0;'+(i<exItems.length-1?'border-bottom:0.5px solid rgba(255,255,255,0.09)':'')+';">'
+      +minPfx
+      +'<span style="color:rgba(255,255,255,0.92);font-size:16px;font-weight:700">'+nm+'</span>'
+      +(dt?'<span style="color:rgba(255,255,255,0.5);font-size:15px;font-weight:500">  '+dt+'</span>':'')
+      +'</div>';
+  }).join('');
+  return'<div style="overflow-y:auto;flex-shrink:0;background:rgba(0,0,0,0.35);border-top:1px solid rgba(255,255,255,0.1)">'
+    +'<div style="max-width:480px;margin:0 auto;padding:16px 24px 22px;text-align:center">'
+    +titleHtml+sepHtml+rows
+    +'</div></div>';
+}
+
+function _tabTimerRender(){
+  var ov=document.getElementById('tab-timer-ov');if(!ov)return;
+  var t=_tabTimer;var cur=t.seq[t.idx]||{phase:'done',label:'DONE!',sub:'',mov:'',dur:0};
+  var ph=cur.phase;
+  var bg=ph==='work'?'#1a0a00':ph==='ready'?'#0a0a1a':ph==='done'?'#0a1a0a':'#0a0a0a';
+  var accent=ph==='work'?'var(--or)':ph==='ready'?'#6366f1':ph==='done'?'#22c55e':'#60a5fa';
+  var pct=cur.dur>0?Math.round((t.rem/cur.dur)*100):0;
+  ov.style.background=bg;
+  ov.innerHTML=
+    '<button onclick="_tabTimerStop()" style="position:absolute;top:16px;right:16px;background:rgba(255,255,255,0.1);border:none;border-radius:50%;width:36px;height:36px;font-size:18px;color:#fff;cursor:pointer;line-height:36px;text-align:center">✕</button>'
+   +'<div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:20px 16px;min-height:0">'
+   +'<div style="font-size:13px;font-weight:800;letter-spacing:4px;text-transform:uppercase;color:'+accent+';margin-bottom:12px">'+cur.label+'</div>'
+   +(cur.mov?'<div style="font-size:22px;font-weight:700;color:#fff;margin-bottom:6px;text-align:center;padding:0 24px">'+cur.mov+'</div>':'')
+   +(cur.sub?'<div style="font-size:13px;color:rgba(255,255,255,0.5);margin-bottom:20px;letter-spacing:1px">'+cur.sub+'</div>':'<div style="margin-bottom:20px"></div>')
+   +(ph!=='done'
+     ?'<div style="font-size:96px;font-weight:900;color:'+accent+';line-height:1;margin-bottom:20px;font-variant-numeric:tabular-nums">'+t.rem+'</div>'
+     +'<div style="width:260px;height:6px;background:rgba(255,255,255,0.1);border-radius:3px;margin-bottom:32px"><div style="width:'+pct+'%;height:100%;background:'+accent+';border-radius:3px;transition:width 0.5s"></div></div>'
+     :'<div style="font-size:64px;margin-bottom:48px">🎉</div>')
+   +'<div style="display:flex;gap:12px">'
+   +'<button onclick="_tabTimerToggle()" style="background:rgba(255,255,255,0.12);border:1px solid rgba(255,255,255,0.2);border-radius:12px;padding:12px 28px;font-size:15px;font-weight:700;color:#fff;cursor:pointer">'+(t.paused?'▶ Resume':'⏸ Pause')+'</button>'
+   +'<button onclick="_tabTimerStop()" style="background:rgba(255,60,60,0.2);border:1px solid rgba(255,60,60,0.4);border-radius:12px;padding:12px 28px;font-size:15px;font-weight:700;color:#ff6060;cursor:pointer">⏹ Stop</button>'
+   +'</div></div>'
+   +_renderTimerExList(t.si);
+}
+function _tabTimerToggle(){_tabTimer.paused=!_tabTimer.paused;_tabTimerRender();}
+function _tabTimerStop(){if(_tabTimer.iv)clearInterval(_tabTimer.iv);_tabTimer.iv=null;var ov=document.getElementById('tab-timer-ov');if(ov)ov.remove();}
+
+// ─── WOD TIMER DISPATCHER ────────────────────────────────────────────────────
+function showWodTimer(type,si){
+  if(type==='Tabata'){showTabataTimer(si);return;}
+  // Countdown types
+  if(type==='AMRAP'||type==='Group A'){showAmrapTimer(si);return;}
+  // YGIG: RFT if iv.r && iv.cap, else AMRAP
+  if(type==='YGIG / Partner WOD'){
+    var _iv=S.wod.sections[si].infoVars||{};
+    if(_iv.r&&_iv.cap){showRftTimer(si);return;}else{showAmrapTimer(si);return;}
+  }
+  // Count-up types
+  if(type==='For Time / RFT'||type==='Chipper'||type==='Buy-In / Cash-Out'){showRftTimer(si);return;}
+  // EMOM
+  if(type==='EMOM'){showEmomTimer(si);return;}
+  // Countdown from cap
+  if(type==='Ladder'||type==='Death By'){showCapTimer(si);return;}
+}
+
+// ─── AMRAP / RFT / EMOM TIMER ────────────────────────────────────────────────
+var _wodTimer={iv:null,paused:false,elapsed:0,totalSec:0,type:'',curMin:1,totalMin:0,minSec:0,movs:[],finished:false};
+function _wodBeep(freq,dur,vol){try{var ctx=new(window.AudioContext||window.webkitAudioContext)();var o=ctx.createOscillator();var g=ctx.createGain();o.connect(g);g.connect(ctx.destination);o.frequency.value=freq;g.gain.setValueAtTime(vol||0.4,ctx.currentTime);g.gain.exponentialRampToValueAtTime(0.001,ctx.currentTime+dur);o.start();o.stop(ctx.currentTime+dur);}catch(e){}}
+function _wodBeepStart(){_wodBeep(880,0.12);setTimeout(function(){_wodBeep(880,0.12);},130);}
+function _wodBeepCountdown(){_wodBeep(660,0.08);}
+function _wodBeepDone(){_wodBeep(660,0.15);setTimeout(function(){_wodBeep(880,0.15);},200);setTimeout(function(){_wodBeep(1100,0.4);},400);}
+function _fmtMS(sec){var m=Math.floor(sec/60),s=sec%60;return(m<10?'0':'')+m+':'+(s<10?'0':'')+s;}
+
+function showAmrapTimer(si){
+  var sec=S.wod.sections[si];
+  var totalMin=(S.wod.cfg.time||20);
+  var label=(sec.type==='Group A'?'A/B AMRAP':sec.type==='YGIG / Partner WOD'?'YGIG AMRAP':'AMRAP');
+  _wodTimer={iv:null,paused:false,elapsed:0,totalSec:totalMin*60,type:'amrap',curMin:0,totalMin:totalMin,minSec:0,movs:[],finished:false,label:label,si:si};
+  _wodBeepStart();
+  var ov=document.createElement('div');ov.id='wod-timer-ov';ov.style.cssText='position:fixed;inset:0;z-index:9999;display:flex;flex-direction:column;font-family:inherit;overflow:hidden;';
+  document.body.appendChild(ov);_wodTimerRender();
+  _wodTimer.iv=setInterval(function(){
+    if(_wodTimer.paused)return;
+    _wodTimer.elapsed++;
+    var rem=_wodTimer.totalSec-_wodTimer.elapsed;
+    if(rem<=0){_wodBeepDone();_wodTimer.finished=true;_wodTimerRender();clearInterval(_wodTimer.iv);_wodTimer.iv=null;return;}
+    if(rem<=10)_wodBeepCountdown();
+    _wodTimerRender();
+  },1000);
+}
+
+function showRftTimer(si){
+  var sec=S.wod.sections[si];
+  var _lbl=sec.type==='Chipper'?'CHIPPER':sec.type==='Buy-In / Cash-Out'?'BUY-IN / CASH-OUT':sec.type==='YGIG / Partner WOD'?'YGIG FOR TIME':'FOR TIME';
+  var capSec=(S.wod.cfg.time||20)*60;
+  _wodTimer={iv:null,paused:false,elapsed:0,totalSec:capSec,type:'rft',curMin:0,totalMin:0,minSec:0,movs:[],finished:false,label:_lbl,si:si};
+  _wodBeepStart();
+  var ov=document.createElement('div');ov.id='wod-timer-ov';ov.style.cssText='position:fixed;inset:0;z-index:9999;display:flex;flex-direction:column;font-family:inherit;overflow:hidden;';
+  document.body.appendChild(ov);_wodTimerRender();
+  _wodTimer.iv=setInterval(function(){
+    if(_wodTimer.paused)return;
+    _wodTimer.elapsed++;
+    if(_wodTimer.elapsed>=_wodTimer.totalSec&&!_wodTimer.finished){_rftFinish();return;}
+    _wodTimerRender();
+  },1000);
+}
+function _rftFinish(){if(_wodTimer.iv)clearInterval(_wodTimer.iv);_wodTimer.iv=null;_wodTimer.finished=true;_wodBeepDone();_wodTimerRender();}
+
+function showCapTimer(si){
+  var sec=S.wod.sections[si];
+  var capSec=(S.wod.cfg.time||20)*60;
+  var _iv=sec.infoVars||{};
+  var _isDB=sec.type==='Death By';
+  var _lbl=_isDB?'DEATH BY':'LADDER';
+  _wodTimer={iv:null,paused:false,elapsed:0,totalSec:capSec,type:'cap',curMin:0,totalMin:0,minSec:0,movs:[],finished:false,label:_lbl,
+    isDB:_isDB,dbStart:_iv.s||1,dbInc:_iv.inc||1,dbLastMin:-1,flash:false,si:si};
+  _wodBeepStart();
+  var ov=document.createElement('div');ov.id='wod-timer-ov';ov.style.cssText='position:fixed;inset:0;z-index:9999;display:flex;flex-direction:column;font-family:inherit;overflow:hidden;';
+  document.body.appendChild(ov);_wodTimerRender();
+  _wodTimer.iv=setInterval(function(){
+    if(_wodTimer.paused)return;
+    _wodTimer.elapsed++;
+    var rem=_wodTimer.totalSec-_wodTimer.elapsed;
+    if(_wodTimer.isDB){
+      var _curMin=Math.floor(_wodTimer.elapsed/60)+1;
+      if(_curMin!==_wodTimer.dbLastMin){
+        _wodTimer.dbLastMin=_curMin;
+        if(_wodTimer.elapsed>0){_wodBeepStart();_wodTimer.flash=true;setTimeout(function(){_wodTimer.flash=false;_wodTimerRender();},600);}
+      }
+    }
+    if(rem<=10&&rem>0)_wodBeepCountdown();
+    if(rem<=0){_wodBeepDone();_wodTimer.finished=true;_wodTimerRender();clearInterval(_wodTimer.iv);_wodTimer.iv=null;return;}
+    _wodTimerRender();
+  },1000);
+}
+
+function showEmomTimer(si){
+  var sec=S.wod.sections[si];
+  var totalMin=S.wod.cfg.time||20;
+  var movs=sec.items.filter(function(it){return it.kind==='str'||it.kind==='cardio';});
+  _wodTimer={iv:null,paused:false,elapsed:0,totalSec:totalMin*60,type:'emom',curMin:1,totalMin:totalMin,minSec:60,movs:movs,finished:false,si:si};
+  _wodBeepStart();
+  var ov=document.createElement('div');ov.id='wod-timer-ov';ov.style.cssText='position:fixed;inset:0;z-index:9999;display:flex;flex-direction:column;font-family:inherit;overflow:hidden;';
+  document.body.appendChild(ov);_wodTimerRender();
+  _wodTimer.iv=setInterval(function(){
+    if(_wodTimer.paused)return;
+    _wodTimer.elapsed++;_wodTimer.minSec--;
+    if(_wodTimer.minSec<=0){
+      _wodTimer.curMin++;
+      if(_wodTimer.curMin>_wodTimer.totalMin){_wodBeepDone();_wodTimer.finished=true;_wodTimerRender();clearInterval(_wodTimer.iv);_wodTimer.iv=null;return;}
+      _wodTimer.minSec=60;_wodBeepStart();
+    }
+    if(_wodTimer.minSec<=3&&_wodTimer.minSec>0)_wodBeepCountdown();
+    _wodTimerRender();
+  },1000);
+}
+
+function _wodTimerRender(){
+  var ov=document.getElementById('wod-timer-ov');if(!ov)return;
+  var wt=_wodTimer,type=wt.type,finished=wt.finished;
+  var accent,bg,mainLabel,bigNum,subLabel,progressPct,movName='';
+  if(type==='amrap'){
+    var rem=Math.max(0,wt.totalSec-wt.elapsed);
+    accent=finished?'#22c55e':'#6366f1';bg=finished?'#0a1a0a':'#08080f';
+    mainLabel=finished?'TIME\'S UP!':(wt.label||'AMRAP');bigNum=_fmtMS(rem);
+    subLabel=wt.totalMin+' MIN';progressPct=wt.totalSec>0?Math.round((rem/wt.totalSec)*100):0;
+  }else if(type==='rft'){
+    accent=finished?'#22c55e':'#10b981';bg=finished?'#0a1a0a':'#04140a';
+    mainLabel=finished?'DONE!':(wt.label||'FOR TIME');bigNum=_fmtMS(wt.elapsed);
+    subLabel=finished?'Final: '+_fmtMS(wt.elapsed):'COUNT UP';progressPct=100;
+  }else if(type==='cap'){
+    var rem=Math.max(0,wt.totalSec-wt.elapsed);
+    var _flash=wt.flash&&!finished;
+    accent=finished?'#ef4444':(_flash?'#fff':'#f59e0b');
+    bg=finished?'#1a0000':(_flash?'#2d1a00':'#110800');
+    mainLabel=finished?'TIME CAP!':(wt.label||'CAP');bigNum=_fmtMS(rem);
+    if(wt.isDB&&!finished){
+      var _dbMin=Math.floor(wt.elapsed/60)+1;
+      var _dbReps=wt.dbStart+((_dbMin-1)*wt.dbInc);
+      movName='MIN '+_dbMin+' — Do '+_dbReps+' reps';
+    }
+    subLabel=_fmtMS(wt.totalSec)+' TIME CAP';progressPct=wt.totalSec>0?Math.round((rem/wt.totalSec)*100):0;
+  }else{
+    var midx=wt.movs.length>0?(wt.curMin-1)%wt.movs.length:-1;
+    movName=midx>=0&&wt.movs[midx]?(wt.movs[midx].ex&&wt.movs[midx].ex.name)||'':'';
+    accent=finished?'#22c55e':'#f59e0b';bg=finished?'#0a1a0a':'#120900';
+    mainLabel=finished?'DONE!':'MIN '+wt.curMin+' / '+wt.totalMin;
+    bigNum=finished?'00:00':_fmtMS(wt.minSec);
+    subLabel=finished?'EMOM Complete':'EMOM';progressPct=Math.round((wt.minSec/60)*100);
+  }
+  ov.style.background=bg;
+  ov.innerHTML=
+    '<button onclick="_wodTimerStop()" style="position:absolute;top:16px;right:16px;background:rgba(255,255,255,0.1);border:none;border-radius:50%;width:36px;height:36px;font-size:18px;color:#fff;cursor:pointer;line-height:36px;text-align:center">✕</button>'
+   +'<div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:20px 16px;min-height:0">'
+   +'<div style="font-size:13px;font-weight:800;letter-spacing:4px;text-transform:uppercase;color:'+accent+';margin-bottom:12px">'+mainLabel+'</div>'
+   +(movName?'<div style="font-size:20px;font-weight:700;color:#fff;margin-bottom:8px;text-align:center;padding:0 24px">'+movName+'</div>':'')
+   +'<div style="font-size:11px;letter-spacing:2px;color:rgba(255,255,255,0.4);margin-bottom:20px;text-transform:uppercase">'+subLabel+'</div>'
+   +(finished
+     ?'<div style="font-size:64px;margin-bottom:48px">🎉</div>'
+     :'<div style="font-size:96px;font-weight:900;color:'+accent+';line-height:1;margin-bottom:20px;font-variant-numeric:tabular-nums">'+bigNum+'</div>'
+     +'<div style="width:260px;height:6px;background:rgba(255,255,255,0.1);border-radius:3px;margin-bottom:32px"><div style="width:'+progressPct+'%;height:100%;background:'+accent+';border-radius:3px;transition:width 0.8s linear"></div></div>')
+   +'<div style="display:flex;gap:12px">'
+   +(!finished?'<button onclick="_wodTimerToggle()" style="background:rgba(255,255,255,0.12);border:1px solid rgba(255,255,255,0.2);border-radius:12px;padding:12px 28px;font-size:15px;font-weight:700;color:#fff;cursor:pointer">'+(wt.paused?'▶ Resume':'⏸ Pause')+'</button>':'')
+   +(type==='rft'&&!finished?'<button onclick="_rftFinish()" style="background:rgba(34,197,94,0.2);border:1px solid rgba(34,197,94,0.5);border-radius:12px;padding:12px 28px;font-size:15px;font-weight:700;color:#22c55e;cursor:pointer">✓ Finish</button>':'')
+   +(type==='cap'&&!finished?'<button onclick="_rftFinish()" style="background:rgba(239,68,68,0.2);border:1px solid rgba(239,68,68,0.4);border-radius:12px;padding:12px 28px;font-size:15px;font-weight:700;color:#ef4444;cursor:pointer">✓ Done Before Cap</button>':'')
+   +'<button onclick="_wodTimerStop()" style="background:rgba(255,60,60,0.2);border:1px solid rgba(255,60,60,0.4);border-radius:12px;padding:12px 28px;font-size:15px;font-weight:700;color:#ff6060;cursor:pointer">⏹ Stop</button>'
+   +'</div></div>'
+   +_renderTimerExList(wt.si);
+}
+function _wodTimerToggle(){_wodTimer.paused=!_wodTimer.paused;_wodTimerRender();}
+function _wodTimerStop(){if(_wodTimer.iv)clearInterval(_wodTimer.iv);_wodTimer.iv=null;var ov=document.getElementById('wod-timer-ov');if(ov)ov.remove();}
+
+// ─────────────────────────────────────────────────────────────────────────────
 function setTabataVal(si,key,val,btn){
   var sec=S.wod.sections[si];if(!sec.tabataCfg)sec.tabataCfg={};
   var parent=btn.parentElement;
@@ -3656,41 +3977,41 @@ function randomTabata(si){
 }
 function setTabataMode(si,mode){
   var sec=S.wod.sections[si];if(!sec.tabataCfg)sec.tabataCfg={};
-  // ضغطة ثانية على نفس الموود تطفيه (عشوائي)
-  if(sec.tabataCfg.mode===mode){sec.tabataCfg.mode=undefined;mode=undefined;}
+  var prevMode=sec.tabataCfg.mode;
+  // ضغطة ثانية على نفس الموود تطفيه
+  if(prevMode===mode){sec.tabataCfg.mode=undefined;mode=undefined;}
   else{sec.tabataCfg.mode=mode;}
-  // لو ما في موود محدد، بس حدّث الأزرار بدون ما تغير الآيتمز
-  if(!mode){
+  var reRender=function(){
     var el=document.getElementById('sec-'+si);if(el)el.outerHTML=renderSec(S.wod.sections[si],si);
     var cfg2=document.getElementById('tabata-cfg-'+si);if(cfg2)cfg2.style.display='block';
-    return;
+  };
+  // لو إطفاء أو تبديل من/إلى single: توليد جديد
+  if(!mode||mode==='single'||prevMode==='single'){
+    if(mode){
+      var newSecs=mkTabata(S.wod.cfg.time,S.level,S.teamSize,sec.tabataCfg);
+      S.wod.sections[si]=newSecs[0];
+    }
+    reRender();return;
   }
+  // multi ↔ alternating: نحافظ على الحركات
   var _isAlt=(mode==='alternating');
-  // حافظ على نفس الحركات — بس شيل السيباريتورز القديمة
   var exItems=sec.items.filter(function(it){return it.kind==='str'||it.kind==='cardio';});
-  // حدّث الديتيل لكل حركة حسب الموود الجديد
-  exItems=exItems.map(function(it){
-    var n=Object.assign({},it);
-    n.detail=_isAlt?'20s on / 10s off':'20s on / 10s off × 8';
-    return n;
-  });
-  var numStr=exItems.filter(function(it){return it.kind==='str';}).length;
+  exItems=exItems.map(function(it){var n=Object.assign({},it);n.detail=_isAlt?'20s on / 10s off':'20s on / 10s off × 8';return n;});
   var totalItems=exItems.length;
   if(_isAlt){
     var _altTot=totalItems*4;
-    sec.items=[{kind:'sep',label:'🔄 ALTERNATING — CYCLE × 8 ROUNDS'}].concat(exItems);
+    sec.items=[{kind:'sep',label:'—— ALTERNATING — CYCLE × 8 ROUNDS ——'}].concat(exItems);
     sec.title='Tabata — Alternating';
     sec.infoKey='i_tabata_alt';sec.infoVars={n:totalItems,tot:_altTot};sec.scoreKey='sc_tabata_alt';
-  } else {
-    var _withRest=[];
+  }else{
+    var _withRest=[{kind:'sep',label:'—— '+totalItems+' MOVEMENTS × 8 INTERVALS ——'}];
     exItems.forEach(function(it,i){_withRest.push(it);if(i<exItems.length-1)_withRest.push({kind:'sep',label:'── 1 MIN REST ──'});});
     var _tabTot=totalItems*4+(totalItems>1?totalItems-1:0);
     sec.items=_withRest;
-    sec.title='Tabata — '+totalItems+' Movements';
+    sec.title='Tabata — Multi';
     sec.infoKey='i_tabata';sec.infoVars={tot:_tabTot};sec.scoreKey='sc_tabata';
   }
-  var el=document.getElementById('sec-'+si);if(el)el.outerHTML=renderSec(S.wod.sections[si],si);
-  var cfg2=document.getElementById('tabata-cfg-'+si);if(cfg2)cfg2.style.display='block';
+  reRender();
 }
 function renderTabataCfg(sec,si){
   var cfg=sec.tabataCfg||{};
@@ -3698,19 +4019,21 @@ function renderTabataCfg(sec,si){
   var S_sel='background:var(--or);border:0.5px solid var(--or);border-radius:7px;padding:5px 10px;font-size:13px;color:#000;cursor:pointer;font-weight:600;font-family:inherit;min-height:30px';
   // يضيء فقط لو المستخدم اختار بنفسه
   var movBtns=[1,2,3,4,5,6,7,8].map(function(n){return'<button onclick="setTabataVal('+si+',\'numMov\','+n+',this)" style="'+(cfg.numMov===n?S_sel:S_btn)+'">'+n+'</button>';}).join('');
-  var cv=cfg.withCardio;var rv=cfg.withRest;
-  var _mode=cfg.mode; // undefined = عشوائي (ما في محدد)
-  var _isSerial=_mode==='serial';
+  var cv=cfg.withCardio;
+  var _mode=cfg.mode; // undefined = عشوائي
+  var _isSingle=_mode==='single';
+  var _isMulti=_mode==='multi';
   var _isAlt=_mode==='alternating';
   return'<div id="tabata-cfg-'+si+'" style="display:none;background:var(--bg3);border:0.5px solid var(--bdr);border-radius:10px;padding:12px;margin-top:6px">'
   +'<div style="display:flex;justify-content:flex-end;margin-bottom:10px"><button onclick="randomTabata('+si+')" style="background:rgba(99,102,241,0.12);border:0.5px solid #6366f1;border-radius:20px;padding:4px 12px;font-size:11px;color:#6366f1;cursor:pointer;font-weight:600">'+t('random')+'</button></div>'
   +'<div style="font-size:13px;font-weight:600;color:var(--txt2);letter-spacing:0.5px;text-transform:uppercase;margin-bottom:6px">MODE</div>'
-  +'<div style="display:flex;gap:6px;margin-bottom:12px">'
-  +'<button onclick="setTabataMode('+si+',\'serial\')" style="'+(_isSerial?S_sel:S_btn)+';min-width:90px;text-align:center">Serial</button>'
-  +'<button onclick="setTabataMode('+si+',\'alternating\')" style="'+(_isAlt?S_sel:S_btn)+';min-width:90px;text-align:center">Alternating</button>'
+  +'<div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px">'
+  +'<button onclick="setTabataMode('+si+',\'single\')" style="'+(_isSingle?S_sel:S_btn)+';min-width:80px;text-align:center">Single</button>'
+  +'<button onclick="setTabataMode('+si+',\'multi\')" style="'+(_isMulti?S_sel:S_btn)+';min-width:80px;text-align:center">Multi</button>'
+  +'<button onclick="setTabataMode('+si+',\'alternating\')" style="'+(_isAlt?S_sel:S_btn)+';min-width:80px;text-align:center">Alternating</button>'
   +'</div>'
-  +'<div style="font-size:13px;font-weight:600;color:var(--txt2);letter-spacing:0.5px;text-transform:uppercase;margin-bottom:6px">'+t('tab_mov')+'</div>'
-  +'<div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px;direction:'+(CFG.lang==='ar'?'rtl':'ltr')+'">'+movBtns+'</div>'
+  +(_isSingle?'':('<div style="font-size:13px;font-weight:600;color:var(--txt2);letter-spacing:0.5px;text-transform:uppercase;margin-bottom:6px">'+t('tab_mov')+'</div>'
+  +'<div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px;direction:'+(CFG.lang==='ar'?'rtl':'ltr')+'">'+movBtns+'</div>'))
   +'<div style="font-size:13px;font-weight:600;color:var(--txt2);letter-spacing:0.5px;text-transform:uppercase;margin-bottom:6px">'+t('em_cardio')+'</div>'
   +'<div style="display:flex;gap:6px;margin-bottom:14px;direction:'+(CFG.lang==='ar'?'rtl':'ltr')+'"><button id="tabata-cardio-'+si+'" onclick="toggleTabataCardio('+si+')" style="'+(cv===true?S_sel:S_btn)+';min-width:60px;text-align:center">'+(cv===true?'ON':'OFF')+'</button></div>'
   +'<button onclick="regenTabata('+si+')" style="width:100%;background:var(--or);color:#000;border:none;border-radius:10px;padding:11px;font-size:14px;font-weight:700;cursor:pointer;min-height:42px">⟳ '+t('chip_regen')+'</button>'
