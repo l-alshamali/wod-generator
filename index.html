@@ -2010,7 +2010,7 @@ function mkLadder(time,lv,team,cfg){
   var _estTeam=(_estDiv>1)?1:team;
   var _ldrEst=function(r,ch,cd){return _calcLadderEst(r.map(function(v){return v/_estDiv;}),ch,lv,_estTeam,cd);};
   // Auto-extend scheme to fill time cap (95-105%) — مع فحص hardMax
-  if(!isAsc&&!cfg.customReps&&reps.length>1){var _budget=time*60;var _ldrRepMax=_exLims(chosen,lv,team,team===2).max||100; // team-split total for team=2var _ext=reps.slice();var _extStep=Math.abs(_ext[_ext.length-1]-_ext[_ext.length-2])||dispStep;var _extSign=_ext[_ext.length-1]>_ext[_ext.length-2]?1:-1;for(var _ei=0;_ei<50;_ei++){var _nextVal=_ext[_ext.length-1]+_extSign*_extStep;if(_nextVal<1||_nextVal>300||_nextVal>_ldrRepMax)break;var _testReps=_ext.concat([_nextVal]);var _testEst=_ldrEst(_testReps,chosen,_resolvedCardio);if(_testEst/_budget>1.05)break;_ext=_testReps;if(_testEst/_budget>=0.95)break;}reps=_ext;dispStep=reps.length>1?Math.abs(reps[1]-reps[0]):dispStep;}
+  if(!isAsc&&!cfg.customReps&&reps.length>1){var _budget=time*60;var _ldrRepMax=_exLims(chosen,lv,team,team===2).max||100;var _ext=reps.slice();var _extStep=Math.abs(_ext[_ext.length-1]-_ext[_ext.length-2])||dispStep;var _extSign=_ext[_ext.length-1]>_ext[_ext.length-2]?1:-1;for(var _ei=0;_ei<50;_ei++){var _nextVal=_ext[_ext.length-1]+_extSign*_extStep;if(_nextVal<1||_nextVal>300||_nextVal>_ldrRepMax)break;var _testReps=_ext.concat([_nextVal]);var _testEst=_ldrEst(_testReps,chosen,_resolvedCardio);if(_testEst/_budget>1.05)break;_ext=_testReps;if(_testEst/_budget>=0.95)break;}reps=_ext;dispStep=reps.length>1?Math.abs(reps[1]-reps[0]):dispStep;}
   // Station auto-extend: لو fill لسا < 95% بعد scheme extend، أضف محطات جديدة (كل المسارات)
   if(!isAsc&&!cfg.customReps&&reps.length){var _stBudget=time*60;var _stFill=_ldrEst(reps,chosen,_resolvedCardio)/_stBudget;if(_stFill<0.95){var _MAX_ST=6;while(_stFill<0.95&&chosen.length<_MAX_ST){var _stPool=_ladderPool.filter(function(e){return!chosen.some(function(c){return c.name===e.name;});});if(!_stPool.length)break;var _newEx=pk(_stPool);var _testChosen=chosen.concat([_newEx]);var _testEst2=_ldrEst(reps,_testChosen,_resolvedCardio);if(_testEst2/_stBudget>1.05){// قفز فوق 105% — جرّب trim الـ scheme من الآخر لتسوية مساحة
   var _trimReps=reps.slice();while(_trimReps.length>2){_trimReps=_trimReps.slice(0,-1);var _trimEst=_ldrEst(_trimReps,_testChosen,_resolvedCardio);if(_trimEst/_stBudget>=0.95&&_trimEst/_stBudget<=1.05){reps=_trimReps;chosen=_testChosen;_stFill=_trimEst/_stBudget;break;}if(_trimEst/_stBudget<0.95)break;}break;}chosen=_testChosen;_stFill=_testEst2/_stBudget;}}}
@@ -2740,14 +2740,43 @@ function _secFill(sec){
   if((sec.type==='Group A'||sec.type==='Group B')&&iv.rnd&&iv.rnd>0){var _gabPW=0;var _gabTT=({beginner:22,intermediate:16,advanced:10,elite:6}[lvl]||16);for(var _ci4=0;_ci4<Math.min(repsArr.length,exArr.length);_ci4++)_gabPW+=repsArr[_ci4]*getSecondsPerRep(exArr[_ci4],lvl,1,false);gateExArr.forEach(function(gx){_gabPW+=_cardioSecEst(gx,lvl,1,false);});_gabPW+=(totalItems-1)*_gabTT;if(_gabPW>0){var _gabWodSec=(iv.t||S.time)*60;var _gabRnds=Math.max(1,Math.floor(_gabWodSec/_gabPW));est=_gabPW*_gabRnds;budget=_gabWodSec;}}
   return est/budget;
 }
+// ── Timing Indicator: Gradient Progress Bar ──
+// Exact app palette dot colours: --ca (Short), --gr (On Track), --or (Long)
+// Gradient uses rgba hex equivalents at 0.55 opacity with overlap stops for smooth blending
+var _FC={sh:'var(--ca)',ok:'var(--gr)',lg:'var(--or)'};
+// rgba hex: --ca=#00bcd4  --gr=#00c853  --or=#ff6600
+function _fillBarData(fill){
+  var pct=Math.round(fill*100);
+  var color,label;
+  if(fill>=0.95&&fill<=1.05){color=_FC.ok;label='On Track';}
+  else if(fill>1.05){color=_FC.lg;label='Long';}
+  else{color=_FC.sh;label='Short';}
+  var barMax=Math.max(150,pct+10);
+  var g1=parseFloat((95/barMax*100).toFixed(1));
+  var g2=parseFloat((105/barMax*100).toFixed(1));
+  var mPct=(pct/barMax*100).toFixed(1);
+  // Smooth gradient: overlap zones with rgba opacity 0.55, blend 8% either side of boundaries
+  var t1=Math.max(0,g1-8).toFixed(1);
+  var t2=Math.min(100,g2+8).toFixed(1);
+  var grad='linear-gradient(to right,'
+    +'rgba(0,188,212,0.75) 0%,'
+    +'rgba(0,188,212,0.35) '+t1+'%,'
+    +'rgba(0,200,83,0.75) '+g1.toFixed(1)+'%,'
+    +'rgba(0,200,83,0.75) '+g2.toFixed(1)+'%,'
+    +'rgba(255,102,0,0.35) '+t2+'%,'
+    +'rgba(255,102,0,0.75) 100%'
+    +')';
+  return{pct:pct,color:color,label:label,grad:grad,mPct:mPct};
+}
 function _fillChip(fill){
   if(fill===null||fill===undefined||isNaN(fill))return'';
-  var pct=Math.round(fill*100);
-  var color,bg;
-  if(fill>=0.95&&fill<=1.05){color='#2e7d32';bg='rgba(46,125,50,0.18)';}
-  else if(fill>1.05){color='#c62828';bg='rgba(198,40,40,0.14)';}
-  else{color='#6a1b9a';bg='rgba(106,27,154,0.16)';}
-  return'<span style="background:'+bg+';color:'+color+';font-size:11px;font-weight:800;padding:3px 10px;border-radius:20px">'+pct+'%</span>';
+  var d=_fillBarData(fill);
+  return'<span style="display:inline-flex;flex-direction:column;min-width:130px;vertical-align:middle">'
+    +'<span style="display:block;position:relative;height:3px;border-radius:2px;background:'+d.grad+';margin-bottom:4px">'
+    +'<span style="position:absolute;top:-2.5px;left:'+d.mPct+'%;transform:translateX(-50%);width:8px;height:8px;background:'+d.color+';border-radius:50%;border:1.5px solid rgba(255,255,255,0.7);box-shadow:0 1px 4px rgba(0,0,0,0.22);display:inline-block"></span>'
+    +'</span>'
+    +'<span style="display:block;font-size:10px;font-weight:700;color:var(--txt2);text-align:right">'+d.pct+'% • '+d.label+'</span>'
+    +'</span>';
 }
 function _secChip(sec){return _fillChip(_secFill(sec));}
 function _gabChip(si){
@@ -2755,20 +2784,21 @@ function _gabChip(si){
   var secB=S.wod&&S.wod.sections[si+1];
   var fA=_secFill(secA);
   var fB=_secFill(secB);
-  function _labeled(f,lbl){
+  function _bar(f,lbl){
     if(f===null||isNaN(f))return'';
-    var pct=Math.round(f*100);
-    var color,bg;
-    if(f>=0.95&&f<=1.05){color='#2e7d32';bg='rgba(46,125,50,0.18)';}
-    else if(f>1.05){color='#c62828';bg='rgba(198,40,40,0.14)';}
-    else{color='#6a1b9a';bg='rgba(106,27,154,0.16)';}
-    return'<span style="background:'+bg+';color:'+color+';font-size:11px;font-weight:800;padding:3px 10px;border-radius:20px">'+lbl+' '+pct+'%</span>';
+    var d=_fillBarData(f);
+    return'<span style="display:inline-flex;align-items:center;gap:5px">'
+      +'<span style="font-size:9px;font-weight:700;color:var(--txt3);width:8px;flex-shrink:0;line-height:1">'+lbl+'</span>'
+      +'<span style="flex:1;display:inline-block;position:relative;height:3px;border-radius:2px;background:'+d.grad+';min-width:60px">'
+      +'<span style="position:absolute;top:-2.5px;left:'+d.mPct+'%;transform:translateX(-50%);width:8px;height:8px;background:'+d.color+';border-radius:50%;border:1.5px solid rgba(255,255,255,0.7);box-shadow:0 1px 3px rgba(0,0,0,0.2);display:inline-block"></span>'
+      +'</span>'
+      +'<span style="font-size:9px;font-weight:700;color:var(--txt2);min-width:52px;text-align:right;flex-shrink:0">'+d.pct+'% • '+d.label+'</span>'
+      +'</span>';
   }
-  var chipA=_labeled(fA,'A');
-  var chipB=_labeled(fB,'B');
-  if(!chipA&&!chipB)return'';
-  var sep='<span style="font-size:11px;color:var(--bdr);margin:0 1px">|</span>';
-  return chipA+sep+chipB;
+  var barA=_bar(fA,'A');
+  var barB=_bar(fB,'B');
+  if(!barA&&!barB)return'';
+  return'<span style="display:inline-flex;flex-direction:column;min-width:180px">'+barA+barB+'</span>';
 }
 
 function renderSec(sec,si){
@@ -2801,7 +2831,7 @@ function renderSec(sec,si){
       +'</div>';
   }
   var _chip=(sec.type==='Group A'||sec.type==='Group B')?'':_secChip(sec);
-  var stRight=_chip+(hasDesc?'<button class="wdi-btn" onclick="showWodDesc(\''+sec.type+'\')">ⓘ</button>':'');
+  var stRight=_chip+(hasDesc?'<button class="wdi-btn" onclick="showWodDesc(\''+sec.type+'\')" >ⓘ</button>':'');
   return'<div class="ws ani" id="sec-'+si+'"><div class="st" style="display:flex;align-items:center;justify-content:space-between"><span>'+sec.type+'</span><span style="display:flex;align-items:center;gap:6px">'+stRight+'</span></div><div class="stt">'+sec.title+'</div>'+roundsBadge
   +renderSecInfo(sec,si,(sec.type==='AMRAP'||sec.type==='YGIG / Partner WOD')?undefined:infoTxt)
   +(teamTxt?'<div class="si team">👥 '+teamTxt+'</div>':'')
@@ -5465,8 +5495,7 @@ function tryCode(){
       +'<div style="font-size:48px;margin-bottom:16px">✅</div>'
       +'<div style="font-size:18px;font-weight:700;color:var(--gr);margin-bottom:8px">'+t('granted')+'</div>'
       +'<div style="font-size:13px;color:var(--txt2);margin-bottom:20px;line-height:1.6">'+t('save_pw')+'</div>'
-      +'<div style="background:var(--bg2);border:1px solid var(--gr);border-radius:12px;padding:14px 24px;margin-bottom:16px">'
-      +'<div style="font-size:11px;color:var(--txt3);margin-bottom:4px">'+t('your_pw')+'</div>'
+      +'<div style="background:var(--bg2);border:1px solid var(--gr);border-radius:12px;padding:14px 24px;margin-bottom:16px'>'<div style="font-size:11px;color:var(--txt3);margin-bottom:4px">'+t('your_pw')+'</div>'
       +'<div style="font-size:22px;font-weight:900;color:var(--or);letter-spacing:4px">'+val+'</div>'
       +'</div>';
   });
