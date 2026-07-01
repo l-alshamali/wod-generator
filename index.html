@@ -1980,7 +1980,7 @@ function mkLadder(time,lv,team,cfg){
             if(_sc<_bestScore){_bestScore=_sc;_bestResult={d:c.d,s:c.s,ex:_eg,cardio:false};}
           }
           // with cardio (AUTO or forced ON)
-          if(cfg.withCardio!==false){
+          if(cfg.withCardio===true){
             var _eC=_calcLadderEst(c.s,_eg,lv,1,true);
             var _fC=_eC/_timeBudget;
             var _scC=_fC>1.10?(_fC-1)*4:_fC<0.90?(0.90-_fC):0;
@@ -1990,7 +1990,6 @@ function mkLadder(time,lv,team,cfg){
       });
       if(_bestResult){
         dir=_bestResult.d;reps=_bestResult.s.slice();chosen=_bestResult.ex;
-        if(cfg.withCardio===undefined)_resolvedCardio=Math.random()>0.5;
       }
     }
     if(!reps.length){dir=dir||'descending';var _p=_pickScheme(dir);if(_p)reps=_p.slice();}
@@ -2012,7 +2011,7 @@ function mkLadder(time,lv,team,cfg){
   // Auto-extend scheme to fill time cap (95-105%) — مع فحص hardMax
   if(!isAsc&&!cfg.customReps&&reps.length>1){var _budget=time*60;var _ldrRepMax=_exLims(chosen,lv,team,team===2).max||100;var _ext=reps.slice();var _extStep=Math.abs(_ext[_ext.length-1]-_ext[_ext.length-2])||dispStep;var _extSign=_ext[_ext.length-1]>_ext[_ext.length-2]?1:-1;for(var _ei=0;_ei<50;_ei++){var _nextVal=_ext[_ext.length-1]+_extSign*_extStep;if(_nextVal<1||_nextVal>300||_nextVal>_ldrRepMax)break;var _testReps=_ext.concat([_nextVal]);var _testEst=_ldrEst(_testReps,chosen,_resolvedCardio);if(_testEst/_budget>1.10)break;_ext=_testReps;if(_testEst/_budget>=0.90)break;}reps=_ext;dispStep=reps.length>1?Math.abs(reps[1]-reps[0]):dispStep;}
   // Station auto-extend: لو fill لسا < 95% بعد scheme extend، أضف محطات جديدة (كل المسارات)
-  if(!isAsc&&!cfg.customReps&&reps.length){var _stBudget=time*60;var _stFill=_ldrEst(reps,chosen,_resolvedCardio)/_stBudget;if(_stFill<0.90){var _MAX_ST=6;while(_stFill<0.90&&chosen.length<_MAX_ST){var _stPool=_ladderPool.filter(function(e){return!chosen.some(function(c){return c.name===e.name;});});if(!_stPool.length)break;var _newEx=pk(_stPool);var _testChosen=chosen.concat([_newEx]);var _testEst2=_ldrEst(reps,_testChosen,_resolvedCardio);if(_testEst2/_stBudget>1.10){// قفز فوق 105% — جرّب trim الـ scheme من الآخر لتسوية مساحة
+  if(!isAsc&&!cfg.customReps&&!cfg.exCnt&&reps.length){var _stBudget=time*60;var _stFill=_ldrEst(reps,chosen,_resolvedCardio)/_stBudget;if(_stFill<0.90){var _MAX_ST=6;while(_stFill<0.90&&chosen.length<_MAX_ST){var _stPool=_ladderPool.filter(function(e){return!chosen.some(function(c){return c.name===e.name;});});if(!_stPool.length)break;var _newEx=pk(_stPool);var _testChosen=chosen.concat([_newEx]);var _testEst2=_ldrEst(reps,_testChosen,_resolvedCardio);if(_testEst2/_stBudget>1.10){// قفز فوق 105% — جرّب trim الـ scheme من الآخر لتسوية مساحة
   var _trimReps=reps.slice();while(_trimReps.length>2){_trimReps=_trimReps.slice(0,-1);var _trimEst=_ldrEst(_trimReps,_testChosen,_resolvedCardio);if(_trimEst/_stBudget>=0.90&&_trimEst/_stBudget<=1.10){reps=_trimReps;chosen=_testChosen;_stFill=_trimEst/_stBudget;break;}if(_trimEst/_stBudget<0.90)break;}break;}chosen=_testChosen;_stFill=_testEst2/_stBudget;}}}
   var sepLabel=isAsc?'♾️ AMRAP — '+time+' MIN CAP':'── '+reps.length+' ROUNDS ──';
   var infoK=isAsc?'i_asc_ladder':'i_scheme';
@@ -2759,12 +2758,12 @@ function _fillBarData(fill){
   var t1=Math.max(0,g1-3).toFixed(1);
   var t2=Math.min(100,g2+3).toFixed(1);
   var grad='linear-gradient(to right,'
-    +'rgba(212,160,23,0.75) 0%,'
-    +'rgba(212,160,23,0.35) '+t1+'%,'
-    +'rgba(0,200,83,0.75) '+g1.toFixed(1)+'%,'
-    +'rgba(0,200,83,0.75) '+g2.toFixed(1)+'%,'
-    +'rgba(217,64,64,0.35) '+t2+'%,'
-    +'rgba(217,64,64,0.75) 100%'
+    +'rgba(212,160,23,1) 0%,'
+    +'rgba(212,160,23,0.55) '+t1+'%,'
+    +'rgba(0,200,83,1) '+g1.toFixed(1)+'%,'
+    +'rgba(0,200,83,1) '+g2.toFixed(1)+'%,'
+    +'rgba(217,64,64,0.55) '+t2+'%,'
+    +'rgba(217,64,64,1) 100%'
     +')';
   return{pct:pct,color:color,label:label,grad:grad,mPct:mPct};
 }
