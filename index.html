@@ -2755,8 +2755,8 @@ function _fillBarData(fill){
   var g2=parseFloat((110/barMax*100).toFixed(1));
   var mPct=(pct/barMax*100).toFixed(1);
   // Smooth gradient: overlap zones with rgba opacity 0.55, blend 8% either side of boundaries
-  var t1=Math.max(0,g1-3).toFixed(1);
-  var t2=Math.min(100,g2+3).toFixed(1);
+  var t1=Math.max(0,g1-2).toFixed(1);
+  var t2=Math.min(100,g2+2).toFixed(1);
   var grad='linear-gradient(to right,'
     +'rgba(212,160,23,1) 0%,'
     +'rgba(212,160,23,0.55) '+t1+'%,'
