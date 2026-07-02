@@ -890,7 +890,7 @@ function _emomDetail(ex,r,lv){
 function _repLimits(cat,lv,team,split){
   var r=(_REP_TABLE[cat]||_REP_TABLE.barbell)[lv]||(_REP_TABLE[cat]||_REP_TABLE.barbell).intermediate;
   var mn=r[0],mx=r[1];
-  if(team===2&&split){mn=evenRep(Math.round(mn*1.5));mx=evenRep(Math.round(mx*1.5));}
+  if(team===2&&split){mn=evenRep(Math.round(mn*2));mx=evenRep(Math.round(mx*2));}
   return{min:mn,max:mx};
 }
 function _repSnap(v,mn,mx){
@@ -910,7 +910,7 @@ function _diffSortReps(repsArr,chosen,lv,team,split){
   var newReps=pairs.map(function(p){return Math.max(2,_repSnap(Math.round(avgRep*avgSpr/p.spr)));});
   return{chosen:newChosen,repsArr:newReps};
 }
-function _pickFlatSeries(team,hardMin,hardMax){var opts=team===2?[[10,100],[20,200]]:[[5,25],[10,100],[20,200]];if(hardMin!=null&&hardMax!=null){opts=opts.filter(function(s){return Math.floor(Math.min(hardMax,s[1])/s[0])*s[0]>Math.ceil(hardMin/s[0])*s[0];});if(!opts.length)opts=[[2,20]];}var s=pk(opts);return{step:s[0],cap:s[1]};}
+function _pickFlatSeries(team,hardMin,hardMax){var opts=team===2?[[2,20],[10,100],[20,200]]:[[5,25],[10,100],[20,200]];if(hardMin!=null&&hardMax!=null){opts=opts.filter(function(s){return Math.floor(Math.min(hardMax,s[1])/s[0])*s[0]>Math.ceil(hardMin/s[0])*s[0];});if(!opts.length)opts=[[2,20]];}var s=pk(opts);return{step:s[0],cap:s[1]};}
 function _exLims(exArr,lv,team,split){
   if(!exArr||!exArr.length){var fb=_repLimits('barbell',lv,team,split);return{min:fb.min,max:fb.max};}
   var acc=exArr.reduce(function(a,e){var l=_repLimits(e.cat,lv,team,split);return{min:Math.max(a.min,l.min),max:Math.min(a.max,l.max)};},{min:0,max:Infinity});
@@ -971,6 +971,8 @@ function _timeCfg(time){
 var _CARRY_VALS={beginner:'30m',intermediate:'60m',advanced:'90m',elite:'120m'};
 var _amrapTgtMap=[{max:7,range:[90,90]},{max:14,range:[120,150]},{max:60,range:[120,180]}];
 function _amrapTgt(time){var e=_amrapTgtMap.find(function(e){return time<=e.max;});var r=e?e.range:[120,180];return r[0]===r[1]?r[0]:ri(r[0],r[1]);}
+var _amrapTgtMapTeam=[{max:7,range:[120,120]},{max:14,range:[120,180]},{max:60,range:[120,210]}];
+function _amrapTgtTeam(time){var e=_amrapTgtMapTeam.find(function(e){return time<=e.max;});var r=e?e.range:[120,210];return r[0]===r[1]?r[0]:ri(r[0],r[1]);}
 var _TIME_VALS={beginner:'30s',intermediate:'45s',advanced:'60s',elite:'90s'};
 function _teamDistVal(val,team){if(!val||team!==2)return val;var n=parseInt(val,10);var u=val.replace(/[0-9]/g,'');return(Math.round(n*1.5/5)*5)+u;}
 function getDetail(ex,reps,suffix,lv,team){
@@ -1010,12 +1012,21 @@ function mkAmrap(time,lv,team,cfg){
   // AMRAP pool: استبعاد تمارين Elite SPR > 15s/rep (لا يقدر الـ scaler ينزل تحت hardMin فتطلع > 100%)
   var _amrPool=getPool(lv,null,team).filter(function(e){return getSecondsPerRep(e,'elite',1,false)<=15;});
   if(!_amrPool.length)_amrPool=getPool(lv,null,team);
+  // YGIG: فلترة إضافية — أي تمرين بأدنى تكرار ممكن يتجاوز الـ hard cap يُستبعد قبل الاختيار
+  if(cfg.maxTargetSec){
+    var _ygigAmrTm2=cfg.noTeamSplit?1:team;
+    var _ygigAmrTr2=_ygigAmrTm2===2?18:({beginner:22,intermediate:16,advanced:10,elite:6}[lv]||16);
+    var _ygigBudget=Math.floor((cfg.maxTargetSec-Math.max(0,exCnt-1)*_ygigAmrTr2)/Math.max(1,exCnt));
+    var _ygigFilt=_amrPool.filter(function(e){var lm=_repLimits(e.cat,lv,1,false);return lm.min*getSecondsPerRep(e,lv,1,false)<=_ygigBudget;});
+    if(_ygigFilt.length>=exCnt)_amrPool=_ygigFilt;
+  }
   // excludedNames (A/B AMRAP: B يستبعد تمارين A)
   if(cfg.excludedNames&&cfg.excludedNames.length){
     var _amrExcl=cfg.excludedNames;
     var _amrPoolFilt=_amrPool.filter(function(e){return _amrExcl.indexOf(e.name)<0;});
     if(_amrPoolFilt.length)_amrPool=_amrPoolFilt;
   }
+  if(team===2&&!cfg.noTeamSplit){var _spFilt=_amrPool.filter(function(e){return e.cat!=='time'&&e.cat!=='carry'&&!e.alternating&&!e.alt;});if(_spFilt.length>=exCnt)_amrPool=_spFilt;}
   var chosen=pkN(_amrPool,strCount);
   // ── Cardio setup before auto-scale (included in estimate) ──
   var _amrCL=_cardioLimits(team,cfg.noTeamSplit?false:true,lv);
@@ -1032,7 +1043,7 @@ function mkAmrap(time,lv,team,cfg){
   // ── Auto-Scale: 3-step priority → reps → exCnt → cardio ──
   var _amrapNItems=chosen.length+(addCardio&&_amrapEx?1:0);
   // ── Target round time (بالثواني) — Solo / Team منفصلين ──
-  var _amrapTarget=(cfg.target||_amrapTgt(time));
+  var _amrapTarget=cfg.target||(team===2&&!cfg.noTeamSplit?_amrapTgtTeam(time):_amrapTgt(time));
   // ── Dynamic limits from unified rep table ──
   var _amrLims=_exLims(chosen,lv,team,cfg.noTeamSplit?false:true);
   var _amrHardMin=_amrLims.min;
@@ -1054,11 +1065,11 @@ function mkAmrap(time,lv,team,cfg){
     var _amrRpRnd=Math.random();
     // 20% flat, 40% asc, 40% desc
     _amrIsFlat=cfg.forceFlat!==undefined?cfg.forceFlat:(chosen.length<=2||_amrRpRnd<0.20);
-    var _amrRpType=_amrIsFlat?'flat':(_amrRpRnd>=0.60?'asc':'desc');
+    var _amrRpType=_amrIsFlat?'flat':((_amrTm===2&&!cfg.noTeamSplit)?'desc':(_amrRpRnd>=0.60?'asc':'desc'));
     if(true){
       if(_amrIsFlat){
         var _forcedLS=cfg.forceLS;var _afv;
-        if(!_forcedLS&&_amrHardMin<=20){
+        if(!_forcedLS&&_amrHardMin<=20&&_amrTm!==2){
           var _efLo=2,_efHi=Math.floor(Math.min(_amrHardMax,20)/2)*2;
           if(_efLo>_efHi)_efLo=_efHi;
           var _efVals=[];for(var _efV=_efLo;_efV<=_efHi;_efV+=2)_efVals.push(_efV);
@@ -1097,10 +1108,13 @@ function mkAmrap(time,lv,team,cfg){
   // ── لووب ثنائي الاتجاه: هدف [90%,100%] — ↑ ارفع | ↓ نزّل ──
   if(!cfg.baseReps&&!cfg.forceRepsArr&&chosen.length){
     var _amrRndMin=Math.round(_amrapTarget/60);
-    var _amrTargetSec=cfg.target?_amrapTarget:(_amrRndMin*60);
+    var _amrTargetSec=_amrapTarget;
     var _calcAmrPW=function(){
-      var pw=_rArr.reduce(function(s,r,i){return s+(i<chosen.length?r*getSecondsPerRep(chosen[i],lv,team):0);},0);
-      pw+=_cardioSecEst(_amrapEx,lv,team,true);
+      var _cpSpl=!cfg.noTeamSplit;
+      var _cpNI=chosen.length+(addCardio&&_amrapEx?1:0);
+      var pw=_rArr.reduce(function(s,r,i){return s+(i<chosen.length?r*getSecondsPerRep(chosen[i],lv,_amrTm,_cpSpl):0);},0);
+      pw+=_cardioSecEst(_amrapEx,lv,_amrTm,_cpSpl);
+      pw+=Math.max(0,_cpNI-1)*((typeof S!=='undefined'&&S.transTime)||15);
       return pw;
     };
     var _amrSnapR=function(r){return _repSnap(Math.round(r),_amrHardMin,_patternMax);};
@@ -1177,7 +1191,12 @@ function mkAmrap(time,lv,team,cfg){
     for(var _hcLoop=0;_hcLoop<20&&_hcFullPW()>_hcEffTarget;_hcLoop++){
       _rArr=_rArr.map(function(r){return Math.max(_hcAbsMin,r-(_amrLS||5));});
     }
-    if(_hcFullPW()>_amrHardCap&&addCardio&&_amrapEx&&!cfg.cardioAmt){
+    if(_hcFullPW()>_amrHardCap&&addCardio&&_amrapEx&&!cfg.cardioAmt&&cfg.withCardio===true){
+      // المستخدم اختار كارديو — قلّل مقداره لأدنى حد بدل ما تشيله
+      var _hcStrSec=_rArr.reduce(function(s,r,i){return s+(i<chosen.length?r*getSecondsPerRep(chosen[i],lv,_amrTm,false):0);},0);
+      var _hcCrdBudget=_amrHardCap-(_hcNItems-1)*_amrTrans-_hcStrSec;
+      if(_hcCrdBudget>0)_amrapEx=_cardioCapSec(_amrapEx,_hcCrdBudget,_amrCL,lv,_amrTm,false);
+    } else if(_hcFullPW()>_amrHardCap&&addCardio&&_amrapEx&&!cfg.cardioAmt){
       addCardio=false;_amrapEx=null;_hcNItems=chosen.length;_hcCardioSec=0;
       var _hcExBudget=_hcEffTarget-(_hcNItems-1)*_amrTrans;
       var _hcTotSPR=chosen.reduce(function(s,e){return s+getSecondsPerRep(e,lv,_amrTm,false);},0);
@@ -1212,12 +1231,14 @@ function mkAmrap(time,lv,team,cfg){
     // الهدف الثاني: (جولات-1) — برفع reps مع تقريب لأعلى لأقرب مضاعف _amrLS
     var _erSetLo=function(){
       var rn=_calcAmrRnds();if(rn<3)return;var lo=Math.ceil(time*60/rn)+1;var s=_erSPR();if(s<=0)return;
+      var _erSlPrev=_rArr.slice();
       if(_amrIsFlat){var b=lo-_erCrd()-_erTr();var r=Math.ceil(Math.ceil(b/s)/_amrLS)*_amrLS;_rArr=_rArr.map(function(){return Math.max(_erSnapMin,Math.min(_erMaxR,r));});}
       else{var need=lo-_calcFullAmrPW();if(need<=0)return;var _erD=Math.ceil(need/s/_amrLS)*_amrLS;_rArr=_rArr.map(function(r){return Math.min(_erMaxR,r+_erD);});}
+      if(_amrHardCap&&_calcFullAmrPW()>_amrHardCap)_rArr=_erSlPrev;
     };
     _erSetHi();                                                            // محاولة 1: قلل reps → (rnds+1)
     if(_calcAmrRnds()%2!==0)_erSetLo();                                   // محاولة 2: ارفع reps → (rnds-1)
-    if(_calcAmrRnds()%2!==0&&addCardio&&_amrapEx&&!cfg.cardioAmt){        // محاولة 3: شيل الكارديو وأعد
+    if(_calcAmrRnds()%2!==0&&addCardio&&_amrapEx&&!cfg.cardioAmt&&cfg.withCardio!==true){  // محاولة 3: شيل الكارديو (لو مو forced)
       addCardio=false;_amrapEx=null;
       _erSetHi();if(_calcAmrRnds()%2!==0)_erSetLo();
     }
@@ -1229,11 +1250,20 @@ function mkAmrap(time,lv,team,cfg){
       chosen=chosen.slice(0,1);_rArr=[_rArr[0]];
       _erSetHi();if(_calcAmrRnds()%2!==0)_erSetLo();
     }
-    if(_calcAmrRnds()%2!==0){                                             // محاولة 6: فجوة رياضية → ارفع بـ _amrLS حتى تصبح زوجي
+    if(_calcAmrRnds()%2!==0){                                             // محاولة 6: فجوة رياضية → ارفع بـ _amrLS حتى تصبح زوجي (مع فحص hard cap)
       for(var _erNudge=0;_erNudge<20&&_calcAmrRnds()%2!==0;_erNudge++){
+        if(_amrHardCap){var _erNxNI=chosen.length+(addCardio&&_amrapEx?1:0);var _erNxPW=_rArr.reduce(function(s,r,i){return s+(i<chosen.length?Math.min(_erMaxR,r+_amrLS)*getSecondsPerRep(chosen[i],lv,_amrTm,false):0);},0)+(_amrapEx&&addCardio?_cardioSecEst(_amrapEx,lv,_amrTm,false):0)+Math.max(0,_erNxNI-1)*_amrTrans;if(_erNxPW>_amrHardCap)break;}
         _rArr=_rArr.map(function(r){return Math.min(_erMaxR,r+_amrLS);});
       }
     }
+  }
+  // حارس نهائي: فرض الـ hard cap بعد كل تصحيحات الجولات الزوجية
+  if(_amrEnsureEven&&typeof _amrHardCap!=='undefined'&&_amrHardCap&&typeof _calcFullAmrPW!=='undefined'&&_calcFullAmrPW()>_amrHardCap&&chosen.length){
+    var _erFNI=chosen.length+(addCardio&&_amrapEx?1:0);
+    var _erFTr=Math.max(0,_erFNI-1)*_amrTrans;
+    var _erFCrd=addCardio&&_amrapEx?_cardioSecEst(_amrapEx,lv,_amrTm,false):0;
+    var _erFSPR=chosen.reduce(function(s,e){return s+getSecondsPerRep(e,lv,_amrTm,false);},0);
+    if(_erFSPR>0){var _erFBudget=_amrHardCap-_erFTr-_erFCrd;var _erFMaxR=_erFBudget>0?Math.max(2,Math.floor(_erFBudget/_erFSPR/(_amrLS||2))*(_amrLS||2)):2;_rArr=_rArr.map(function(r){return Math.min(r,_erFMaxR);});}
   }
   var items=[];
   chosen.forEach(function(ex,i){
@@ -2185,8 +2215,7 @@ function mkYGIG(time,lv,team,cfg){
   var _ygigAmrapTgt=Math.round(time*60/_ygigInitEven);
   var _ygigWithCardio=cfg.withCardio!==undefined?cfg.withCardio:Math.random()<0.50;
   // نفس جدول exCnt حسب الوقت مثل AMRAP (بدل الـ 50/50 الثابت)
-  var _ygigExR=time<=4?[1,1]:time<=14?[2,2]:time<=35?[2,3]:[2,4];
-  var _ygigExCnt=cfg.exCnt||ri(_ygigExR[0],_ygigExR[1]);
+  var _ygigExCnt=cfg.exCnt||ri(2,3);
   // استدعاء واحد لـ mkAmrap — نفس الـ auto-scaler 30-iteration مع قيدين إضافيين فقط:
   // maxTargetSec = hard cap على وقت الجولة | ensureEvenRounds = جولات زوجية داخل نفس اللووب
   var _amrSec=mkAmrap(time,lv,team,{
@@ -2755,14 +2784,14 @@ function _fillBarData(fill){
   var g2=parseFloat((110/barMax*100).toFixed(1));
   var mPct=(pct/barMax*100).toFixed(1);
   // Smooth gradient: overlap zones with rgba opacity 0.55, blend 8% either side of boundaries
-  var t1=Math.max(0,g1-2).toFixed(1);
-  var t2=Math.min(100,g2+2).toFixed(1);
+  var t1=Math.max(0,g1).toFixed(1);
+  var t2=Math.min(100,g2).toFixed(1);
   var grad='linear-gradient(to right,'
     +'rgba(212,160,23,1) 0%,'
-    +'rgba(212,160,23,0.55) '+t1+'%,'
+    +'rgba(212,160,23,1) '+t1+'%,'
     +'rgba(0,200,83,1) '+g1.toFixed(1)+'%,'
     +'rgba(0,200,83,1) '+g2.toFixed(1)+'%,'
-    +'rgba(217,64,64,0.55) '+t2+'%,'
+    +'rgba(217,64,64,1) '+t2+'%,'
     +'rgba(217,64,64,1) 100%'
     +')';
   return{pct:pct,color:color,label:label,grad:grad,mPct:mPct};
