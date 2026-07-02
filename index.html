@@ -186,10 +186,10 @@ var T={
     step1:'Step 1 / 5',step1q:"What's your CrossFit level?",step1s:'Sets workout intensity',
     lv_b:'Beginner',lv_b_d:'Under 6 months',lv_i:'Intermediate',lv_i_d:'6mo – 2 years',
     lv_a:'Advanced',lv_a_d:'2 – 5 years',lv_e:'Elite',lv_e_d:'5+ / competitive',
-    step2:'Step 2 / 5',step2q:'How long?',step2s:'WOD duration (not including warm-up)',
+    step2:'Step 2 / 5',step2q:'Time Cap?',step2s:'WOD duration (not including warm-up)',
     minutes:'minutes',next:'Next →',back_lv:'← Back to Level',back_ti:'← Back to Time',back_te:'← Back to Team',back_ty:'← Back to Types',
-    step3:'Step 3 / 5',step3q:'Solo or team?',step3s:'Affects volume and rep sharing',
-    solo:'Individual',team2:'Team of 2',
+    step3:'Step 3 / 5',step3q:'Training Format?',step3s:'Affects volume and rep sharing',
+    solo:'Solo',team2:'Partner',
     step4:'Step 4 / 5',step4q:'WOD Type?',step4s:'Pick one or more — one drawn at random',
     type_hint:'Select multiple types for variety',generate:'Generate WOD',team_only:'Team only',
     wod_day:'WOD of the Day',new_wod:'↺ New WOD',copy:'📋 Copy',share:'📤 Share',generating:'Generating your WOD...',
@@ -214,26 +214,26 @@ var T={
     dyn_start:'Start',dyn_step_up:'Step ↑',dyn_step_dn:'Step ↓',dyn_peak:'Peak',scheme_sel:'— Select Scheme —',lad_type:'Ladder Type',
     tr_dir:'Pattern',
     ga_repsa:'Fixed Reps',ga_repsb:'Fixed Reps',
-    i_amrap:'As Many Rounds As Possible · {t} min · <span style="color:var(--accent)">~{rnds} rounds</span> · ~{rndTime}/round',i_amrap_m:'As Many Rounds As Possible · {t} min · <span style="color:var(--accent)">~{rnds} rounds</span> · ~{rndTime}/round',
-    i_rft:'Complete {r} rounds AFAP. Time cap: {t} min.',
-    i_emom:'Every Minute On the Minute · {n} movements rotating · {s} sets · ~45 s work / min',
-    i_chipper:'{n} movements done ONCE through in order. Time cap: {t} min.',i_chipper_st:'{s} Stations · {tot} Total Movements · Time cap: {t} min',
-    i_tabata_classic:'One movement. 20s work / 10s rest × 8 intervals = 4 min. Score = lowest reps in any single interval.',
-    i_tabata:'20s work / 10s rest × 8 intervals per movement = 4 min each. Complete all 8 intervals of one movement before moving to the next. Your Tabata score = lowest reps across any single interval. Total: {tot} min.',
-    i_tabata_alt:'Rotate through all {n} movements each interval. 20s work / 10s rest × 8 rounds = {tot} min. Score = lowest reps in any single interval.',
-    i_deathby:'Min 1: {s} reps. Add {inc} reps each minute until failure. Cap: {t} min.',
+    i_amrap:'Complete as many rounds as possible | Time cap: {t} min',i_amrap_m:'Complete as many rounds as possible | Time cap: {t} min',
+    i_rft:'Complete {r} rounds as fast as possible | Time cap: {t} min',
+    i_emom:'Every minute on the minute | Time cap: {t} min | {n} movements rotating · {s} sets · <span style="font-weight:800">~45s work/min</span>',
+    i_chipper:'Complete all reps of each movement before moving on | Time cap: {t} min',i_chipper_st:'Complete all reps of each movement before moving on | Time cap: {t} min',
+    i_tabata_classic:'One movement, rotating through intervals | 20s work / 10s rest × 8 intervals | Total time: 4 min',
+    i_tabata:'Complete all 8 intervals per movement before moving to next | 20s work / 10s rest × 8 intervals each | Total time: {tot} min',
+    i_tabata_alt:'Rotate through all movements each interval | 20s work / 10s rest × 8 rounds | Total time: {tot} min',
+    i_deathby:'Add {inc} reps each minute until failure | Time cap: {t} min | Starting at {s} reps in Min 1',
     i_buyin:'Complete buy-in, then {r} rounds, then cash-out. Cap: {t} min.',
-    i_ygig:'AMRAP {t} min — partners alternate full rounds. Switch after each complete round. Scale weight per partner if needed. Score = total rounds + reps.',
-    i_ygig_ft:'Complete {r} rounds each (alternating) AFAP. Time cap: {cap} min.',
+    i_ygig:'Alternate full rounds with your partner | Time cap: {t} min',
+    i_ygig_ft:'Complete {r} rounds as fast as possible | Time cap: {cap} min',
     i_ygig_split:'YGIG Split — partners share reps on each exercise, alternating in short bursts. Cap: {t} min. Scale weight per partner if needed.',est_time_label:'Estimated time to complete',
 
-    i_groupA:'Both groups work simultaneously for {t} min, then switch stations',
+    i_groupA:'Both groups work simultaneously, then switch stations | Time cap: {cap} min',
     i_groupA_amrap:'A — AMRAP {t} Min · <span style="color:var(--accent)">~{rnds} rounds</span> · ~{rndTime}/round',
     i_groupB_amrap:'B — AMRAP {t} Min · <span style="color:var(--accent)">~{rnds} rounds</span> · ~{rndTime}/round',
     i_groupB:'Both groups work at the same time, then switch after {t} min. Scale weight per athlete if needed.',
-    i_asc_ladder:'Ascending ladder — add {step} reps each round. Keep going until the {t}-min time cap.',
-    i_scheme_cardio:'Scheme: {scheme}. Cardio between rounds. Cap: {t} min.',
-    i_scheme:'Scheme: {scheme}. Cap: {t} min.',max_effort:'Max effort',
+    i_asc_ladder:'Ladder scheme, changing reps each round | Time cap: {t} min',
+    i_scheme_cardio:'Ladder scheme, changing reps each round | Time cap: {t} min',
+    i_scheme:'Ladder scheme, changing reps each round | Time cap: {t} min',max_effort:'Max effort',
     sc_time:'Score = finish time',sc_rounds:'Score = total rounds + partial reps',sc_rounds_ab:'Score = rounds + reps',
     sc_rounds_comp:'Score = rounds completed',sc_load:'Score = heaviest load / sets completed',
     sc_sets:'Score = all sets completed',sc_tabata:'Score = lowest reps each round (Tabata score)',sc_tabata_alt:'Score = lowest reps in any single interval (across all movements)',
@@ -242,10 +242,10 @@ var T={
     tm_split:'✂️ Partition reps freely (Move to next exercise only when current is done)',tm_one:'✂️ Partition reps freely (One works, one rests)',
     tm_partition:'✂️ Partition reps freely to finish all rounds AFAP',tm_own:'🔁 Alternate minutes (Min 1: Athlete A / Min 2: Athlete B)',
     tm_alternate:'⏱️ Smart transition inside the time window or work together',tm_3min:'⏱️ Smart transition inside the time window or work together',
-    tm_simultaneous:'💥 Work simultaneously (Both work at the same time and combine reps)',tm_both:'✂️ Partition ascending reps inside the minute window',
+    tm_simultaneous:'💥 Work simultaneously (Both work at the same time)',tm_both:'✂️ Partition ascending reps inside the minute window',
     tm_full:'✂️ Partition reps freely (Follows AMRAP or For Time protocol)',tm_free:'✂️ Partition reps freely (Follows AMRAP or For Time protocol)',
-    tm_buyin:'🥪 Buy-In / Cash-Out: ✂️ Partition reps freely | Middle Rounds: ✂️ Partition round reps freely',
-    tm_ladder:'✂️ Partition ascending reps freely each round',
+    tm_buyin:'Buy-In / Cash-Out: ✂️ Partition reps freely | WOD: ✂️ Partition reps freely to finish all rounds AFAP',
+    tm_ladder:'✂️ Partition reps freely each round',
     tm_ygig_amrap:'🔁 Alternate FULL rounds (Athlete A finishes a full round, then switch)',
     tm_ygig_ft:'🔁 Alternate FULL rounds until each partner completes their target rounds',
     tm_halfA:'🔄 Simultaneous station swap: Partner 1 starts on Station A & Partner 2 starts on Station B, swap at half-time',tm_ygig:'Team of {n}: rotate in order'},
@@ -1558,7 +1558,7 @@ function mkEmom(time,lv,team,cfg){
     var _rLtr=String.fromCharCode(65+chosen.length+(addCardio?1:0));
     items.push({kind:'str',ex:{name:'🛑 REST',cat:'rest',unit:'reps'},emomMin:'Min '+_rLtr,detail:'Complete Rest — Breathe & Recover',noEdit:true,noPencil:true,isRest:true});
   }
-  return[{type:'EMOM',title:'EMOM '+time+' Min',infoKey:'i_emom',infoVars:{n:numMov,s:sets},scoreKey:'sc_rounds_comp',teamKey:team>1?'tm_own':null,items:items,emomCfg:cfg}];
+  return[{type:'EMOM',title:'EMOM '+time+' Min',infoKey:'i_emom',infoVars:{n:numMov,s:sets,t:time},scoreKey:'sc_rounds_comp',teamKey:team>1?'tm_own':null,items:items,emomCfg:cfg}];
 }
 
 var CHIPPER_SCHEMES={
@@ -1847,10 +1847,7 @@ function mkChipper(time,lv,team,cfg){
     _allCardio.forEach(function(x){x.ex=Object.assign({},x.ex,{amount:_refAmt,unit:_refUnit});});
   }
   var _cardioAdded2=items.filter(function(x){return x.kind==='cardio';}).length;
-  var _clInfoEn='Complete all reps of each movement before moving on — '+strCount+' movements'+(_cardioAdded2?' · '+_cardioAdded2+' cardio':'')+'  |  Time cap: '+time+' min';
-  var _clInfoAr='أكمل كل تكرارات الحركة قبل الانتقال — '+strCount+' حركات'+(_cardioAdded2?' · '+_cardioAdded2+' كارديو':'')+' | الحد الزمني: '+time+' دقيقة';
-  var _clInfo=CFG.lang==='ar'?_clInfoAr:_clInfoEn;
-  return[{type:'Chipper',title:'Chipper — For Time',info:_clInfo,scoreKey:'sc_time',teamKey:team>1?'tm_split':null,items:items,chipperCfg:cfg}];
+  return[{type:'Chipper',title:'Chipper — For Time',infoKey:'i_chipper',infoVars:{t:time},scoreKey:'sc_time',teamKey:team>1?'tm_split':null,items:items,chipperCfg:cfg}];
 }
 
 function mkTabata(time,lv,team,cfg){
@@ -1914,8 +1911,10 @@ function mkDeathBy(time,lv,team,cfg){
   var increment=cfg.increment||(team===2?2:1);
   cfg._genStart=start;cfg._genInc=increment;
   var title='Death By';
-  var items=[{kind:'str',ex:ex1,emomMin:'Each Min',detail:start+' + '+increment+' reps/min',noPencil:true}];
-  return[{type:'Death By',title:title,infoKey:'i_deathby',infoVars:{s:start,inc:increment,t:time},scoreKey:'sc_deathby',teamKey:team>1?'tm_both':null,items:items,deathByCfg:cfg}];
+  var _dbIncR=increment===1?'rep':'reps';var _dbSR=start===1?'rep':'reps';
+  var _dbInfo='Add '+increment+' '+_dbIncR+' each minute until failure | Time cap: '+time+' min | <span style="font-weight:800">Starting at '+start+' '+_dbSR+' in Min 1</span>';
+  var items=[{kind:'str',ex:ex1,detail:start+' + '+increment+' '+_dbIncR+'/min',noPencil:true}];
+  return[{type:'Death By',title:title,info:_dbInfo,scoreKey:'sc_deathby',teamKey:team>1?'tm_both':null,items:items,deathByCfg:cfg}];
 }
 function buildRoundItems(scheme,chosen,lv,team){
   var items=[];
@@ -2276,11 +2275,11 @@ function mkGroupAB(time,lv,team,cfg){
   });
   if(_aCardio&&_aCardio.ex&&_aCardio.ex.amount!=null)_bCfg.cardioAmt=_aCardio.ex.amount;
   var secB=mkAmrap(time/2,lv,1,_bCfg)[0];
-  secA.type='Group A';secA.title='A — AMRAP '+(time/2)+' Min';
+  secA.type='Group A';secA.title='Station A — AMRAP '+(time/2)+' Min';
   secA.infoKey='i_groupA_amrap';
   secA.scoreKey='sc_rounds_ab';secA.teamKey=team>1?'tm_halfA':null;
   secA.groupAbCfg=cfg;
-  secB.type='Group B';secB.title='B — AMRAP '+(time/2)+' Min';
+  secB.type='Group B';secB.title='Station B — AMRAP '+(time/2)+' Min';
   secB.infoKey='i_groupB_amrap';
   secB.groupAbCfg=cfg;
   return[secA,secB];
@@ -2676,23 +2675,23 @@ function setChipperRepInput(si,inp){
   _chipperLockScheme(si,true);
 }
 
-function cfgGearRow(infoTxt,toggleFn,si,timeEst){
+function cfgGearRow(infoTxt,toggleFn,si,timeEst,preTime){
   var txt=(infoTxt||'').replace(/\. /g,' | ').replace(/\.$/,'');
-  var tH=timeEst?' | '+t('est_time_label')+' <span style="font-weight:800">~'+timeEst+'</span>':'';
+  var tH=timeEst?' | '+t('est_time_label')+(preTime?' '+preTime:'')+' <span style="font-weight:800">~'+timeEst+'</span>':'';
   return '<div class="si" style="display:flex;align-items:center;justify-content:space-between;gap:8px"><span>'+txt+tH+'</span><span onclick="'+toggleFn+'('+si+')" style="cursor:pointer;font-size:15px;flex-shrink:0;opacity:0.6">⚙️</span></div>';
 }
 function renderSecInfo(sec,si,infoTxt){
-  var _amrBoldTime='';if((sec.type==='AMRAP'||sec.type==='YGIG / Partner WOD')&&infoTxt===undefined&&sec.infoKey){var _riv=sec.infoVars||{};var _rlv=S.level||'intermediate';var _isYgigSec=sec.type==='YGIG / Partner WOD'&&!(_riv.r);var _rtm=_isYgigSec?1:(S.teamSize||1);var _rSplit=_isYgigSec?false:true;var _rtT=_rtm===2?18:({beginner:22,intermediate:16,advanced:10,elite:6}[_rlv]||16);var _rpw=0;var _rstrI=sec.items.filter(function(x){return x.kind==='str'&&x.baseRep&&!x.isRest;});var _rcardI=sec.items.filter(function(x){return(x.kind==='cardio'||x.kind==='station-gate')&&x.ex&&x.ex.amount;});_rstrI.forEach(function(it){_rpw+=it.baseRep*getSecondsPerRep(it.ex,_rlv,_rtm,_rSplit);});_rcardI.forEach(function(cx){_rpw+=_cardioSecEst(cx.ex,_rlv,_rtm,_rSplit);});_rpw+=(_rstrI.length+_rcardI.length-1)*_rtT;if(_rpw>0){var _rwSec=(_riv.t||S.time)*60;var _rdynRnds=Math.max(1,Math.floor(_rwSec/_rpw));var _rndSnap=Math.round(_rpw/10)*10;var _rndTime=Math.floor(_rndSnap/60)+':'+((_rndSnap%60)<10?'0':'')+(_rndSnap%60);var _amrTotSec=Math.round(_rdynRnds*_rpw);var _amrTotTime=Math.floor(_amrTotSec/60)+':'+( (_amrTotSec%60)<10?'0':'')+(_amrTotSec%60);_amrBoldTime=_amrTotTime;infoTxt=ti(sec.infoKey,Object.assign({},_riv,{rnds:_rdynRnds,rndTime:_rndTime}));}}
-  if(sec.type==='Group A'&&infoTxt===undefined){var _gabT=S.wod&&S.wod.cfg&&S.wod.cfg.time||S.time;var _gabDesc=ti('i_groupA',{t:Math.floor(_gabT/2)});var _grlv=S.level||'intermediate';var _grtT=({beginner:22,intermediate:16,advanced:10,elite:6}[_grlv]||16);var _gabCalc=function(s){if(!s||!s.items)return null;var _si=s.items.filter(function(x){return x.kind==='str'&&x.baseRep&&!x.isRest;});var _ci=s.items.filter(function(x){return(x.kind==='cardio'||x.kind==='station-gate')&&x.ex&&x.ex.amount;});var _pw=0;_si.forEach(function(it){_pw+=it.baseRep*getSecondsPerRep(it.ex,_grlv,1,false);});_ci.forEach(function(cx){_pw+=_cardioSecEst(cx.ex,_grlv,1,false);});_pw+=(_si.length+_ci.length-1)*_grtT;if(_pw<=0)return null;var _t=(s.infoVars&&s.infoVars.t)||S.time;var _rnds=Math.max(1,Math.floor(_t*60/_pw));var _snap=Math.round(_pw/10)*10;var _tm=Math.floor(_snap/60)+':'+((_snap%60)<10?'0':'')+(_snap%60);return{rnds:_rnds,rndTime:_tm,t:_t,totSec:Math.round(_rnds*_pw)};};var _secB=S.wod&&S.wod.sections&&S.wod.sections[si+1];var _iA=_gabCalc(sec);var _iB=_gabCalc(_secB);var _gabTotSec=(_iA?_iA.totSec:0)+(_iB?_iB.totSec:0);var _gabBoldTime=_gabTotSec>0?Math.floor(_gabTotSec/60)+':'+( (_gabTotSec%60)<10?'0':'')+(_gabTotSec%60):'';var _pA=_iA?'A — AMRAP '+_iA.t+' Min · <span style="color:var(--accent)">~'+_iA.rnds+' rounds</span> · ~'+_iA.rndTime+'/round':'A';var _pB=_iB?'B — AMRAP '+_iB.t+' Min · <span style="color:var(--accent)">~'+_iB.rnds+' rounds</span> · ~'+_iB.rndTime+'/round':'B';infoTxt=_gabDesc+' | '+_pA+' | '+_pB;}
+  var _amrBoldTime='';if((sec.type==='AMRAP'||sec.type==='YGIG / Partner WOD')&&infoTxt===undefined&&sec.infoKey){var _riv=sec.infoVars||{};var _rlv=S.level||'intermediate';var _isYgigSec=sec.type==='YGIG / Partner WOD'&&!(_riv.r);var _rtm=_isYgigSec?1:(S.teamSize||1);var _rSplit=_isYgigSec?false:true;var _rtT=_rtm===2?18:({beginner:22,intermediate:16,advanced:10,elite:6}[_rlv]||16);var _rpw=0;var _rstrI=sec.items.filter(function(x){return x.kind==='str'&&x.baseRep&&!x.isRest;});var _rcardI=sec.items.filter(function(x){return(x.kind==='cardio'||x.kind==='station-gate')&&x.ex&&x.ex.amount;});_rstrI.forEach(function(it){_rpw+=it.baseRep*getSecondsPerRep(it.ex,_rlv,_rtm,_rSplit);});_rcardI.forEach(function(cx){_rpw+=_cardioSecEst(cx.ex,_rlv,_rtm,_rSplit);});_rpw+=(_rstrI.length+_rcardI.length-1)*_rtT;if(_rpw>0){var _rwSec=(_riv.t||S.time)*60;var _rdynRnds=Math.max(1,Math.floor(_rwSec/_rpw));var _rndSnap=Math.round(_rpw/10)*10;var _rndTime=Math.floor(_rndSnap/60)+':'+((_rndSnap%60)<10?'0':'')+(_rndSnap%60);var _amrTotSec=Math.round(_rdynRnds*_rpw);var _amrTotTime=Math.floor(_amrTotSec/60)+':'+( (_amrTotSec%60)<10?'0':'')+(_amrTotSec%60);_amrBoldTime=_rdynRnds?_rdynRnds+' rounds · ~'+_rndTime+'/round ~'+_amrTotTime:_amrTotTime;infoTxt=ti(sec.infoKey,Object.assign({},_riv,{rnds:_rdynRnds,rndTime:_rndTime}));}}
+  if(sec.type==='Group A'&&infoTxt===undefined){var _gabT=S.wod&&S.wod.cfg&&S.wod.cfg.time||S.time;var _gabDesc=ti('i_groupA',{cap:_gabT});var _grlv=S.level||'intermediate';var _grtT=({beginner:22,intermediate:16,advanced:10,elite:6}[_grlv]||16);var _gabCalc=function(s){if(!s||!s.items)return null;var _si=s.items.filter(function(x){return x.kind==='str'&&x.baseRep&&!x.isRest;});var _ci=s.items.filter(function(x){return(x.kind==='cardio'||x.kind==='station-gate')&&x.ex&&x.ex.amount;});var _pw=0;_si.forEach(function(it){_pw+=it.baseRep*getSecondsPerRep(it.ex,_grlv,1,false);});_ci.forEach(function(cx){_pw+=_cardioSecEst(cx.ex,_grlv,1,false);});_pw+=(_si.length+_ci.length-1)*_grtT;if(_pw<=0)return null;var _t=(s.infoVars&&s.infoVars.t)||S.time;var _rnds=Math.max(1,Math.floor(_t*60/_pw));var _snap=Math.round(_pw/10)*10;var _tm=Math.floor(_snap/60)+':'+((_snap%60)<10?'0':'')+(_snap%60);return{rnds:_rnds,rndTime:_tm,t:_t,totSec:Math.round(_rnds*_pw)};};var _secB=S.wod&&S.wod.sections&&S.wod.sections[si+1];var _iA=_gabCalc(sec);var _iB=_gabCalc(_secB);var _gabTotSec=(_iA?_iA.totSec:0)+(_iB?_iB.totSec:0);var _gabBoldTime=_gabTotSec>0?Math.floor(_gabTotSec/60)+':'+( (_gabTotSec%60)<10?'0':'')+(_gabTotSec%60):'';var _pA=_iA?'Station A: ~'+_iA.rnds+' rounds · ~'+_iA.rndTime+'/round':'Station A';var _pB=_iB?'Station B: ~'+_iB.rnds+' rounds · ~'+_iB.rndTime+'/round':'Station B';infoTxt=_gabDesc+' | '+_pA+' | '+_pB;}
   infoTxt=infoTxt!==undefined?infoTxt:(sec.infoKey?ti(sec.infoKey,sec.infoVars||{}):sec.info);
   if(sec.type==='Chipper'){var _cE='';var _cL=S.level||'intermediate';var _cTm=S.teamSize||1;var _cTr=_cTm===2?18:({beginner:22,intermediate:16,advanced:10,elite:6}[_cL]||16);var _cSI=sec.items.filter(function(x){return x.kind==='str'&&x.baseRep&&!x.isRest;});var _cCI=sec.items.filter(function(x){return(x.kind==='cardio'||x.kind==='station-gate')&&x.ex&&x.ex.amount;});var _cPW=0;_cSI.forEach(function(it){_cPW+=it.baseRep*getSecondsPerRep(it.ex,_cL,_cTm,_cTm===2);});_cCI.forEach(function(cx){_cPW+=_cardioSecEst(cx.ex,_cL,_cTm,_cTm===2);});_cPW+=(_cSI.length+_cCI.length>1?(_cSI.length+_cCI.length-1)*_cTr:0);if(_cPW>0){var _cs=Math.round(_cPW);_cE=Math.floor(_cs/60)+':'+(_cs%60<10?'0':'')+(_cs%60);}return cfgGearRow(infoTxt,'toggleChipperCfg',si,_cE)+renderChipperCfg(sec,si);}
   if(sec.type==='AMRAP')return cfgGearRow(infoTxt,'toggleAmrapCfg',si,_amrBoldTime)+renderAmrapCfg(sec,si);
-  if(sec.type==='For Time / RFT'){var _rE='';var _rL=S.level||'intermediate';var _rTm=S.teamSize||1;var _rTr=_rTm===2?18:({beginner:22,intermediate:16,advanced:10,elite:6}[_rL]||16);var _rIV=sec.infoVars||{};var _rRnds=_rIV.r||1;var _rSI=sec.items.filter(function(x){return x.kind==='str'&&x.baseRep&&!x.isRest;});var _rCI=sec.items.filter(function(x){return(x.kind==='cardio'||x.kind==='station-gate')&&x.ex&&x.ex.amount;});var _rPW=0;_rSI.forEach(function(it){_rPW+=it.baseRep*getSecondsPerRep(it.ex,_rL,_rTm,_rTm===2);});_rCI.forEach(function(cx){_rPW+=_cardioSecEst(cx.ex,_rL,_rTm,_rTm===2);});_rPW+=(_rSI.length+_rCI.length>1?(_rSI.length+_rCI.length-1)*_rTr:0);if(_rPW>0){var _rt=Math.round(_rPW*_rRnds);_rE=Math.floor(_rt/60)+':'+(_rt%60<10?'0':'')+(_rt%60);}return cfgGearRow(infoTxt,'toggleRftCfg',si,_rE)+renderRftCfg(sec,si);}
+  if(sec.type==='For Time / RFT'){var _rE='';var _rL=S.level||'intermediate';var _rTm=S.teamSize||1;var _rTr=_rTm===2?18:({beginner:22,intermediate:16,advanced:10,elite:6}[_rL]||16);var _rIV=sec.infoVars||{};var _rRnds=_rIV.r||1;var _rSI=sec.items.filter(function(x){return x.kind==='str'&&x.baseRep&&!x.isRest;});var _rCI=sec.items.filter(function(x){return(x.kind==='cardio'||x.kind==='station-gate')&&x.ex&&x.ex.amount;});var _rPW=0;_rSI.forEach(function(it){_rPW+=it.baseRep*getSecondsPerRep(it.ex,_rL,_rTm,_rTm===2);});_rCI.forEach(function(cx){_rPW+=_cardioSecEst(cx.ex,_rL,_rTm,_rTm===2);});_rPW+=(_rSI.length+_rCI.length>1?(_rSI.length+_rCI.length-1)*_rTr:0);if(_rPW>0){var _rt=Math.round(_rPW*_rRnds);_rE=_rRnds+' rounds ~'+Math.floor(_rt/60)+':'+(_rt%60<10?'0':'')+(_rt%60);}return cfgGearRow(infoTxt,'toggleRftCfg',si,_rE)+renderRftCfg(sec,si);}
   if(sec.type==='EMOM')return cfgGearRow(infoTxt,'toggleEmomCfg',si)+renderEmomCfg(sec,si);
-  if(sec.type==='Tabata')return cfgGearRow(infoTxt,'toggleTabataCfg',si)+renderTabataCfg(sec,si);
+  if(sec.type==='Tabata'){var _tTxt=infoTxt?infoTxt.replace(/(Total time: [\d]+ min)/,'<span style="font-weight:800">$1</span>'):infoTxt;return cfgGearRow(_tTxt,'toggleTabataCfg',si)+renderTabataCfg(sec,si);}
   if(sec.type==='Death By')return cfgGearRow(infoTxt,'toggleDeathByCfg',si)+renderDeathByCfg(sec,si);
-  if(sec.type==='YGIG / Partner WOD'){var _yE='';var _yLv=S.level||'intermediate';var _yTr={beginner:22,intermediate:16,advanced:10,elite:6}[_yLv]||16;var _ySI=sec.items.filter(function(x){return x.kind==='str'&&x.baseRep&&!x.isRest;});var _yCI=sec.items.filter(function(x){return(x.kind==='cardio'||x.kind==='station-gate')&&x.ex&&x.ex.amount;});var _yIV=sec.infoVars||{};if(sec.infoKey==='i_ygig_ft'){var _yRnds=(_yIV.r||1)*2;var _yPW=0;_ySI.forEach(function(it){_yPW+=it.baseRep*getSecondsPerRep(it.ex,_yLv,1,false);});_yCI.forEach(function(cx){_yPW+=_cardioSecEst(cx.ex,_yLv,1,false);});_yPW+=(_ySI.length+_yCI.length>1?(_ySI.length+_yCI.length-1)*_yTr:0);var _yEst=_yPW*_yRnds;if(_yEst>0){var _ys=Math.round(_yEst);_yE=Math.floor(_ys/60)+':'+(_ys%60<10?'0':'')+(_ys%60);}}else{var _yRndsA=_yIV.rnds||0;var _yTgtA=_yIV.tgt||0;if(_yRndsA>0&&_yTgtA>0){var _yEstA=Math.round(_yRndsA*_yTgtA);_yE=Math.floor(_yEstA/60)+':'+(_yEstA%60<10?'0':'')+(_yEstA%60);}}return cfgGearRow(infoTxt,'toggleYgigCfg',si,_yE)+renderYgigCfg(sec,si);}
-  if(sec.type==='Buy-In / Cash-Out'){var _bE='';var _bL=S.level||'intermediate';var _bTm=S.teamSize||1;var _bTr=_bTm===2?18:({beginner:22,intermediate:16,advanced:10,elite:6}[_bL]||16);var _bIV=sec.infoVars||{};var _bRnds=_bIV.r||1;var _biItems=sec.items.filter(function(x){return x.kind==='buyin'&&x.ex&&x.ex.amount;});var _bSI=sec.items.filter(function(x){return x.kind==='str'&&x.baseRep&&!x.isRest;});var _bCI=sec.items.filter(function(x){return(x.kind==='cardio'||x.kind==='station-gate')&&x.ex&&x.ex.amount;});var _bPW=0;var _bRndPW=0;_bSI.forEach(function(it){_bRndPW+=it.baseRep*getSecondsPerRep(it.ex,_bL,_bTm,_bTm===2);});_bCI.forEach(function(cx){_bRndPW+=_cardioSecEst(cx.ex,_bL,_bTm,_bTm===2);});if(_bSI.length+_bCI.length>1)_bRndPW+=(_bSI.length+_bCI.length-1)*_bTr;_bPW+=_bRndPW*_bRnds;if(_bPW>0){var _bs=Math.round(_bPW);_bE=Math.floor(_bs/60)+':'+(_bs%60<10?'0':'')+(_bs%60);}return cfgGearRow(infoTxt,'toggleBuyInCfg',si,_bE)+renderBuyInCfg(sec,si);}
+  if(sec.type==='YGIG / Partner WOD'){var _yE='';var _yLv=S.level||'intermediate';var _yTr={beginner:22,intermediate:16,advanced:10,elite:6}[_yLv]||16;var _ySI=sec.items.filter(function(x){return x.kind==='str'&&x.baseRep&&!x.isRest;});var _yCI=sec.items.filter(function(x){return(x.kind==='cardio'||x.kind==='station-gate')&&x.ex&&x.ex.amount;});var _yIV=sec.infoVars||{};if(sec.infoKey==='i_ygig_ft'){var _yRnds=(_yIV.r||1)*2;var _yPW=0;_ySI.forEach(function(it){_yPW+=it.baseRep*getSecondsPerRep(it.ex,_yLv,1,false);});_yCI.forEach(function(cx){_yPW+=_cardioSecEst(cx.ex,_yLv,1,false);});_yPW+=(_ySI.length+_yCI.length>1?(_ySI.length+_yCI.length-1)*_yTr:0);var _yEst=_yPW*_yRnds;if(_yEst>0){var _ys=Math.round(_yEst);_yE=Math.floor(_ys/60)+':'+(_ys%60<10?'0':'')+(_ys%60);}}else{var _yRndsA=_yIV.rnds||0;var _yTgtA=_yIV.tgt||0;if(_yRndsA>0&&_yTgtA>0){var _yEstA=Math.round(_yRndsA*_yTgtA);_yE=Math.floor(_yEstA/60)+':'+(_yEstA%60<10?'0':'')+(_yEstA%60);}}return cfgGearRow(infoTxt,'toggleYgigCfg',si,sec.infoKey==='i_ygig_ft'?(_yE?(_yIV.r||'')+' rounds ~'+_yE:''):_amrBoldTime)+renderYgigCfg(sec,si);}
+  if(sec.type==='Buy-In / Cash-Out'){var _bE='';var _bL=S.level||'intermediate';var _bTm=S.teamSize||1;var _bTr=_bTm===2?18:({beginner:22,intermediate:16,advanced:10,elite:6}[_bL]||16);var _bIV=sec.infoVars||{};var _bRnds=_bIV.r||1;var _biItems=sec.items.filter(function(x){return x.kind==='buyin'&&x.ex&&x.ex.amount;});var _bSI=sec.items.filter(function(x){return x.kind==='str'&&x.baseRep&&!x.isRest;});var _bCI=sec.items.filter(function(x){return(x.kind==='cardio'||x.kind==='station-gate')&&x.ex&&x.ex.amount;});var _bPW=0;var _bRndPW=0;_bSI.forEach(function(it){_bRndPW+=it.baseRep*getSecondsPerRep(it.ex,_bL,_bTm,_bTm===2);});_bCI.forEach(function(cx){_bRndPW+=_cardioSecEst(cx.ex,_bL,_bTm,_bTm===2);});if(_bSI.length+_bCI.length>1)_bRndPW+=(_bSI.length+_bCI.length-1)*_bTr;_bPW+=_bRndPW*_bRnds;if(_bPW>0){var _bs=Math.round(_bPW);_bE=Math.floor(_bs/60)+':'+(_bs%60<10?'0':'')+(_bs%60);}var _hasBuyIn=_biItems.some(function(x){return x.which==='buyin';});var _hasCashOut=_biItems.some(function(x){return x.which==='cashout';});var _bDynTxt=(_hasBuyIn&&_hasCashOut)?('Complete buy-in, then '+_bRnds+' rounds, then cash-out'):(_hasBuyIn?('Complete buy-in, then '+_bRnds+' rounds'):(_hasCashOut?('Complete '+_bRnds+' rounds, then cash-out'):('Complete '+_bRnds+' rounds')));infoTxt=_bDynTxt+' | Time cap: '+(_bIV.t||S.time||0)+' min';return cfgGearRow(infoTxt,'toggleBuyInCfg',si,_bE)+renderBuyInCfg(sec,si);}
   if(sec.type==='Ladder'){var _ldE='';var _ldSch=sec.scheme;if(_ldSch&&_ldSch.length){var _ldLv=S.level||'intermediate';var _ldTm=S.teamSize||1;var _ldEstDiv=sec._estDiv||1;var _ldEstTeam=_ldEstDiv>1?1:_ldTm;var _ldTT=_ldEstTeam===2?18:({beginner:22,intermediate:16,advanced:10,elite:6}[_ldLv]||16);var _ldSI=sec.items.filter(function(x){return x.kind==='str'&&!x.isRest;});var _ldCI=sec.items.filter(function(x){return(x.kind==='cardio'||x.kind==='station-gate')&&x.ex&&x.ex.amount;});var _ldEst=0;_ldSI.forEach(function(it){var _rpr=it.repsPerRound;var _sch=(_rpr&&_rpr.length>1)?_rpr:_ldSch;_sch.forEach(function(r){_ldEst+=(r/_ldEstDiv)*getSecondsPerRep(it.ex,_ldLv,_ldEstTeam,true);});});_ldCI.forEach(function(cx){var _ca=cx.cardioAmounts;if(_ca&&_ca.length>1){_ca.forEach(function(a){_ldEst+=_cardioSecEst(Object.assign({},cx.ex,{amount:a/_ldEstDiv}),_ldLv,_ldEstTeam,true);});}else if(cx.ex&&cx.ex.amount){_ldEst+=_cardioSecEst(Object.assign({},cx.ex,{amount:cx.ex.amount/_ldEstDiv}),_ldLv,_ldEstTeam,true)*_ldSch.length;}});_ldEst+=(_ldSI.length+_ldCI.length)*_ldSch.length>0?((_ldSI.length+_ldCI.length)*_ldSch.length-1)*_ldTT:0;if(_ldEst>0){var _ls=Math.round(_ldEst);_ldE=Math.floor(_ls/60)+':'+(_ls%60<10?'0':'')+(_ls%60);}}return cfgGearRow(infoTxt||'','toggleLadderCfg',si,_ldE)+renderLadderCfg(sec,si);}
   if(sec.type==='Group A')return cfgGearRow(infoTxt,'toggleAmrapCfg',si,_gabBoldTime||'')+renderGroupAbAmrapCfg(sec,si);
   if(sec.type==='Group B')return '';
@@ -4460,7 +4459,7 @@ function _dbDetail(sec){
   var unit=(sec.items&&sec.items[0]&&sec.items[0].ex)?sec.items[0].ex.unit||'reps':'reps';
   if(unit==='time')return s+'s + '+inc+'s/min';
   if(unit==='carry')return s+'m + '+inc+'m/min';
-  return s+' + '+inc+' reps/min';
+  return s+' + '+inc+' '+(inc===1?'rep':'reps')+'/min';
 }
 function setDeathByCat(si,cat,btn){
   var sec=S.wod.sections[si];if(!sec.deathByCfg)sec.deathByCfg={};
@@ -4957,11 +4956,11 @@ function regenGroupAb(si){
   var _aStr=secA.items?secA.items.filter(function(it){return it.kind==='str';}).map(function(it){return it.ex.name;}):[];
   var _bCfg=Object.assign({},cfg,{excludedNames:_aStr});
   var secB=(_regenBest(_mkA,blockTime,S.level,1,_bCfg)||[mkAmrap(blockTime,S.level,1,_bCfg)[0]])[0];
-  secA.type='Group A';secA.title='A — AMRAP '+blockTime+' Min';
+  secA.type='Group A';secA.title='Station A — AMRAP '+blockTime+' Min';
   secA.infoKey='i_groupA_amrap';
   secA.scoreKey='sc_rounds_ab';secA.teamKey=S.teamSize>1?'tm_halfA':null;
   secA.groupAbCfg=cfg;
-  secB.type='Group B';secB.title='B — AMRAP '+blockTime+' Min';
+  secB.type='Group B';secB.title='Station B — AMRAP '+blockTime+' Min';
   secB.infoKey='i_groupB_amrap';
   secB.groupAbCfg=cfg;
   S.wod.sections[si]=secA;if(S.wod.sections[si+1])S.wod.sections[si+1]=secB;
@@ -4975,11 +4974,11 @@ function randomGroupAb(si){
   var secA=mkAmrap(blockTime,S.level,1,cfg)[0];
   var _aStr=secA.items?secA.items.filter(function(it){return it.kind==='str';}).map(function(it){return it.ex.name;}):[];
   var secB=mkAmrap(blockTime,S.level,1,Object.assign({},cfg,{excludedNames:_aStr}))[0];
-  secA.type='Group A';secA.title='A — AMRAP '+blockTime+' Min';
+  secA.type='Group A';secA.title='Station A — AMRAP '+blockTime+' Min';
   secA.infoKey='i_groupA_amrap';
   secA.scoreKey='sc_rounds_ab';secA.teamKey=S.teamSize>1?'tm_halfA':null;
   secA.groupAbCfg=cfg;
-  secB.type='Group B';secB.title='B — AMRAP '+blockTime+' Min';
+  secB.type='Group B';secB.title='Station B — AMRAP '+blockTime+' Min';
   secB.infoKey='i_groupB_amrap';
   secB.groupAbCfg=cfg;
   S.wod.sections[si]=secA;if(S.wod.sections[si+1])S.wod.sections[si+1]=secB;
