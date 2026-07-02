@@ -893,6 +893,8 @@ function _repLimits(cat,lv,team,split){
   if(team===2&&split){mn=evenRep(Math.round(mn*2));mx=evenRep(Math.round(mx*2));}
   return{min:mn,max:mx};
 }
+function _clampRep(r,ex,lv,team,split){if(!ex||!r||ex.unit==='time'||ex.unit==='carry')return r;var l=_repLimits(ex.cat,lv,team,!!split);return Math.max(l.min,Math.min(l.max,r));}
+function _clampEmomRep(r,ex,lv,team){if(!ex||!r||ex.unit==='time'||ex.unit==='carry')return r;var l=_emomRepLimits(ex.cat,lv,team);return Math.max(l.min,Math.min(l.max,r));}
 function _repSnap(v,mn,mx){
   var s=v<=24?Math.round(v/2)*2:Math.round(v/10)*10;
   s=Math.max(2,s);
@@ -1267,7 +1269,7 @@ function mkAmrap(time,lv,team,cfg){
   }
   var items=[];
   chosen.forEach(function(ex,i){
-    var r=_rArr[i]||baseReps;
+    var r=_clampRep(_rArr[i]||baseReps,ex,lv,team,!cfg.noTeamSplit);
     items.push({kind:'str',ex:ex,detail:getDetail(ex,r,null,lv,team),baseRep:r});
   });
   if(addCardio&&_amrapEx){
@@ -1487,8 +1489,8 @@ function mkRFT(time,lv,team,cfg){
   if(_perExReps&&_perExReps.length&&_rpType!=='flat'&&chosen.length>2){var _rftSI=chosen.map(function(_,i){return i;}).sort(function(a,b){return getSecondsPerRep(chosen[a],lv,team)-getSecondsPerRep(chosen[b],lv,team);});var _rftFSCleanMin=Math.ceil(_rftLimsAll.min/_rftLS)*_rftLS;var _rftFSMaxBase=Math.floor((_rftLadderCap-(chosen.length-1)*_rftLS)/_rftLS)*_rftLS;var _rftNC2=[],_rftNR2=[];var _rftCardioTime=_cardioSecEst(_cEx,lv,team,true);var _rftPerRndTgt=_rftBdg2/Math.max(1,rounds);var _rftTotalSPR=_rftSI.reduce(function(s,oi){return s+getSecondsPerRep(chosen[oi],lv,team);},0);var _rftStepContrib=_rftSI.reduce(function(s,oi,si){return s+(chosen.length-1-si)*getSecondsPerRep(chosen[oi],lv,team);},0)*_rftLS;var _rftMinLadderStr=_rftFSCleanMin*_rftTotalSPR+_rftStepContrib;if(_rftMinLadderStr+_rftCardioTime>_rftPerRndTgt){_rftSI.forEach(function(oi){_rftNC2.push(chosen[oi]);_rftNR2.push(_rftFSCleanMin);});}else if(_rftFSMaxBase>=_rftFSCleanMin){var _rftStrBudget=_rftPerRndTgt*0.97-_rftCardioTime;var _rftCalcBase=_rftTotalSPR>0?Math.round((_rftStrBudget-_rftStepContrib)/_rftTotalSPR/_rftLS)*_rftLS:_rftFSCleanMin;_rftCalcBase=Math.max(_rftFSCleanMin,Math.min(_rftFSMaxBase,_rftCalcBase));_rftSI.forEach(function(oi,si){var rv=Math.min(_rftLadderCap,_rftCalcBase+(chosen.length-1-si)*_rftLS);_rftNC2.push(chosen[oi]);_rftNR2.push(Math.max(_rftFSCleanMin,rv));});}else{_rftSI.forEach(function(oi){_rftNC2.push(chosen[oi]);_rftNR2.push(_rftFSCleanMin);});}chosen=_rftNC2;_perExReps=_rftNR2;}
   var items=[{kind:'sep',label:'── '+rounds+' ROUNDS ──'}];
   chosen.forEach(function(ex,i){
-    var _bRep=(_perExReps&&_perExReps[i]!=null)?_perExReps[i]:(reps[0]||baseReps);
-    var _det=(_perExReps&&_perExReps[i]!=null)?(_perExReps[i]!=null&&ex.unit==='time'?getDetail(ex,_perExReps[i],null,lv,team):ex.unit==='carry'?getDetail(ex,_perExReps[i],null,lv,team):_perExReps[i]+' '+t('reps_unit')):schemeLabel(ex,reps,lv,team);
+    var _bRep=_clampRep((_perExReps&&_perExReps[i]!=null)?_perExReps[i]:(reps[0]||baseReps),ex,lv,team,!cfg.noTeamSplit);
+    var _det=(_perExReps&&_perExReps[i]!=null)?(ex.unit==='time'?getDetail(ex,_bRep,null,lv,team):ex.unit==='carry'?getDetail(ex,_bRep,null,lv,team):_bRep+' '+t('reps_unit')):schemeLabel(ex,reps,lv,team);
     items.push({kind:'str',ex:ex,detail:_det,baseRep:_bRep});
   });
   if(addCardio&&_cEx){items.push({kind:'cardio',ex:_cEx});}
@@ -1546,7 +1548,7 @@ function mkEmom(time,lv,team,cfg){
   var _emomCycle=numMov+(addCardio&&cEx?1:0)+(_emomRest?1:0);
   var sets=cfg.rounds||Math.floor(time/_emomCycle);
   var items=[{kind:'sep',label:'── '+sets+' Sets ──'}];
-  chosen.forEach(function(ex,i){var r=(_emRArr&&_emRArr[i])||baseReps;items.push({kind:'str',ex:ex,emomMin:'Min '+String.fromCharCode(65+i),detail:_emomDetail(ex,r,lv),baseRep:r});});
+  chosen.forEach(function(ex,i){var r=_clampEmomRep((_emRArr&&_emRArr[i])||baseReps,ex,lv,team);items.push({kind:'str',ex:ex,emomMin:'Min '+String.fromCharCode(65+i),detail:_emomDetail(ex,r,lv),baseRep:r});});
   if(addCardio&&cEx){
     items.push({kind:'cardio',ex:cEx,emomMin:'Min '+String.fromCharCode(65+chosen.length)});
   }
@@ -1672,7 +1674,7 @@ function mkChipper(time,lv,team,cfg){
       for(var e=0;e<sz;e++){
         var ex=chosen[s*sz+e];
         if(!ex)continue;
-        items.push({kind:'str',ex:ex,detail:getDetail(ex,rep,null,lv,team),baseRep:rep});
+        var _cr=_clampRep(rep,ex,lv,team,false);items.push({kind:'str',ex:ex,detail:getDetail(ex,_cr,null,lv,team),baseRep:_cr});
       }
       if(addGates){
         var avail=gatePool.filter(function(m){return usedGates.indexOf(m)<0;});
@@ -1813,13 +1815,13 @@ function mkChipper(time,lv,team,cfg){
   var items=[];
   var _clCardioN=addCardio&&cEx?(cfg.cardioCount||1):0;
   if(_clCardioN<=1){
-    chosen.forEach(function(ex,i){items.push({kind:'str',ex:ex,detail:getDetail(ex,repsArr[i],null,lv,team),baseRep:repsArr[i]});});
+    chosen.forEach(function(ex,i){var _cr=_clampRep(repsArr[i],ex,lv,team,team===2);items.push({kind:'str',ex:ex,detail:getDetail(ex,_cr,null,lv,team),baseRep:_cr});});
     if(addCardio&&cEx)items.push({kind:'cardio',ex:cEx});
   }else{
     // توزيع N كارديو بين التمارين بالتساوي
     var _chunk=Math.ceil(chosen.length/_clCardioN);
     chosen.forEach(function(ex,i){
-      items.push({kind:'str',ex:ex,detail:getDetail(ex,repsArr[i],null,lv,team),baseRep:repsArr[i]});
+      var _cr=_clampRep(repsArr[i],ex,lv,team,team===2);items.push({kind:'str',ex:ex,detail:getDetail(ex,_cr,null,lv,team),baseRep:_cr});
       if((i+1)%_chunk===0&&Math.floor(i/_chunk)<_clCardioN){
         var _cxCopy=Object.assign({},cEx);
         items.push({kind:'cardio',ex:_cxCopy});
@@ -1910,7 +1912,7 @@ function buildRoundItems(scheme,chosen,lv,team){
   var items=[];
   scheme.forEach(function(r,i){
     items.push({kind:'sep',label:'── Round '+(i+1)+' ──'});
-    chosen.forEach(function(ex){items.push({kind:'str',ex:ex,detail:getDetail(ex,r,null,lv,team),baseRep:r});});
+    chosen.forEach(function(ex){var _cr=_clampRep(r,ex,lv,team,team===2);items.push({kind:'str',ex:ex,detail:getDetail(ex,_cr,null,lv,team),baseRep:_cr});});
   });
   return items;
 }
@@ -1918,7 +1920,7 @@ function buildLadderItems(scheme,chosen,cardioExs,lv,team){
   var items=[];
   scheme.forEach(function(r,i){
     items.push({kind:'sep',label:'── Round '+(i+1)+' ──'});
-    chosen.forEach(function(ex){items.push({kind:'str',ex:ex,detail:getDetail(ex,r,null,lv,team),baseRep:r});});
+    chosen.forEach(function(ex){var _cr=_clampRep(r,ex,lv,team,team===2);items.push({kind:'str',ex:ex,detail:getDetail(ex,_cr,null,lv,team),baseRep:_cr});});
     if(i<scheme.length-1)items.push({kind:'cardio',ex:cardioExs[i]||pk(CARDIO)});
   });
   return items;
