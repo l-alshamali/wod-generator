@@ -184,8 +184,8 @@ var T={
     wod:'WOD',title:'Workout<br>Generator',sub:'v1.0',
     gate_hint:'Enter your email & password',enter:'Enter →',buy:'Buy Access ↗',tnc:'Terms & Conditions',
     step1:'Step 1 / 5',step1q:"What's your CrossFit level?",step1s:'Sets workout intensity',
-    lv_b:'Beginner',lv_b_d:'Under 6 months',lv_i:'Intermediate',lv_i_d:'6mo – 2 years',
-    lv_a:'Advanced',lv_a_d:'2 – 5 years',lv_e:'Elite',lv_e_d:'5+ / competitive',
+    lv_b:'Beginner',lv_b_d:'New to CrossFit',lv_i:'Intermediate',lv_i_d:'Building consistency',
+    lv_a:'Advanced',lv_a_d:'Well-conditioned athlete',lv_e:'Elite',lv_e_d:'Competitive-level fitness',
     step2:'Step 2 / 5',step2q:'Time Cap?',step2s:'WOD duration (not including warm-up)',
     minutes:'minutes',next:'Next →',back_lv:'← Back to Level',back_ti:'← Back to Time',back_te:'← Back to Team',back_ty:'← Back to Types',
     step3:'Step 3 / 5',step3q:'Training Format?',step3s:'Affects volume and rep sharing',
@@ -234,11 +234,11 @@ var T={
     i_asc_ladder:'Ladder scheme, changing reps each round | Time cap: {t} min',
     i_scheme_cardio:'Ladder scheme, changing reps each round | Time cap: {t} min',
     i_scheme:'Ladder scheme, changing reps each round | Time cap: {t} min',max_effort:'Max effort',
-    sc_time:'Score = finish time',sc_rounds:'Score = total rounds + partial reps',sc_rounds_ab:'Score = rounds + reps',
-    sc_rounds_comp:'Score = rounds completed',sc_load:'Score = heaviest load / sets completed',
-    sc_sets:'Score = all sets completed',sc_tabata:'Score = lowest reps each round (Tabata score)',sc_tabata_alt:'Score = lowest reps in any single interval (across all movements)',
+    sc_time:'Score = finish time',sc_rounds:'Score = total rounds + partial reps',sc_rounds_ab:'Score = total rounds + partial reps',
+    sc_rounds_comp:'Score = total rounds completed',sc_load:'Score = heaviest load or sets completed',
+    sc_sets:'Score = total sets completed',sc_tabata:'Score = lowest reps in any round',sc_tabata_alt:'Score = lowest reps in any interval, across all movements',
     sc_deathby:'Score = last completed minute',sc_total:'Score = total rounds across all intervals',
-    sc_ygig:'Score = total rounds / finish time',sc_score_rounds:'Score = rounds',
+    sc_ygig:'Score = total rounds or finish time',sc_score_rounds:'Score = total rounds',
     tm_split:'✂️ Partition reps freely (Move to next exercise only when current is done)',tm_one:'✂️ Partition reps freely (One works, one rests)',
     tm_partition:'✂️ Partition reps freely to finish all rounds AFAP',tm_own:'🔁 Alternate minutes (Min 1: Athlete A / Min 2: Athlete B)',
     tm_alternate:'⏱️ Smart transition inside the time window or work together',tm_3min:'⏱️ Smart transition inside the time window or work together',
@@ -2475,7 +2475,7 @@ function step0(){
   +'<div style="font-size:13px;color:var(--txt2);font-weight:500;letter-spacing:1px">'+t('sub')+'</div>'
   +'</div>'
   +dots(0)+'<div class="qc ani"><div class="ql">'+t('step1')+'</div><div class="qt" style="margin-bottom:16px">'+t('step1q')+'</div><div class="og">'
-  +lvls.map(function(x){return'<button class="ob'+(S.level===x[0]?' sel':'')+'" onclick="setLevel(\''+x[0]+'\',this)"><span class="oi">'+x[1]+'</span><span class="on">'+x[2]+'</span></button>'}).join('')+'</div></div>';
+  +lvls.map(function(x){return'<button class="ob'+(S.level===x[0]?' sel':'')+'" onclick="setLevel(\''+x[0]+'\',this)"><span class="oi">'+x[1]+'</span><span class="on">'+x[2]+'</span>'+(x[3]?'<span class="od">'+x[3]+'</span>':'')+'</button>'}).join('')+'</div></div>';
 }
 function setLevel(l,el){S.level=l;S.wod=null;if(el)el.classList.add('sel');setTimeout(function(){S.step=1;render()},220)}
 function step1(){
@@ -2506,17 +2506,17 @@ function setTeam(n,el){
   setTimeout(function(){S.step=3;render();},220);
 }
 var TYPES=[
-  {id:'for-time',icon:'⏰',name:'Rounds For Time / RFT',desc:'Rounds For Time',desc_ar:'أكمل الجولات بأسرع وقت'},
-  {id:'amrap',icon:'🔄',name:'AMRAP',desc:'As Many Rounds/Reps As Possible',desc_ar:'أكبر عدد جولات ممكن'},
-  {id:'emom',icon:'🔔',name:'EMOM',desc:'Every Minute On the Minute',desc_ar:'حركة كل دقيقة'},
-  {id:'chipper',icon:'🪓',name:'Chipper',desc:'high-intensity interval training (HIIT)',desc_ar:'مرة واحدة عبر كل الحركات'},
-  {id:'ladder',icon:'📈',name:'Ladder',desc:'Ascending or descending reps',desc_ar:'تكرارات تصاعدية أو تنازلية'},
-  {id:'buy-in-cashout',icon:'💰',name:'Buy-In / Cash-Out',desc:'Cardio bookends the WOD',desc_ar:'كارديو في البداية والنهاية'},
-  {id:'tabata',icon:'💥',name:'Tabata',desc:'20s on / 10s off × 8 rounds',desc_ar:'٢٠ث عمل / ١٠ث راحة × ٨ جولات'},
-  {id:'death-by',icon:'💀',name:'Death By',desc:'+1 rep each minute until failure',desc_ar:'يضاف تكرار كل دقيقة حتى الفشل'},
-  {id:'group-ab',icon:'🅰️',name:'A/B AMRAP',desc:'Two groups, alternate stations',desc_ar:'مجموعتان يتبادلان المحطات',teamOnly:true},
-  {id:'ygig-amrap',icon:'🔁',name:'YGIG — AMRAP',desc:'Partners alternate AMRAP rounds',desc_ar:'تناوب جولات AMRAP مع الشريك',teamOnly:true},
-  {id:'ygig-ft',icon:'🔀',name:'YGIG — For Time',desc:'Partners alternate rounds for time',desc_ar:'تناوب جولات للوقت مع الشريك',teamOnly:true},
+  {id:'for-time',icon:'⏰',name:'For Time / RFT',desc:'Fastest time to finish',desc_ar:'أكمل الجولات بأسرع وقت'},
+  {id:'amrap',icon:'🔄',name:'AMRAP',desc:'Max rounds in time cap',desc_ar:'أكبر عدد جولات ممكن'},
+  {id:'emom',icon:'🔔',name:'EMOM',desc:'New set every minute',desc_ar:'حركة كل دقيقة'},
+  {id:'chipper',icon:'🪓',name:'Chipper',desc:'One long list, once through',desc_ar:'مرة واحدة عبر كل الحركات'},
+  {id:'ladder',icon:'📈',name:'Ladder',desc:'Reps climb or drop each round',desc_ar:'تكرارات تصاعدية أو تنازلية'},
+  {id:'buy-in-cashout',icon:'💰',name:'Buy-In / Cash-Out',desc:'Cardio before / after',desc_ar:'كارديو في البداية والنهاية'},
+  {id:'tabata',icon:'💥',name:'Tabata',desc:'20s work, 10s rest × 8',desc_ar:'٢٠ث عمل / ١٠ث راحة × ٨ جولات'},
+  {id:'death-by',icon:'💀',name:'Death By',desc:'+1 rep every minute',desc_ar:'يضاف تكرار كل دقيقة حتى الفشل'},
+  {id:'group-ab',icon:'🅰️',name:'A/B AMRAP',desc:'Two groups, swap stations',desc_ar:'مجموعتان يتبادلان المحطات',teamOnly:true},
+  {id:'ygig-amrap',icon:'🔁',name:'YGIG — AMRAP',desc:'Partners swap full rounds',desc_ar:'تناوب جولات AMRAP مع الشريك',teamOnly:true},
+  {id:'ygig-ft',icon:'🔀',name:'YGIG — For Time',desc:'Partners swap rounds, race time',desc_ar:'تناوب جولات للوقت مع الشريك',teamOnly:true},
 ];
 function step3(){
   var sel=S.wodTypes;
@@ -2524,7 +2524,7 @@ function step3(){
   +TYPES.map(function(tp){
     var dis=tp.teamOnly&&S.teamSize<2;
     var tpDesc=dis?t('team_only'):(CFG.lang==='ar'&&tp.desc_ar?tp.desc_ar:tp.desc);
-    return'<button class="ob'+(sel.indexOf(tp.id)>=0?' sel':'')+' '+(dis?'dis':'')+'" onclick="'+(dis?'':'toggleType(\''+tp.id+'\')')+'"><span class="oi">'+tp.icon+'</span><span class="on">'+tp.name+'</span></button>';
+    return'<button class="ob'+(sel.indexOf(tp.id)>=0?' sel':'')+' '+(dis?'dis':'')+'" onclick="'+(dis?'':'toggleType(\''+tp.id+'\')')+'"><span class="oi">'+tp.icon+'</span><span class="on">'+tp.name+'</span>'+(tpDesc?'<span class="od">'+tpDesc+'</span>':'')+'</button>';
   }).join('')+'</div><button class="nb" onclick="go()" '+(sel.length===0?'disabled':'')+'>'+t('generate')+'</button>'
   +bkBtn('back_te',2)+'</div>';
 }
