@@ -216,7 +216,7 @@ var T={
     ga_repsa:'Fixed Reps',ga_repsb:'Fixed Reps',
     i_amrap:'Complete as many rounds as possible | Time cap: {t} min',i_amrap_m:'Complete as many rounds as possible | Time cap: {t} min',
     i_rft:'Complete {r} rounds as fast as possible | Time cap: {t} min',
-    i_emom:'Every minute on the minute | Time cap: {t} min | {n} movements rotating · {s} sets · <span style="font-weight:800">~45s work/min</span>',
+    i_emom:'Every minute on the minute | Time cap: {t} min | {n} movements rotating · {s} sets · ~45s work/min',
     i_chipper:'Complete all reps of each movement before moving on | Time cap: {t} min',i_chipper_st:'Complete all reps of each movement before moving on | Time cap: {t} min',
     i_tabata_classic:'One movement, rotating through intervals | 20s work / 10s rest × 8 intervals | Total time: 4 min',
     i_tabata:'Complete all 8 intervals per movement before moving to next | 20s work / 10s rest × 8 intervals each | Total time: {tot} min',
@@ -437,7 +437,7 @@ var STR=[
   {name:'Good Morning',cat:'barbell',tier:1,alts:['Romanian Deadlift','Hang Power Clean','Back Squat','KB Good Morning']},
   {name:'Air Squat',cat:'gymnastics',tier:1,alts:['Goblet Squat','Jump Squat','KB Swing','Mountain Climber']},
   {name:'Push-Up',cat:'gymnastics',tier:1,alts:['Ring Dip','Hand-Release Push-Up','Handstand Push-Up','Wall Walk']},
-  {name:'Strict Pull-up',cat:'gymnastics',tier:1,alts:['Jumping Pull-Up','Banded Pull-Up','Ring Row','Negative Pull-Up']},
+  {name:'Pull-up',cat:'gymnastics',tier:1,alts:['Jumping Pull-Up','Banded Pull-Up','Ring Row','Negative Pull-Up']},
   {name:'Chin-Up',cat:'gymnastics',tier:1,alts:['Pull-Up','Jumping Pull-Up','Banded Pull-Up','Ring Row']},
   {name:'Kipping Pull-Up',cat:'gymnastics',tier:2,alts:['Strict Pull-Up','Jumping Pull-Up','Banded Pull-Up','Ring Row']},
   {name:'Negative Pull-Up',cat:'gymnastics',tier:1,alts:['Jumping Pull-Up','Ring Row','Banded Pull-Up','Pull-Up']},
@@ -589,7 +589,7 @@ var STR=[
   {name:'Skin the Cat',cat:'gymnastics',tier:3,alts:['Ring Muscle-Up','L-Sit','Ring Row','Strict Pull-Up']},
   {name:'Dragon Flag',cat:'gymnastics',tier:3,alts:['L-Sit','Toes-to-Bar','V-Up','Hollow Body Hold']},
   {name:'Nordic Curl',cat:'gymnastics',tier:3,alts:['GHD Sit-Up','Romanian Deadlift','Good Morning','Glute Bridge']},
-  {name:'Strict Chest-to-bar Pull-up',cat:'gymnastics',tier:3,alts:['Chest-to-Bar Pull-Up','Strict Pull-up','Butterfly Pull-Up','Kipping Pull-Up']},
+  {name:'Strict Chest-to-bar Pull-up',cat:'gymnastics',tier:3,alts:['Chest-to-Bar Pull-Up','Pull-up','Butterfly Pull-Up','Kipping Pull-Up']},
   {name:'Strict Toes-to-bar',cat:'gymnastics',tier:3,alts:['Toes-to-Bar','Hanging Knee Raise','Knees-to-Chest','Leg Raise']},
   // ── NEW T3 · Dumbbell ─────────────────────────────────────
   {name:'DB Hang Power Snatch',cat:'dumbbell',tier:3,alts:['DB Snatch','Power Snatch','KB Snatch','DB Clean']},
@@ -1279,7 +1279,7 @@ function mkAmrap(time,lv,team,cfg){
   var _amrapRndMin=Math.round(_amrapTarget/60);
   var _amrapManual=!!cfg.target;
   var _amrapRnds=Math.round(time/(_amrapTarget/60));
-  return[{type:'AMRAP',title:'AMRAP '+time+' Min',infoKey:_amrapManual?'i_amrap_m':'i_amrap',infoVars:{t:time,rnd:_amrapRndMin,rnds:_amrapRnds,tgt:_amrapTarget},scoreKey:'sc_rounds',teamKey:team>1?'tm_one':null,teamVars:{n:team},items:items,amrapCfg:cfg,_patternLS:_amrLS,_patternFlat:_amrIsFlat,_patternType:_amrRpType}];
+  return[{type:'AMRAP',title:'AMRAP — '+time+' Min',infoKey:_amrapManual?'i_amrap_m':'i_amrap',infoVars:{t:time,rnd:_amrapRndMin,rnds:_amrapRnds,tgt:_amrapTarget},scoreKey:'sc_rounds',teamKey:team>1?'tm_one':null,teamVars:{n:team},items:items,amrapCfg:cfg,_patternLS:_amrLS,_patternFlat:_amrIsFlat,_patternType:_amrRpType}];
 }
 
 function mkRFT(time,lv,team,cfg){
@@ -1498,7 +1498,7 @@ function mkRFT(time,lv,team,cfg){
   if(addCardio&&_cEx){items.push({kind:'cardio',ex:_cEx});}
 
   // العنوان: سكيم متغير → "For Time (21-15-9)" | جولات ثابتة → "X Rounds For Time"
-  var _rftTitle=rounds+' Rounds For Time';
+  var _rftTitle=rounds+' Rounds — For Time';
   return[{type:'For Time / RFT',title:_rftTitle,infoKey:'i_rft',infoVars:{r:rounds,t:time},scoreKey:'sc_time',teamKey:team>1?'tm_partition':null,items:items,scheme:reps,chosen:chosen,rftCfg:cfg}];
 }
 
@@ -1558,7 +1558,7 @@ function mkEmom(time,lv,team,cfg){
     var _rLtr=String.fromCharCode(65+chosen.length+(addCardio?1:0));
     items.push({kind:'str',ex:{name:'🛑 REST',cat:'rest',unit:'reps'},emomMin:'Min '+_rLtr,detail:'Complete Rest — Breathe & Recover',noEdit:true,noPencil:true,isRest:true});
   }
-  return[{type:'EMOM',title:'EMOM '+time+' Min',infoKey:'i_emom',infoVars:{n:numMov,s:sets,t:time},scoreKey:'sc_rounds_comp',teamKey:team>1?'tm_own':null,items:items,emomCfg:cfg}];
+  var _emomActualTime=_emomCycle*sets;return[{type:'EMOM',title:'EMOM — '+_emomActualTime+' Min',infoKey:'i_emom',infoVars:{n:numMov,s:sets,t:time},scoreKey:'sc_rounds_comp',teamKey:team>1?'tm_own':null,items:items,emomCfg:cfg}];
 }
 
 var CHIPPER_SCHEMES={
@@ -2088,7 +2088,7 @@ function mkLadder(time,lv,team,cfg){
     }
   }
   var _ladderTimeSec=isAsc?null:_ldrEst(reps,chosen,_resolvedCardio);
-  return[{type:'Ladder',title:'Ladder',infoKey:infoK,infoVars:infoV,scoreKey:'sc_time',teamKey:team>1?'tm_ladder':null,items:items,scheme:reps,chosen:chosen,ladderCfg:cfg,_ladderTimeSec:_ladderTimeSec,_estDiv:_estDiv}];
+  return[{type:'Ladder',title:'Ladder — For Time',infoKey:infoK,infoVars:infoV,scoreKey:'sc_time',teamKey:team>1?'tm_ladder':null,items:items,scheme:reps,chosen:chosen,ladderCfg:cfg,_ladderTimeSec:_ladderTimeSec,_estDiv:_estDiv}];
 }
 
 function buildSchemeForRounds(dir,rounds,lv){
@@ -2173,7 +2173,7 @@ function mkBuyInOut(time,lv,team,cfg){
     items.push({kind:'sep',label:'── CASH-OUT ──'});
     items.push({kind:'buyin',label:'CASH-OUT — '+bOut.name,which:'cashout',exName:bOut.name,ex:bOut,tag:'CASH-OUT',detail:cashOutAmt});
   }
-  var _biTitle=mode==='buyin'?'Buy-In + WOD':mode==='cashout'?'WOD + Cash-Out':'Buy-In + WOD + Cash-Out';
+  var _biTitle=mode==='buyin'?'Buy-In — WOD':mode==='cashout'?'WOD — Cash-Out':'Buy-In — WOD — Cash-Out';
   return[{type:'Buy-In / Cash-Out',title:_biTitle,infoKey:'i_buyin',infoVars:{r:rounds,t:time},scoreKey:'sc_time',teamKey:team>1?'tm_buyin':null,items:items,buyInCfg:cfg,scheme:reps,noLongForm:true}];
 }
 function mkYGIG(time,lv,team,cfg){
@@ -2209,7 +2209,7 @@ function mkYGIG(time,lv,team,cfg){
       }
       timeCap=Math.min(time,Math.max(1,timeCap));
     }
-    _rftSec.type='YGIG / Partner WOD';_rftSec.title='YGIG - '+(roundsEach*2)+' Rounds For Time';
+    _rftSec.type='YGIG / Partner WOD';_rftSec.title='YGIG — '+(roundsEach*2)+' Rounds, For Time';
     _rftSec.infoKey='i_ygig_ft';_rftSec.infoVars={r:roundsEach,cap:timeCap};
     _rftSec.scoreKey='sc_time';_rftSec.teamKey='tm_ygig_ft';_rftSec.teamVars={n:eff};
     _rftSec.noLongForm=true;_rftSec.ygigCfg=cfg;
@@ -2246,7 +2246,7 @@ function mkYGIG(time,lv,team,cfg){
     return pw>0?Math.max(1,Math.floor(time*60/pw)):_ygigInitEven;
   })();
   var _amrRnd=Math.round(_ygigAmrapTgt/60);
-  _amrSec.type='YGIG / Partner WOD';_amrSec.title='YGIG — AMRAP '+time+' Min';
+  _amrSec.type='YGIG / Partner WOD';_amrSec.title='YGIG — AMRAP, '+time+' Min';
   _amrSec.infoKey='i_amrap';_amrSec.infoVars={t:time,rnd:_amrRnd,rnds:_ygigFinalRnds,tgt:_ygigAmrapTgt};
   _amrSec.scoreKey='sc_ygig';_amrSec.teamKey='tm_ygig_amrap';_amrSec.teamVars={n:eff};
   _amrSec.noLongForm=true;_amrSec.ygigCfg=cfg;
@@ -2677,7 +2677,7 @@ function setChipperRepInput(si,inp){
 
 function cfgGearRow(infoTxt,toggleFn,si,timeEst,preTime){
   var txt=(infoTxt||'').replace(/\. /g,' | ').replace(/\.$/,'');
-  var tH=timeEst?' | '+t('est_time_label')+(preTime?' '+preTime:'')+' <span style="font-weight:800">~'+timeEst+'</span>':'';
+  var tH=timeEst?' | '+t('est_time_label')+(preTime?' '+preTime:'')+' <span style="font-weight:800">~'+timeEst+' min</span>':'';
   return '<div class="si" style="display:flex;align-items:center;justify-content:space-between;gap:8px"><span>'+txt+tH+'</span><span onclick="'+toggleFn+'('+si+')" style="cursor:pointer;font-size:15px;flex-shrink:0;opacity:0.6">⚙️</span></div>';
 }
 function renderSecInfo(sec,si,infoTxt){
@@ -2687,7 +2687,7 @@ function renderSecInfo(sec,si,infoTxt){
   if(sec.type==='Chipper'){var _cE='';var _cL=S.level||'intermediate';var _cTm=S.teamSize||1;var _cTr=_cTm===2?18:({beginner:22,intermediate:16,advanced:10,elite:6}[_cL]||16);var _cSI=sec.items.filter(function(x){return x.kind==='str'&&x.baseRep&&!x.isRest;});var _cCI=sec.items.filter(function(x){return(x.kind==='cardio'||x.kind==='station-gate')&&x.ex&&x.ex.amount;});var _cPW=0;_cSI.forEach(function(it){_cPW+=it.baseRep*getSecondsPerRep(it.ex,_cL,_cTm,_cTm===2);});_cCI.forEach(function(cx){_cPW+=_cardioSecEst(cx.ex,_cL,_cTm,_cTm===2);});_cPW+=(_cSI.length+_cCI.length>1?(_cSI.length+_cCI.length-1)*_cTr:0);if(_cPW>0){var _cs=Math.round(_cPW);_cE=Math.floor(_cs/60)+':'+(_cs%60<10?'0':'')+(_cs%60);}return cfgGearRow(infoTxt,'toggleChipperCfg',si,_cE)+renderChipperCfg(sec,si);}
   if(sec.type==='AMRAP')return cfgGearRow(infoTxt,'toggleAmrapCfg',si,_amrBoldTime)+renderAmrapCfg(sec,si);
   if(sec.type==='For Time / RFT'){var _rE='';var _rL=S.level||'intermediate';var _rTm=S.teamSize||1;var _rTr=_rTm===2?18:({beginner:22,intermediate:16,advanced:10,elite:6}[_rL]||16);var _rIV=sec.infoVars||{};var _rRnds=_rIV.r||1;var _rSI=sec.items.filter(function(x){return x.kind==='str'&&x.baseRep&&!x.isRest;});var _rCI=sec.items.filter(function(x){return(x.kind==='cardio'||x.kind==='station-gate')&&x.ex&&x.ex.amount;});var _rPW=0;_rSI.forEach(function(it){_rPW+=it.baseRep*getSecondsPerRep(it.ex,_rL,_rTm,_rTm===2);});_rCI.forEach(function(cx){_rPW+=_cardioSecEst(cx.ex,_rL,_rTm,_rTm===2);});_rPW+=(_rSI.length+_rCI.length>1?(_rSI.length+_rCI.length-1)*_rTr:0);if(_rPW>0){var _rt=Math.round(_rPW*_rRnds);_rE=_rRnds+' rounds ~'+Math.floor(_rt/60)+':'+(_rt%60<10?'0':'')+(_rt%60);}return cfgGearRow(infoTxt,'toggleRftCfg',si,_rE)+renderRftCfg(sec,si);}
-  if(sec.type==='EMOM')return cfgGearRow(infoTxt,'toggleEmomCfg',si)+renderEmomCfg(sec,si);
+  if(sec.type==='EMOM'){var _emIV=sec.infoVars||{};var _emS=_emIV.s||0;var _emCycle=(sec.items||[]).filter(function(x){return x.kind!=='sep';}).length;var _emMins=_emCycle*_emS;var _emE=_emMins>0?_emMins+':00':'';return cfgGearRow(infoTxt,'toggleEmomCfg',si,_emE)+renderEmomCfg(sec,si);}
   if(sec.type==='Tabata'){var _tTxt=infoTxt?infoTxt.replace(/(Total time: [\d]+ min)/,'<span style="font-weight:800">$1</span>'):infoTxt;return cfgGearRow(_tTxt,'toggleTabataCfg',si)+renderTabataCfg(sec,si);}
   if(sec.type==='Death By')return cfgGearRow(infoTxt,'toggleDeathByCfg',si)+renderDeathByCfg(sec,si);
   if(sec.type==='YGIG / Partner WOD'){var _yE='';var _yLv=S.level||'intermediate';var _yTr={beginner:22,intermediate:16,advanced:10,elite:6}[_yLv]||16;var _ySI=sec.items.filter(function(x){return x.kind==='str'&&x.baseRep&&!x.isRest;});var _yCI=sec.items.filter(function(x){return(x.kind==='cardio'||x.kind==='station-gate')&&x.ex&&x.ex.amount;});var _yIV=sec.infoVars||{};if(sec.infoKey==='i_ygig_ft'){var _yRnds=(_yIV.r||1)*2;var _yPW=0;_ySI.forEach(function(it){_yPW+=it.baseRep*getSecondsPerRep(it.ex,_yLv,1,false);});_yCI.forEach(function(cx){_yPW+=_cardioSecEst(cx.ex,_yLv,1,false);});_yPW+=(_ySI.length+_yCI.length>1?(_ySI.length+_yCI.length-1)*_yTr:0);var _yEst=_yPW*_yRnds;if(_yEst>0){var _ys=Math.round(_yEst);_yE=Math.floor(_ys/60)+':'+(_ys%60<10?'0':'')+(_ys%60);}}else{var _yRndsA=_yIV.rnds||0;var _yTgtA=_yIV.tgt||0;if(_yRndsA>0&&_yTgtA>0){var _yEstA=Math.round(_yRndsA*_yTgtA);_yE=Math.floor(_yEstA/60)+':'+(_yEstA%60<10?'0':'')+(_yEstA%60);}}return cfgGearRow(infoTxt,'toggleYgigCfg',si,sec.infoKey==='i_ygig_ft'?(_yE?(_yIV.r||'')+' rounds ~'+_yE:''):_amrBoldTime)+renderYgigCfg(sec,si);}
@@ -2856,7 +2856,7 @@ function renderSec(sec,si){
   var _subHdr=function(lbl){return'<div style="font-size:11px;font-weight:700;color:var(--txt3);letter-spacing:1.5px;text-transform:uppercase;margin:8px 0 6px">── '+lbl+' ──</div>';};
   if(sec.type==='Group A'){
     var _gabBadges=_gabChip(si);
-    var gabInner='<span>A/B AMRAP</span>'
+    var gabInner='<span>A/B AMRAP / Partner WOD</span>'
       +'<span style="display:flex;align-items:center;gap:4px">'+_gabBadges+(hasDesc?'<button class="wdi-btn" onclick="showWodDesc(\'Group A\')">ⓘ</button>':'')+'</span>';
     return'<div class="ws ani" id="sec-'+si+'" style="border-bottom-left-radius:0;border-bottom-right-radius:0;margin-bottom:0">'
       +'<div class="st" style="display:flex;align-items:center;justify-content:space-between">'+gabInner+'</div>'
@@ -5183,7 +5183,7 @@ function openEditDetail(si,ii,r){
     if(!fixedUnit2){if(item.savedUnit){strEditUnit=item.savedUnit;}else{var cu2=detUnit(item.detail);strEditUnit=(cu2==='m'||cu2==='s'||cu2==='reps')?cu2:'reps';}}else{strEditUnit=fixedUnit2;}
     var rounds2=[];for(var _ri2=0;_ri2<_schemeLen;_ri2++){rounds2.push(parseInt((getRoundRep(item.detail,_ri2).match(/\d+/)||['10'])[0],10)||10);}
     editingDetail={si:si,ii:ii,unit:unit2,fixedUnit:fixedUnit2,multiRound:true,roundCount:_schemeLen,rounds:rounds2};
-    if(sec.type==='Ladder')_edRoundsExpanded=true;
+    var _allSame=rounds2.every(function(v){return v===rounds2[0];});if(!_allSame||sec.type==='Ladder')_edRoundsExpanded=true;
     _renderEditDetailSheet(ex2.name,rounds2[0],label2,presets2,fixedUnit2,false,rounds2);
     var ov2=document.getElementById('edit-overlay');ov2.style.display='block';
     setTimeout(function(){document.getElementById('edit-sheet').style.transform='translateX(-50%) translateY(0)';},10);
