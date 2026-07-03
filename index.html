@@ -52,7 +52,7 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:26px;heigh
 .wb.b{border-color:var(--bl);color:var(--bl)}
 .ws{background:var(--bg2);border:0.5px solid var(--bdr2);border-radius:14px;padding:18px 14px;margin:0 4px 10px}
 .st{font-size:11px;color:var(--or);text-transform:uppercase;letter-spacing:2px;font-weight:700;margin-bottom:2px;font-family:'Segoe UI',sans-serif}
-.stt{font-size:16px;font-weight:600;margin-bottom:12px;padding-bottom:10px;border-bottom:0.5px solid var(--bdr2);color:var(--txt);font-family:'Segoe UI',sans-serif}
+.stt{font-size:16px;font-weight:600;margin-bottom:12px;padding-bottom:10px;border-bottom:0.5px solid var(--bdr2);color:var(--txt);font-family:'Segoe UI',sans-serif;text-align:start}
 .si{font-size:13px;color:var(--txt2);padding:7px 10px;background:var(--bg3);border-radius:7px;border-left:2px solid var(--or);margin-bottom:8px;line-height:1.55;font-family:'Segoe UI',sans-serif;text-align:start}
 .si.team{border-left-color:var(--ye)}
 .si.sc{border-left-color:var(--bl)}
@@ -66,7 +66,7 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:26px;heigh
 .en.reo-src{background:var(--or);color:#000;box-shadow:0 0 0 3px rgba(255,120,0,0.25)}
 .en.reo-tgt{background:var(--bg2);border-style:dashed;animation:reo-pulse 1s infinite alternate}
 @keyframes reo-pulse{from{border-color:var(--or);color:var(--or)}to{border-color:rgba(255,120,0,0.3);color:rgba(255,120,0,0.4)}}
-.eb{flex:1;min-width:0}
+.eb{flex:1;min-width:0;text-align:start}
 .ename{font-size:14px;font-weight:500;color:var(--txt);margin-bottom:2px;font-family:'Segoe UI',sans-serif}
 .edet{font-size:13px;color:var(--or);font-weight:700;font-family:'Segoe UI',sans-serif}
 .ea{display:flex;flex-direction:column;gap:4px;flex-shrink:0}
@@ -75,7 +75,7 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:26px;heigh
 .esb.re{color:var(--re);border-color:rgba(255,23,68,.3)}
 .cb{display:flex;align-items:center;gap:9px;padding:9px 10px;margin:5px 0;background:var(--cag);border:0.5px solid rgba(0,188,212,.2);border-radius:10px}
 .ci{font-size:16px;flex-shrink:0}
-.cbb{flex:1;min-width:0}
+.cbb{flex:1;min-width:0;text-align:start}
 .cn{font-size:14px;font-weight:700;color:var(--ca)}
 .cd{font-size:11px;color:rgba(0,188,212,.7);margin-top:1px}
 .ct{font-size:11px;background:rgba(0,188,212,.12);color:var(--ca);padding:2px 7px;border-radius:7px;font-weight:700;flex-shrink:0}
@@ -2552,7 +2552,7 @@ var LL={beginner:'Beginner',intermediate:'Intermediate',advanced:'Advanced',elit
 function renderWod(){
   window.scrollTo(0,0);
   var w=S.wod;
-  app.innerHTML=dots(4)+'<div class="wh ani"><div class="wl">'+t('wod_day')+'</div><div class="wn"><bdi dir="ltr">'+S.wodName+'</bdi></div><div class="wm"><span class="wb o">'+(TL[w.type]||w.type)+'</span><span class="wb">'+({'beginner':t('lv_b'),'intermediate':t('lv_i'),'advanced':t('lv_a'),'elite':t('lv_e')}[S.level]||LL[S.level])+'</span><span class="wb'+(CFG.lang==='ar'?' dir="ltr"':'')+'>'+S.time+' '+(CFG.lang==='ar'?arMin(S.time):'min')+'</span>'+(S.teamSize>1?'<span class="wb b">'+(CFG.lang==='ar'?t('team_chip'):'Team')+' '+S.teamSize+'</span>':'')+'</div></div>'
+  app.innerHTML=dots(4)+'<div class="wh ani"><div class="wl">'+t('wod_day')+'</div><div class="wn"><bdi dir="ltr">'+S.wodName+'</bdi></div><div class="wm"><span class="wb o">'+(TL[w.type]||w.type)+'</span><span class="wb">'+({'beginner':t('lv_b'),'intermediate':t('lv_i'),'advanced':t('lv_a'),'elite':t('lv_e')}[S.level]||LL[S.level])+'</span><span class="wb"'+(CFG.lang==='ar'?' dir="ltr"':'')+'>'+S.time+' '+(CFG.lang==='ar'?arMin(S.time):'min')+'</span>'+(S.teamSize>1?'<span class="wb b">'+(CFG.lang==='ar'?t('team_chip'):'Team')+' '+S.teamSize+'</span>':'')+'</div></div>'
   +'<div id="secs">'+w.sections.map(function(s,i){return renderSec(s,i)}).join('')+'</div>'
   +'<div class="ar"><button class="ab pri" onclick="regen()">'+t('new_wod')+'</button><button class="ab" onclick="shareWod()" style="background:rgba(255,102,0,0.08);color:var(--or);border:1px solid rgba(255,102,0,0.3)">'+t('share')+'</button></div>'
   +'<button class="bk" style="margin:8px 4px 0" onclick="S.cfgStore={};S.step=3;render()">'+t('back_ty')+'</button>'
