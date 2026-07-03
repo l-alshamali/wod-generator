@@ -383,7 +383,7 @@ var TNC={
     ]
   }
 };
-var CFG={lang:'en',theme:'dark'};
+var CFG={lang:'en',theme:'dark',showFillBar:false};
 function t(k){return T[CFG.lang][k]||T.en[k]||k;}
 function arMin(n){n=parseInt(n)||0;if(n===1)return 'دقيقة واحدة';if(n===2)return 'دقيقتان';if(n>=3&&n<=10)return 'دقائق';return 'دقيقة';}
 function bdiNums(s){if(CFG.lang!=='ar'||!s)return s;return s.replace(/(\d+(?:[:.\-]\d+)*)/g,'<bdi>$1</bdi>');}
@@ -2826,6 +2826,7 @@ function _fillBarData(fill){
   return{pct:pct,color:color,label:label,grad:grad,mPct:mPct};
 }
 function _fillChip(fill){
+  if(!CFG.showFillBar)return'';
   if(fill===null||fill===undefined||isNaN(fill))return'';
   var d=_fillBarData(fill);
   return'<span style="display:inline-flex;flex-direction:column;min-width:130px;vertical-align:middle">'
