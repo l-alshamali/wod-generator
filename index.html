@@ -2480,7 +2480,7 @@ function bkBtn(key,step){return'<button class="bk" onclick="S.step='+step+';rend
 function step0(){
   var lvls=[['beginner','🌱',t('lv_b'),t('lv_b_d')],['intermediate','⚡',t('lv_i'),t('lv_i_d')],['advanced','🔥',t('lv_a'),t('lv_a_d')],['elite','🏆',t('lv_e'),t('lv_e_d')]];
   app.innerHTML='<div style="text-align:center;padding:32px 16px 24px">'
-  +'<div style="font-size:11px;color:var(--or);text-transform:uppercase;letter-spacing:3px;font-weight:700;margin-bottom:10px;font-family:\'Segoe UI\',sans-serif">'+t('wod')+'</div>'
+  +'<img src="wod_logo_transparent.png" style="width:80px;height:auto;margin-bottom:10px" alt="WOD">'
   +'<div style="font-size:30px;font-weight:900;color:var(--txt,#fff);letter-spacing:-1px;line-height:1.1;font-family:\'Segoe UI\',sans-serif">'+t('title')+'</div>'
   +'<div style="width:40px;height:2px;background:var(--or);margin:14px auto 12px;border-radius:2px"></div>'
   +'<div style="font-size:13px;color:var(--txt2);font-weight:500;letter-spacing:1px">'+t('sub')+'</div>'
@@ -5551,7 +5551,7 @@ function verifyCode(email,password,cb){
 function showGate(){
   app.innerHTML=
     '<div style="min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:32px 20px;text-align:center">'
-    +'<div style="font-size:11px;color:var(--or);text-transform:uppercase;letter-spacing:3px;font-weight:700;margin-bottom:10px">'+t('wod')+'</div>'
+    +'<img src="wod_logo_transparent.png" style="width:80px;height:auto;margin-bottom:10px" alt="WOD">'
     +'<div style="font-size:30px;font-weight:900;color:var(--txt,#fff);letter-spacing:-1px;line-height:1.1;margin-bottom:6px">'+t('title')+'</div>'
     +'<div style="width:40px;height:2px;background:var(--or);margin:12px auto 6px;border-radius:2px"></div>'
     +'<div style="font-size:13px;color:var(--txt2);margin-bottom:32px">'+t('sub')+'</div>'
