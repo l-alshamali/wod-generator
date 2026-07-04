@@ -638,8 +638,10 @@ var CARDIO=[
   {name:'Ski Erg',      amount:1000, unit:'m',    alts:['Row','Run','Assault Bike']},
   {name:'Ski Erg',      amount:20,   unit:'Cal',  alts:['Row','Run','Assault Bike']},
   {name:'Ski Erg',      amount:30,   unit:'Cal',  alts:['Row','Run','Assault Bike']},
-  {name:'Double-Unders',amount:30,   unit:'reps', alts:['Single-Unders','Jump Rope']},
-  {name:'Double-Unders',amount:50,   unit:'reps', alts:['Single-Unders','Jump Rope']},
+  {name:'Double-Unders',amount:30,   unit:'reps', alts:['Single-Unders','Row','Assault Bike']},
+  {name:'Double-Unders',amount:50,   unit:'reps', alts:['Single-Unders','Row','Assault Bike']},
+  {name:'Single-Unders',amount:30,   unit:'reps', altOnly:true, alts:['Double-Unders','Row','Assault Bike']},
+  {name:'Single-Unders',amount:50,   unit:'reps', altOnly:true, alts:['Double-Unders','Row','Assault Bike']},
   {name:'Sprint',       amount:100,  unit:'m',    alts:['Run','Row']}];
 var TABATA_STR_NAMES=['Air Squat','Push-Up','Burpee','Mountain Climber','Box Jump','Box Step-Up','Slam Ball','Wall Ball','V-Up','Knees-to-Chest','Broad Jump','KB Swing','American KB Swing','KB Thruster','DB Thruster','DB Snatch','DB Lunge','DB Box Step-Up','DB Push Press','Walking Lunge','Lunge','Reverse Lunge'];
 var TABATA_CARDIO=[
@@ -738,7 +740,8 @@ function getSecondsPerRep(ex,lv,team,split){
     else if(ex.cat==='barbell')base=[3.0,3.2,3.2,4.5][t-1]||3.0;
     else if(ex.cat==='kettlebell')base=[2.5,2.7,3.5,4.25][t-1]||2.5;
     else if(ex.cat==='dumbbell')base=[3.0,3.0,5.0,4.0][t-1]||3.0;
-    else base=3.0;
+    else if(ex.unit==='carry')base=2.0;  // DEFAULT_SPEED carry: elite=2.0→adv=2.4→int=2.8→beg=3.2
+    else base=3.0;                        // DEFAULT_SPEED reps:  elite=3.0→adv=3.6→int=4.2→beg=4.8
   }
   return base*spd;
 }
@@ -762,7 +765,7 @@ function _roundCal(v,team){if(v<=0)return team===2?12:6;return v<24?Math.max(2,M
 function _roundMtr(v){return Math.max(100,Math.round(v/100)*100);}
 // ── Flat Series for normal cardio (AMRAP / RFT / Chipper / YGIG / Group A-B) ──
 var _CARDIO_SERIES={Cal:[[2,10],[10,100],[20,200]],m:[[100,500],[200,1000],[500,5000]],reps:[[10,100],[20,200],[50,500]]};
-function _cardioPickFlat(unit,mn,mx,noSmall){var key=unit==='DU'||unit==='reps'?'reps':unit==='m'?'m':'Cal';var sers=_CARDIO_SERIES[key];if(noSmall&&key==='Cal')sers=sers.filter(function(s){return s[0]>=10;});var valid=sers.filter(function(s){var lo=Math.ceil(Math.max(s[0],mn)/s[0])*s[0];return lo<=Math.min(mx,s[1]);});if(!valid.length)valid=sers;var ser=pk(valid);var lo=Math.max(ser[0],Math.ceil(mn/ser[0])*ser[0]);var hi=Math.min(ser[1],Math.floor(mx/ser[0])*ser[0]);if(lo>hi){lo=ser[0];hi=ser[1];}var vals=[];for(var v=lo;v<=hi;v+=ser[0])vals.push(v);return{amount:vals.length?pk(vals):lo,_serStep:ser[0],_serCap:ser[1]};}
+function _cardioPickFlat(unit,mn,mx,noSmall){var key=unit==='DU'||unit==='reps'?'reps':unit==='m'?'m':'Cal';var sers=_CARDIO_SERIES[key];if(noSmall&&key==='Cal')sers=sers.filter(function(s){return s[0]>=10;});var valid=sers.filter(function(s){var lo=Math.ceil(Math.max(s[0],mn)/s[0])*s[0];return lo<=Math.min(mx,s[1]);});if(!valid.length)valid=sers;var ser=pk(valid);var lo=Math.max(ser[0],Math.ceil(mn/ser[0])*ser[0]);var hi=Math.min(ser[1],Math.floor(mx/ser[0])*ser[0]);if(isNaN(lo)||isNaN(hi)||lo>hi){lo=ser[0];hi=ser[1];}var vals=[];for(var v=lo;v<=hi;v+=ser[0])vals.push(v);return{amount:vals.length?pk(vals):lo,_serStep:ser[0],_serCap:ser[1]};}
 function _cardioNearestSer(unit,amt,mn,mx){var key=unit==='DU'||unit==='reps'?'reps':unit==='m'?'m':'Cal';var sers=_CARDIO_SERIES[key];var all={};sers.forEach(function(s){for(var v=Math.ceil(Math.max(s[0],mn)/s[0])*s[0];v<=Math.min(s[1],mx);v+=s[0])all[v]=true;});var vals=Object.keys(all).map(Number).sort(function(a,b){return a-b;});if(!vals.length)return amt;var best=vals[0],bd=Math.abs(vals[0]-amt);vals.forEach(function(v){var d=Math.abs(v-amt);if(d<bd){bd=d;best=v;}});return best;}
 function _cardioNextSer(unit,amt,dir,mn,mx,noSmall){var key=unit==='DU'||unit==='reps'?'reps':unit==='m'?'m':'Cal';var sers=_CARDIO_SERIES[key];if(noSmall&&key==='Cal')sers=sers.filter(function(s){return s[0]>=10;});var all={};sers.forEach(function(s){for(var v=Math.ceil(Math.max(s[0],mn)/s[0])*s[0];v<=Math.min(s[1],mx);v+=s[0])all[v]=true;});var vals=Object.keys(all).map(Number).sort(function(a,b){return a-b;});if(!vals.length)return amt;if(dir>0){for(var i=0;i<vals.length;i++)if(vals[i]>amt)return vals[i];return vals[vals.length-1];}for(var i=vals.length-1;i>=0;i--)if(vals[i]<amt)return vals[i];return vals[0];}
 // ── Cardio Limits Table (solo = table | team-split = ×2) ──────────────────
@@ -823,11 +826,14 @@ function _cardioSecEst(cEx,lv,team,split){
     rate={elite:3.0,advanced:4.2,intermediate:5.7,beginner:6.9}[lv2]||5.7;
   }else if(nm==='double-unders'||nm==='double under'||nm==='double unders'){
     rate={elite:0.46,advanced:0.64,intermediate:0.87,beginner:1.06}[lv2]||0.87;
+  }else if(nm==='single-unders'||nm==='single under'||nm==='single unders'){
+    rate={elite:0.30,advanced:0.42,intermediate:0.57,beginner:0.69}[lv2]||0.57;
   }else{
-    var spd=({elite:0.80,advanced:1.00,intermediate:1.20,beginner:1.60}[lv2]||1.20)*_teamF;
-    if(u==='Cal')return a*5.5*spd;
-    if(u==='m')return(a/10)*3.0*spd;
-    return a*3.0*spd;
+    // DEFAULT_CARDIO_SPEED fallback — manual entry / unknown machine
+    var _dfRate=u==='Cal'?({elite:2.5,advanced:3.5,intermediate:4.75,beginner:5.75}[lv2]||4.75)
+               :u==='m'? ({elite:0.20,advanced:0.28,intermediate:0.38,beginner:0.46}[lv2]||0.38)
+               :         ({elite:0.46,advanced:0.64,intermediate:0.87,beginner:1.06}[lv2]||0.87);
+    return a*_dfRate*_teamF;
   }
   return a*rate*_teamF;
 }
@@ -1056,7 +1062,7 @@ function mkAmrap(time,lv,team,cfg){
   // ── Unified transition table (solo: level-based | team=2: 18s) — AMRAP & YGIG same values ──
   var _amrTm=cfg.noTeamSplit?1:team;
   var _amrTrans=_amrTm===2?18:({beginner:22,intermediate:16,advanced:10,elite:6}[lv]||16);
-  var _amrapCPool=cfg.cardioAmt?CARDIO.filter(function(c){return c.unit==='Cal';}):CARDIO;
+  var _amrapCPool=cfg.cardioAmt?CARDIO.filter(function(c){return c.unit==='Cal'&&!c.altOnly;}):CARDIO.filter(function(c){return !c.altOnly;});
   var _amrapPickEx=_amrapCPool.length?pk(_amrapCPool):null;
   var _amrapExUnit=_amrapPickEx?_amrapPickEx.unit:'Cal';
   var _amrapInitAmt=cfg.cardioAmt||(_amrapExUnit==='Cal'?_amrCL.calMin:_amrCL.mtrMin);
@@ -1742,7 +1748,7 @@ function mkChipper(time,lv,team,cfg){
   var _clCLInit=_chipperCL(lv,team);
   var cEx=addCardio?(function(){if(!CARDIO.length)return null;var _cp=pk(CARDIO);var _cu=_cp.unit;var _mn=_cu==='Cal'?_clCLInit.calMin:_cu==='m'?_clCLInit.mtrMin:_clCLInit.duMin;var _mx=_cu==='Cal'?_clCLInit.calMax:_cu==='m'?_clCLInit.mtrMax:_clCLInit.duMax;return Object.assign({},_cp,{amount:_cardioPickFlat(_cu,_mn,_mx,true).amount});})():null;
   var _clBudget=time*60;
-  var _swapCardio=function(curCex,CL){var _alts=CARDIO.filter(function(c){return!curCex||c.unit!==curCex.unit;});if(!_alts.length)return curCex;var _nc=pk(_alts);return Object.assign({},_nc,{amount:_cardioInitAmt(_nc.unit,CL)});};
+  var _swapCardio=function(curCex,CL){var _alts=CARDIO.filter(function(c){return(!curCex||c.unit!==curCex.unit)&&!c.altOnly;});if(!_alts.length)return curCex;var _nc=pk(_alts);return Object.assign({},_nc,{amount:_cardioInitAmt(_nc.unit,CL)});};
   {
     // ── Limits ──
     var _clLims=_exLimsForTime(chosen,lv,team,true);
@@ -1840,6 +1846,8 @@ function mkChipper(time,lv,team,cfg){
     // كاب الكارديو عند 40% (يمنح مجال كافي للـ post-loop يسد الفجوة)
     if(addCardio&&cEx)cEx=_cardioCapSec(cEx,_clBudget*0.40,_clCLInit,lv,team,true,true);
   }
+  // ── Guard: fix NaN amount before building items ──
+  if(addCardio&&cEx&&(isNaN(cEx.amount)||!cEx.amount)){var _fbCL=_chipperCL(lv,team);cEx=Object.assign({},cEx,{amount:_cardioInitAmt(cEx.unit,_fbCL)});}
   // ── Sort by difficulty: easiest→most reps, hardest→fewest ──
   // DESC: easiest first (most reps) → hardest last (fewest reps)
   // ASC:  hardest first (fewest reps) → easiest last (most reps)
@@ -1870,6 +1878,7 @@ function mkChipper(time,lv,team,cfg){
   var _allCardio=items.filter(function(x){return x.kind==='cardio';});
   if(_allCardio.length>1){
     var _refAmt=_allCardio[0].ex.amount;var _refUnit=_allCardio[0].ex.unit;
+    if(isNaN(_refAmt)||!_refAmt){var _fbCL2=_chipperCL(lv,team);_refAmt=_cardioInitAmt(_refUnit,_fbCL2);}
     _allCardio.forEach(function(x){x.ex=Object.assign({},x.ex,{amount:_refAmt,unit:_refUnit});});
   }
   var _cardioAdded2=items.filter(function(x){return x.kind==='cardio';}).length;
@@ -2839,7 +2848,7 @@ function _fillBarData(fill){
     +')';
   return{pct:pct,color:color,label:label,grad:grad,mPct:mPct};
 }
-function _fillChip(fill){return'';}
+function _fillChip(fill){return '';}
 function _secChip(sec){return _fillChip(_secFill(sec));}
 function _gabChip(si){
   var secA=S.wod&&S.wod.sections[si];
@@ -3044,6 +3053,7 @@ function doReorder(si,ii){
   var el=document.getElementById('sec-'+si);
   if(el)el.outerHTML=renderSec(S.wod.sections[si],si);
 }
+function openExerciseVideo(name){var q=encodeURIComponent(name+' crossfit');var a=document.createElement('a');a.href='https://www.youtube.com/results?search_query='+q;a.target='_blank';a.rel='noopener noreferrer';document.body.appendChild(a);a.click();document.body.removeChild(a);}
 function renderStr(it,si,ii,num,roundIdx){
   var ex=it.ex;
   var emTag=it.emomMin?'<span style="background:var(--og);color:var(--or);font-size:10px;font-weight:700;padding:1px 6px;border-radius:5px;margin-left:5px">'+it.emomMin+'</span>':'';
@@ -3068,7 +3078,7 @@ function renderStr(it,si,ii,num,roundIdx){
   var _enCls='en'+(_isSrc?' reo-src':(_isTgt?' reo-tgt':''));
   var _enLabel=_isSrc?'☰':num;
   var _enClick='onclick="'+(_isSrc?'cancelReorder()':(_isTgt?'doReorder('+si+','+ii+')':'startReorder('+si+','+ii+')'))+'"';
-  return'<div class="er" id="ex-'+si+'-'+ii+'"><div class="'+_enCls+'" '+_enClick+'>'+_enLabel+'</div><div class="eb"><div class="ename">'+ex.name+emTag+'</div>'+(it.noEdit?'<div class="edet" style="display:inline-flex;align-items:center;gap:4px">'+fmtDetail(it.detail)+'</div>':'<span style="font-size:14px;color:var(--or);font-weight:700">'+fmtDetail(it.detail)+'</span>'+(it.noPencil?'':'<button onclick="openEditDetail('+si+','+ii+(roundIdx!==undefined?','+roundIdx:'')+')" style="background:none;border:none;padding:0 0 0 3px;font-size:11px;cursor:pointer;line-height:1;vertical-align:middle">&#x270F;&#xFE0F;</button>'))+'</div><div class="ea"><button class="esb" onclick="toggleSwap(\''+si+'\',\''+ii+'\')">'+t('swap')+'</button><button class="esb re" onclick="regenEx('+si+','+ii+',\'str\')">'+t('new_ex')+'</button></div></div>'
+  return'<div class="er" id="ex-'+si+'-'+ii+'"><div class="'+_enCls+'" '+_enClick+'>'+_enLabel+'</div><div class="eb"><div class="ename" style="display:flex;align-items:center;gap:3px">'+ex.name+emTag+'<svg width="14" height="14" viewBox="0 0 24 24" data-name="'+ex.name.replace(/"/g,"&quot;")+'" onclick="openExerciseVideo(this.dataset.name)" style="cursor:pointer;flex-shrink:0" title="Watch on YouTube" fill="none"><path d="M8 5L19 12L8 19V5Z" fill="var(--or)"/></svg></div>'+(it.noEdit?'<div class="edet" style="display:inline-flex;align-items:center;gap:4px">'+fmtDetail(it.detail)+'</div>':'<span style="font-size:14px;color:var(--or);font-weight:700">'+fmtDetail(it.detail)+'</span>'+(it.noPencil?'':'<button onclick="openEditDetail('+si+','+ii+(roundIdx!==undefined?','+roundIdx:'')+')" style="background:none;border:none;padding:0 0 0 3px;font-size:11px;cursor:pointer;line-height:1;vertical-align:middle">&#x270F;&#xFE0F;</button>'))+'</div><div class="ea"><button class="esb" onclick="toggleSwap(\''+si+'\',\''+ii+'\')">'+t('swap')+'</button><button class="esb re" onclick="regenEx('+si+','+ii+',\'str\')">'+t('new_ex')+'</button></div></div>'
   +'<div class="sp" id="sp-'+si+'-'+ii+'"><div class="sh" style="display:flex;align-items:center;justify-content:space-between">'+t('similar')+'<button onclick="toggleSwap(\''+si+'\',\''+ii+'\')" style="background:none;border:none;cursor:pointer;font-size:16px;color:#2ECC71;line-height:1;padding:0;margin-left:8px">✕</button></div><div class="so">'
   +_altF.map(function(a){return'<div class="soi" onclick="swapStr('+si+','+ii+',\''+a.replace(/'/g,"\\'")+'\')">'+'<span class="sn">'+a+'</span><span class="stag">→ '+t('use')+'</span></div>'}).join('')
   +'</div><button class="gn" onclick="regenEx('+si+','+ii+',\'str\')">'+t('gen_diff')+'</button>'
@@ -3087,7 +3097,8 @@ function renderCardio(it,si,ii,roundIdx){
   var ex=it.ex;
   var emTag=it.emomMin?'<span style="background:var(--cag);color:var(--ca);font-size:10px;font-weight:700;padding:1px 6px;border-radius:5px;margin-left:5px">'+it.emomMin+'</span>':'';
   // Top: exercise name only
-  var nameOnly=ex.name+emTag;
+  var _ytIcon='<svg width="14" height="14" viewBox="0 0 24 24" data-name="'+ex.name.replace(/"/g,"&quot;")+'" onclick="openExerciseVideo(this.dataset.name)" style="cursor:pointer;vertical-align:middle;margin-left:3px;flex-shrink:0" title="Watch on YouTube" fill="none"><path d="M8 5L19 12L8 19V5Z" fill="var(--ca)"/></svg>';
+  var nameOnly=ex.name+emTag+_ytIcon;
   // Bottom: amount+unit
   var amountHtml;
   var _sec=S.wod.sections[si];
@@ -3425,7 +3436,7 @@ function regenEx(si,ii,kind){
   var isTabata=sec.type==='Tabata';
   var newEx;
   if(kind==='cardio'){
-    var _cardioPool=isTabata?TABATA_CARDIO:CARDIO;
+    var _cardioPool=isTabata?TABATA_CARDIO:CARDIO.filter(function(c){return !c.altOnly;});
     if(isTabata){
       do{newEx=pk(_cardioPool);}while(newEx.name===(old.ex&&old.ex._raw||old.ex&&old.ex.name));
       S.wod.sections[si].items[ii]=Object.assign({},old,{ex:tabataCardioEx(newEx)});
@@ -3562,7 +3573,7 @@ function _buildWodText(){
     if(s.scheme&&s.scheme.length&&s.longForm){
       s.scheme.forEach(function(_,r){txt+='── ROUND '+(r+1)+' ──\n';s.items.forEach(function(it){if(it.kind==='sep')return;if(it.kind==='cardio'){var _caA=it.cardioAmounts&&it.cardioAmounts.length>1;var _ca=_caA?(it.cardioAmounts.every(function(v){return v===it.cardioAmounts[0];})?it.cardioAmounts[0]+' '+(it.ex.unit||'Cal'):it.cardioAmounts.join(' - ')+' '+(it.ex.unit||'Cal')):(it.ex.amount!=null?fmtCa(it.ex):(it.detail||''));txt+=it.ex.name+(_ca?' — '+_ca:'')+'\n';return;}if(it.kind==='str'){var _rd=getRoundRep(it.detail,r)||(it.baseRep?it.baseRep+' reps':'');txt+=it.ex.name+' — '+_rd+'\n';}});});
     }else{
-      s.items.forEach(function(it){if(it.kind==='sep'||it.kind==='scheme-header'){txt+=it.label+'\n';return;}if(it.kind==='buyin'){var _biTag=it.tag||(it.which==='buyin'?'BUY-IN':'CASH-OUT');txt+=_biTag+(it.ex?' — '+it.ex.name:it.label.replace(/^[^—]+— /,''))+(it.ex&&it.ex.amount!=null?' — '+fmtCa(it.ex):'')+' \n';return;}if(it.kind==='station-header'){return;}if(it.kind==='station-gate'){var _sg=it.ex.amount!=null?fmtCa(it.ex):(it.detail||'');txt+=it.ex.name+(_sg?' — '+_sg:'')+'\n';return;}if(it.kind==='cardio'){var _caA=it.cardioAmounts&&it.cardioAmounts.length>1;var _ca=_caA?(it.cardioAmounts.every(function(v){return v===it.cardioAmounts[0];})?it.cardioAmounts[0]+' '+(it.ex.unit||'Cal'):it.cardioAmounts.join(' - ')+' '+(it.ex.unit||'Cal')):(it.ex.amount!=null?fmtCa(it.ex):(it.detail||''));txt+=it.ex.name+(_ca?' — '+_ca:'')+'\n';return;}txt+=it.ex.name+' — '+(collapseDetail(dispDetail(it.detail))||(it.baseRep?it.baseRep+' reps':''))+'\n';});
+      s.items.forEach(function(it){if(it.kind==='sep'||it.kind==='scheme-header'){txt+=it.label+'\n';return;}if(it.kind==='buyin'){var _biTag=it.tag||(it.which==='buyin'?'BUY-IN':'CASH-OUT');txt+=_biTag+(it.ex?' — '+it.ex.name:it.label.replace(/^[^—]+— /,''))+(it.ex&&it.ex.amount!=null?' — '+fmtCa(it.ex):'')+' \n';return;}if(it.kind==='station-header'){return;}if(it.kind==='station-gate'){var _sg=it.ex.amount!=null?fmtCa(it.ex):(it.detail||'');txt+=it.ex.name+(_sg?' — '+_sg:'')+'\n';return;}if(it.kind==='cardio'){var _caA=it.cardioAmounts&&it.cardioAmounts.length>1;var _ca=_caA?(it.cardioAmounts.every(function(v){return v===it.cardioAmounts[0];})?it.cardioAmounts[0]+' '+(it.ex.unit||'Cal'):it.cardioAmounts.join(' - ')+' '+(it.ex.unit||'Cal')):(it.ex.amount!=null?fmtCa(it.ex):(it.detail||''));txt+=it.ex.name+(_ca?' — '+_ca:'')+'\n';return;}txt+=it.ex.name+' — '+(fmtDetail(it.detail)||(it.baseRep?it.baseRep+' reps':''))+'\n';});
     }
     txt+='\n';
   });
@@ -4070,6 +4081,9 @@ function _timerItemDetail(it){
     // Collapse 'X - X - X ... unit' to 'X unit' when all values are equal
     var _sp=it.detail.match(/^[\d.]+(?:\s*-\s*[\d.]+)*\s+(reps|Cal|m|s)$/);
     if(_sp){var _nums=it.detail.replace(/\s+(reps|Cal|m|s)$/,'').split(/\s*-\s*/).map(Number);if(_nums.length>1&&_nums.every(function(v){return v===_nums[0];}))return _nums[0]+' '+_sp[1];}
+    // Collapse embedded-unit format: "30s - 30s - 30s" → "30s"
+    var _se=it.detail.match(/^(\d+[a-zA-Z]+)(\s*-\s*\d+[a-zA-Z]+)*$/);
+    if(_se){var _pe=it.detail.split(/\s*-\s*/);if(_pe.length>1&&_pe.every(function(v){return v.trim()===_pe[0].trim();}))return _pe[0].trim();}
     return dispDetail(it.detail);
   }
   // Ladder cardio: cardioAmounts holds the full per-round sequence [42,38,34,...]
