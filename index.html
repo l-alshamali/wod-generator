@@ -5721,7 +5721,7 @@ function _swDoSave(){
     toast('⚠️ Not found','#ff6600');return;
   }
   var saved2=_swLoad();
-  if(saved2.length>=_SW_MAX){toast(CFG.lang==='ar'?'تم الوصول للحد الأقصى (30 تمرين محفوظ)<br>يرجى حذف تمرين محفوظ قبل إضافة تمرين جديد.':'Maximum limit reached (30 saved WODs)<br>please delete a saved WOD before adding a new one.','#ff6600',4500);return;}
+  if(saved2.length>=_SW_MAX){toast(CFG.lang==='ar'?'تم الوصول للحد الأقصى<br>يرجى حذف تمرين محفوظ قبل إضافة تمرين جديد.':'Maximum limit reached<br>please delete a saved WOD before adding a new one.','#ff6600',4500);return;}
   saved2.unshift({id:Date.now(),dateSaved:_swFmtDate(),customName:null,snap:snap});
   try{localStorage.setItem(_SW_KEY,JSON.stringify(saved2));toast(CFG.lang==='ar'?'💾 تم الحفظ!':'💾 Saved!','#22c55e');_swUpdateBadge();}
   catch(e3){toast('⚠️ '+e3.message,'#ff4444');}
