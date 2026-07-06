@@ -2907,7 +2907,7 @@ function _fillBarData(fill){
     +')';
   return{pct:pct,color:color,label:label,grad:grad,mPct:mPct};
 }
-function _fillChip(fill){
+function _fillChip(fill){return'';/*HIDDEN*/
   if(fill===null||fill===undefined||isNaN(fill))return'';
   var d=_fillBarData(fill);
   return'<span style="display:inline-flex;flex-direction:column;min-width:130px;vertical-align:middle">'
