@@ -2907,7 +2907,7 @@ function _fillBarData(fill){
     +')';
   return{pct:pct,color:color,label:label,grad:grad,mPct:mPct};
 }
-function _fillChip(fill){
+function _fillChip(fill){return"";/*
   if(fill===null||fill===undefined||isNaN(fill))return'';
   var d=_fillBarData(fill);
   return'<span style="display:inline-flex;flex-direction:column;min-width:130px;vertical-align:middle">'
@@ -2917,8 +2917,8 @@ function _fillChip(fill){
     +'<span style="display:block;font-size:10px;font-weight:700;color:var(--txt2);text-align:right">'+d.pct+'% • '+d.label+'</span>'
     +'</span>';
 }
-function _secChip(sec){return _fillChip(_secFill(sec));}
-function _gabChip(si){
+*/}function _secChip(sec){return _fillChip(_secFill(sec));}
+function _gabChip(si){return"";/*
   var secA=S.wod&&S.wod.sections[si];
   var secB=S.wod&&S.wod.sections[si+1];
   var fA=_secFill(secA);
@@ -2934,7 +2934,7 @@ function _gabChip(si){
       +'<span style="font-size:9px;font-weight:700;color:var(--txt2);min-width:52px;text-align:right;flex-shrink:0">'+d.pct+'% • '+d.label+'</span>'
       +'</span>';
   }
-  var barA=_bar(fA,'A');
+  var barA=_bar(fA,'A');*/
   var barB=_bar(fB,'B');
   if(!barA&&!barB)return'';
   return'<span style="display:inline-flex;flex-direction:column;min-width:180px">'+barA+barB+'</span>';
