@@ -7,7 +7,10 @@
 <style>
   :root { --or:#FF6B00; --bg:#0D0D0D; --bg2:#1A1A1A; --bdr:#2A2A2A; --txt:#FFFFFF; --txt2:#888; }
   * { box-sizing:border-box; margin:0; padding:0; }
-  body { background:var(--bg); color:#fff; font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif; min-height:100vh; display:flex; align-items:center; justify-content:center; padding:20px; }
+  body { background:var(--bg); color:#fff; font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif; min-height:100vh; display:flex; align-items:center; justify-content:center; padding:20px; overflow-x:hidden; }
+  html { overflow-x:hidden; }
+  ::-webkit-scrollbar { display:none; }
+  * { scrollbar-width:none; }
   .card { width:100%; max-width:400px; text-align:center; }
   .label { font-size:11px; color:var(--or); text-transform:uppercase; letter-spacing:3px; font-weight:700; margin-bottom:10px; }
   .title { font-size:28px; font-weight:900; letter-spacing:-1px; line-height:1.1; margin-bottom:8px; }
