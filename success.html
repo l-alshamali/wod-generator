@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>Get Your Password — WOD Generator</title>
 <style>
   :root { --or:#FF6B00; --bg:#0D0D0D; --bg2:#1A1A1A; --bdr:#2A2A2A; --txt:#FFFFFF; --txt2:#888; }
@@ -75,11 +75,7 @@ async function getCode() {
       <div class="result">
         <div class="result-label">Your Password</div>
         <div class="code">${latest}</div>
-        <div class="instructions">
-          Go to <a href="https://wodgenerator.org">wodgenerator.org</a><br>
-          Enter your email + this password to log in.<br><br>
-          <span style="color:#fff">Keep it safe!</span>
-        </div>
+        <div class="instructions"><div style="font-size:17px;font-weight:700;color:var(--txt2);margin-bottom:6px">Go to <a href="https://wodgenerator.org" style="color:var(--or);font-weight:800;text-decoration:none">wodgenerator.org</a></div>Enter your email + this password to log in.<br><br><span style="color:#fff;font-weight:700">Keep it safe!</span></div>
       </div>`;
   } catch(e) {
     output.innerHTML = '<div class="error">Connection error. Please try again.</div>';
