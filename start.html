@@ -138,16 +138,18 @@
   .hero-eyebrow{
     display:inline-flex; align-items:center; gap:10px;
     font-size:.78rem; font-weight:800;
-    color: var(--orange);
+    color: var(--grey);
     margin-bottom: 28px;
   }
   .hero-eyebrow::before, .hero-eyebrow::after{
-    content:""; width:24px; height:1px; background: var(--orange); opacity:.5;
+    content:""; width:24px; height:1px; background: var(--grey); opacity:.6;
   }
   .hero h1{
     font-size: clamp(2rem, 6vw, 3.8rem);
-    line-height: 1.35;
+    line-height: 1.5;
     color: var(--white);
+    padding-bottom: 0.15em;
+    overflow: visible;
   }
   .hero h1 .accent{ color: var(--orange); }
 
@@ -261,7 +263,10 @@
 
   /* ============ WHY US ============ */
   .why-grid{ display:grid; grid-template-columns: repeat(4,1fr); gap:18px; }
-  .why-card{ padding: 26px 6px; border-top: 2px solid var(--orange); }
+  .why-card{ padding: 26px 6px; border-top: 2px solid var(--orange); display:flex; flex-direction:column; }
+  .why-card img{ margin-top:auto; }
+  html[dir="rtl"] #step-img-3, html[dir="rtl"] #step-img-4{ padding-top:24px; }
+  html[dir="ltr"] #step-img-2, html[dir="ltr"] #step-img-3, html[dir="ltr"] #step-img-4, html[dir="ltr"] #step-img-5{ padding-top:24px; }
   .why-card h4{ font-size:1rem; margin-bottom:10px; }
   .why-card p{ color:var(--grey); font-size:.88rem; }
 
@@ -290,12 +295,15 @@
     background: radial-gradient(50% 60% at 50% 100%, rgba(255,122,41,.12), transparent 65%);
   }
   .closing blockquote{
-    font-size: clamp(1.3rem, 3vw, 1.9rem);
+    font-size: clamp(1.1rem, 2vw, 1.4rem);
     max-width: 720px; margin: 0 auto 40px;
     color: var(--white);
+    font-weight: 800;
+    line-height: 1.6;
   }
-  .closing blockquote::before{ content:"“"; color:var(--orange); }
-  .closing blockquote::after{ content:"”"; color:var(--orange); }
+  .closing blockquote::before{ content:''; }
+  .closing blockquote::after{ content:''; }
+  .closing blockquote .q{ color:var(--orange); font-style:normal; }
 
   footer{
     padding: 30px 24px 40px; text-align:center;
@@ -344,13 +352,13 @@
   </div>
 
   <h1 class="display">
-    <span data-ar=""><span style="background:linear-gradient(90deg,#ff6b00,#ffb347);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;">توقف عن التخمين<br>ابدأ في تحقيق الإنجازات</span></span>
-    <span data-en=""><span style="background:linear-gradient(90deg,#ff6b00,#ffb347);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;">Stop guessing<br>Start achieving</span></span>
+    <span data-ar=""><span style="background:linear-gradient(90deg,#ff6b00,#ffb347);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;display:inline-block;padding-bottom:0.25em;margin-bottom:-0.25em;">مولّد التمارين الذكي</span></span>
+    <span data-en=""><span style="background:linear-gradient(90deg,#ff6b00,#ffb347);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;">Smart WOD Generator</span></span>
   </h1>
 
   <p class="hero-sub">
-    <span data-ar="" style="color:#ffffff;font-weight:800;font-size:1.25rem;">مدربك الذكي في جيبك — يقوم بإنشاء تمارين "كروس فيت" (CrossFit) متنوعة تقضي على الملل وتفرض تقدماً مستمراً</span>
-    <span data-en="" style="color:#ffffff;font-weight:800;font-size:1.25rem;">Your smart coach in your pocket — generating varied CrossFit workouts that kill boredom and force constant progress.</span>
+    <span data-ar="" style="color:#ffffff;font-weight:800;font-size:1.25rem;">مدربك الذكي لتمارين كروسفت بلا حدود<br>صُممت لتدفعك نحو التطور المستمر</span>
+    <span data-en="" style="color:#ffffff;font-weight:800;font-size:1.25rem;">Your smart coach for unlimited CrossFit workouts<br>built to keep you improving</span>
   </p>
 
   <div class="cta-row">
@@ -376,6 +384,7 @@
           <span data-ar=""><strong style="color:var(--chalk)">ابدأ بذكاء:</strong> اختر مستوى لياقتك (مبتدئ، متوسط، متقدم، أو نخبة)؛ لنقوم بضبط الخوارزميات بدقة لتناسب قدراتك الحالية وتدفعك نحو التطور.</span>
           <span data-en=""><strong style="color:var(--chalk)">Start Smart:</strong> Choose your fitness level (Beginner, Intermediate, Advanced, or Elite). Our algorithms will calibrate everything to push your limits safely and effectively.</span>
         </p>
+        <img src="step1.jpg" alt="Step 1" style="width:100%;display:block;margin:12px auto 0;border-radius:8px;mix-blend-mode:lighten;">
       </div>
       <div class="why-card">
         <h4><span class="mono" style="color:var(--orange)">02</span> <span data-ar="">حدد مدة التمرين</span><span data-en="">Set Your Duration</span></h4>
@@ -383,6 +392,7 @@
           <span data-ar=""><strong style="color:var(--chalk)">وقتك هو الأولوية:</strong> اختر المدة الزمنية المتاحة لديك، وسنقوم بتعديل حجم التمرين وكثافته ليتناسب تماماً مع وقتك.</span>
           <span data-en=""><strong style="color:var(--chalk)">Your Time Matters:</strong> Choose your available workout duration, and we'll adjust the volume and intensity to fit your schedule perfectly.</span>
         </p>
+        <img id="step-img-2" src="step2.jpg" alt="Step 2" style="width:100%;max-width:320px;display:block;margin:12px auto 0;border-radius:8px;mix-blend-mode:lighten;">
       </div>
       <div class="why-card">
         <h4><span class="mono" style="color:var(--orange)">03</span> <span data-ar="">اختر صيغة التمرين</span><span data-en="">Choose Your Format</span></h4>
@@ -390,6 +400,7 @@
           <span data-ar=""><strong style="color:var(--chalk)">فردي أم فريق؟</strong> حدد ما إذا كنت ستتمرين بمفردك (Solo) أو مع شريك (Team of 2)، لضبط التكرارات وتوزيع الحمل التدريبي.</span>
           <span data-en=""><strong style="color:var(--chalk)">Solo or Team?</strong> Select whether you're training alone (Solo) or with a partner (Team of 2) to auto-adjust reps and workload sharing.</span>
         </p>
+        <img id="step-img-3" src="step3.jpg" alt="Step 3" style="width:100%;max-width:320px;display:block;margin:12px auto 0;border-radius:8px;mix-blend-mode:lighten;">
       </div>
       <div class="why-card">
         <h4><span class="mono" style="color:var(--orange)">04</span> <span data-ar="">حدد نوع الـ WOD</span><span data-en="">Pick Your WOD Format</span></h4>
@@ -397,6 +408,7 @@
           <span data-ar=""><strong style="color:var(--chalk)">اختر أسلوب التحدي:</strong> انتقِ صيغة التمرين التي تفضلها (مثل AMRAP، EMOM، أو For Time) لبناء التمرين المثالي.</span>
           <span data-en=""><strong style="color:var(--chalk)">Choose Your Challenge:</strong> Select your preferred workout style (such as AMRAP, EMOM, or For Time) to build your ideal session.</span>
         </p>
+        <img id="step-img-4" src="step4.jpg" alt="Step 4" style="width:100%;max-width:320px;display:block;margin:12px auto 0;border-radius:8px;mix-blend-mode:lighten;">
       </div>
       <div class="why-card">
         <h4><span class="mono" style="color:var(--orange)">05</span> <span data-ar="">اضغط "توليد"</span><span data-en="">Hit "Generate"</span></h4>
@@ -404,6 +416,7 @@
           <span data-ar=""><strong style="color:var(--chalk)">انطلق!</strong> بضغطة واحدة، تظهر أمامك خطة تدريبية كاملة ومدروسة. اضبط المؤقت، وتنفس بعمق.. حان وقت الإنجاز!</span>
           <span data-en=""><strong style="color:var(--chalk)">Game Time!</strong> In one tap, your complete, science-backed training plan appears. Set the timer, take a deep breath.. it's time to crush it!</span>
         </p>
+        <img id="step-img-5" src="step5.jpg" alt="Step 5" style="width:100%;max-width:320px;display:block;margin:12px auto 0;border-radius:8px;mix-blend-mode:lighten;">
       </div>
     </div>
   </div>
@@ -494,126 +507,7 @@
   </div>
 </section>
 
-<!-- ============ LEVELS (LADDER MOTIF) ============ -->
-<section id="levels">
-  <div class="wrap" style="max-width:820px;">
-    <div class="section-head">
-      <div class="eyebrow"><span data-ar="">مستويات التحدي</span><span data-en="">Challenge Levels</span></div>
-      <h2 class="display" style="text-align:center"><span data-ar="" style="background:linear-gradient(90deg,#ff6b00,#ffb347);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;">تسلّق السلّم بلا استعجال</span><span data-en="" style="background:linear-gradient(90deg,#ff6b00,#ffb347);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;">Climb the ladder, no rush</span></h2>
-      <p><span data-ar="">لا يهم من أين تبدأ، المهم أن تستمر — نظام تدرّج يحترم تطورك البدني.</span><span data-en="">It doesn't matter where you start — only that you keep climbing.</span></p>
-    </div>
 
-    <div class="ladder">
-      <div class="rung">
-        <div class="rung-num mono">01</div>
-        <div>
-          <h4><span data-ar="">مبتدئ</span><span data-en="">Beginner</span></h4>
-          <p><span data-ar="">تمارين بوزن الجسم تركز على التكنيك الصحيح وبناء الأساس المتين.</span><span data-en="">Bodyweight work focused on clean technique and a solid foundation.</span></p>
-          <div class="rung-bar"><i style="width:25%"></i></div>
-        </div>
-      </div>
-      <div class="rung">
-        <div class="rung-num mono">02</div>
-        <div>
-          <h4><span data-ar="">متوسط</span><span data-en="">Intermediate</span></h4>
-          <p><span data-ar="">إدخال أدوات الكروس فت الأساسية لزيادة القوة والتحمل.</span><span data-en="">Core CrossFit equipment enters the mix to build strength and endurance.</span></p>
-          <div class="rung-bar"><i style="width:55%"></i></div>
-        </div>
-      </div>
-      <div class="rung">
-        <div class="rung-num mono">03</div>
-        <div>
-          <h4><span data-ar="">متقدم</span><span data-en="">Advanced</span></h4>
-          <p><span data-ar="">تحديات عالية الكثافة تختبر أقصى حدودك البدنية والذهنية.</span><span data-en="">High-intensity challenges testing your physical and mental limits.</span></p>
-          <div class="rung-bar"><i style="width:80%"></i></div>
-        </div>
-      </div>
-      <div class="rung is-elite">
-        <div class="rung-num mono">04</div>
-        <div>
-          <h4><span data-ar="">نخبة</span><span data-en="">Elite</span></h4>
-          <p><span data-ar="">بروتوكولات بمستوى المنافسات — للرياضي اللي ما يعرف السقف.</span><span data-en="">Competition-grade protocols — for the athlete with no ceiling.</span></p>
-          <div class="rung-bar"><i style="width:100%"></i></div>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- ============ NUTRITION ============ -->
-<section id="nutrition">
-  <div class="wrap">
-    <div class="section-head">
-      <div class="eyebrow"><span data-ar="">وقود الأبطال</span><span data-en="">Fuel for Champions</span></div>
-      <h2 class="display" style="text-align:center"><span data-ar="" style="background:linear-gradient(90deg,#ff6b00,#ffb347);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;">التغذية التي تكمل تدريبك</span><span data-en="" style="background:linear-gradient(90deg,#ff6b00,#ffb347);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;">Nutrition that completes your training</span></h2>
-      <p><span data-ar="">الرياضي الذكي يدرك أن "المطبخ هو المكان الذي تُبنى فيه العضلات".</span><span data-en="">The smart athlete knows muscle is built in the kitchen too.</span></p>
-    </div>
-    <div class="format-grid" style="grid-template-columns:repeat(3,1fr);">
-      <div class="format-card">
-        <span class="tag mono">PROTEIN</span>
-        <h4><span data-ar="">البروتين لبناء العضلات</span><span data-en="">Protein for muscle</span></h4>
-        <p><span data-ar="">تذكير دائم بأهمية البروتين (لحوم، بقوليات، مكملات) لترميم الأنسجة بعد تمارين المقاومة.</span><span data-en="">A steady reminder of protein's role (meat, legumes, supplements) in repairing tissue after resistance work.</span></p>
-      </div>
-      <div class="format-card">
-        <span class="tag mono">CARBS</span>
-        <h4><span data-ar="">الكربوهيدرات الذكية</span><span data-en="">Smart carbs</span></h4>
-        <p><span data-ar="">مصادر طاقة طويلة الأمد (شوفان، بطاطس، أرز بني) تضمن استمرارية طاقتك خلال الـ WODs الطويلة.</span><span data-en="">Long-burning energy sources (oats, potatoes, brown rice) to sustain you through longer WODs.</span></p>
-      </div>
-      <div class="format-card">
-        <span class="tag mono">RECOVERY</span>
-        <h4><span data-ar="">الترطيب والتعافي</span><span data-en="">Hydration &amp; recovery</span></h4>
-        <p><span data-ar="">الماء ووجبات خفيفة صحية (مكسرات، زبادي يوناني، فاكهة) هي مفتاحك لاستعادة النشاط بسرعة.</span><span data-en="">Water and healthy snacks (nuts, Greek yogurt, fruit) are your key to bouncing back fast.</span></p>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- ============ SCIENCE ============ -->
-<section id="science">
-  <div class="wrap" style="max-width:680px; text-align:center;">
-    <div class="eyebrow" style="justify-content:center;"><span data-ar="">العلم والنتائج</span><span data-en="">Science &amp; Results</span></div>
-    <h2 class="display" style="font-size:1.9rem; margin-bottom:20px; text-align:center;">
-      <span data-ar="" style="background:linear-gradient(90deg,#ff6b00,#ffb347);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;">لماذا العشوائية المنظمة هي سر الأبطال؟</span>
-      <span data-en="" style="background:linear-gradient(90deg,#ff6b00,#ffb347);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;">Why structured randomness wins</span>
-    </h2>
-    <p style="color:var(--chalk); font-size:1.02rem; margin-bottom:16px;">
-      <span data-ar="">عندما تكرر نفس التمرين يومياً، يعتاد جسمك عليه وتتوقف النتائج — هذا ما يعرف بـ"الارتباك العضلي". WOD Generator يستخدم خوارزمية ذكية تضمن عدم تكرار النمط، فتجبر عضلاتك على التكيف المستمر.</span>
-      <span data-en="">Repeat the same workout daily and your body adapts — results stall. This is "muscle confusion." WOD Generator's algorithm guarantees the pattern never repeats, forcing constant adaptation.</span>
-    </p>
-    <p style="color:var(--grey); font-size:1.02rem;">
-      <span data-ar="">نحن لا نهتم فقط بالتعرق، نحن نهتم بالبيانات — كل تمرين تنهيه هو خطوة للأمام يحفظها التطبيق كمرجع لنجاحك.</span>
-      <span data-en="">We don't just care about the sweat — we care about the data. Every workout you finish is a step forward the app keeps as your own record of progress.</span>
-    </p>
-  </div>
-</section>
-
-<!-- ============ WHY US ============ -->
-<section id="why">
-  <div class="wrap">
-    <div class="section-head">
-      <div class="eyebrow"><span data-ar="">لماذا نحن؟</span><span data-en="">Why Us?</span></div>
-      <h2 class="display" style="text-align:center"><span data-ar="" style="background:linear-gradient(90deg,#ff6b00,#ffb347);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;">هذا ما يغيّر لعبتك الرياضية</span><span data-en="" style="background:linear-gradient(90deg,#ff6b00,#ffb347);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;">This is what changes your game</span></h2>
-    </div>
-    <div class="why-grid">
-      <div class="why-card">
-        <h4><span data-ar="">انضباط بلا أعذار</span><span data-en="">No-excuse discipline</span></h4>
-        <p><span data-ar="">مهما ازدحم جدولك، تمرين فعّال جاهز خلال دقائق — افتح، ولّد، وابدأ.</span><span data-en="">However packed your day is, an effective workout is ready in minutes — open, generate, go.</span></p>
-      </div>
-      <div class="why-card">
-        <h4><span data-ar="">وداعاً لهضبة النتائج</span><span data-en="">Goodbye, plateaus</span></h4>
-        <p><span data-ar="">خوارزمياتنا تمنع جسمك من الاعتياد على نمط واحد — كل يوم تحدٍ جديد.</span><span data-en="">Our algorithms stop your body settling into one pattern — a new challenge every day.</span></p>
-      </div>
-      <div class="why-card">
-        <h4><span data-ar="">مرونة تواكب طموحك</span><span data-en="">Flexible by design</span></h4>
-        <p><span data-ar="">سواء في البوكس أو الجيم أو البيت، التمرين يتكيّف مع أدواتك المتاحة.</span><span data-en="">Box, gym, or home — the workout adapts to whatever equipment you've got.</span></p>
-      </div>
-      <div class="why-card">
-        <h4><span data-ar="">جزء من مجتمع الأبطال</span><span data-en="">Part of a community</span></h4>
-        <p><span data-ar="">تمارين الفِرَق تجعل التمرين تجربة اجتماعية مليئة بالحماس والمنافسة.</span><span data-en="">Partner WODs turn training into a shared, competitive, high-energy experience.</span></p>
-      </div>
-    </div>
-  </div>
-</section>
 
 <section id="faq">
   <div class="wrap">
@@ -651,8 +545,10 @@
 </section>
 
 <footer>
-  <span data-ar="">مولّد تمارين WOD — مصمم لرياضي الكروس فت الجاد.</span>
-  <span data-en="">WOD Generator — built for the serious CrossFit athlete.</span>
+  <a href="https://www.instagram.com/wod.generator" target="_blank" style="display:inline-flex;align-items:center;gap:8px;color:var(--chalk);text-decoration:none;font-weight:700;font-size:1rem;">
+    <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>
+    @wod.generator
+  </a>
 </footer>
 
 <script>
