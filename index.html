@@ -1410,6 +1410,7 @@ function mkRFT(time,lv,team,cfg){
   // ── خريطة الجولات الذكية: سبرينت=3 | متوسط=4-5 | ماراثون=5-7 (الكارديو يمتص الوقت الزائد) ──
   var _rftMaxRounds=_rftDefaultRounds+2;
   var rounds=schemeReps?schemeReps.length:(cfg.rounds||_rftDefaultRounds);
+  if(cfg.rounds)rounds=cfg.rounds; // early hard-lock: user-specified rounds always win
   var baseReps=null;
   if(!schemeReps){
     if(cfg.baseReps){
@@ -1579,7 +1580,7 @@ function mkRFT(time,lv,team,cfg){
 
   if(_perExReps&&_perExReps.length&&_rpType!=='flat'&&chosen.length>2){var _rftSI=chosen.map(function(_,i){return i;}).sort(function(a,b){return getSecondsPerRep(chosen[a],lv,team)-getSecondsPerRep(chosen[b],lv,team);});var _rftFSCleanMin=Math.ceil(_rftLimsAll.min/_rftLS)*_rftLS;var _rftFSMaxBase=Math.floor((_rftLadderCap-(chosen.length-1)*_rftLS)/_rftLS)*_rftLS;var _rftNC2=[],_rftNR2=[];var _rftCardioTime=_cardioSecEst(_cEx,lv,team,true);var _rftPerRndTgt=_rftBdg2/Math.max(1,rounds);var _rftTotalSPR=_rftSI.reduce(function(s,oi){return s+getSecondsPerRep(chosen[oi],lv,team);},0);var _rftStepContrib=_rftSI.reduce(function(s,oi,si){return s+(chosen.length-1-si)*getSecondsPerRep(chosen[oi],lv,team);},0)*_rftLS;var _rftMinLadderStr=_rftFSCleanMin*_rftTotalSPR+_rftStepContrib;if(_rftMinLadderStr+_rftCardioTime>_rftPerRndTgt){_rftSI.forEach(function(oi){_rftNC2.push(chosen[oi]);_rftNR2.push(_rftFSCleanMin);});}else if(_rftFSMaxBase>=_rftFSCleanMin){var _rftStrBudget=_rftPerRndTgt*0.97-_rftCardioTime;var _rftCalcBase=_rftTotalSPR>0?Math.round((_rftStrBudget-_rftStepContrib)/_rftTotalSPR/_rftLS)*_rftLS:_rftFSCleanMin;_rftCalcBase=Math.max(_rftFSCleanMin,Math.min(_rftFSMaxBase,_rftCalcBase));_rftSI.forEach(function(oi,si){var rv=Math.min(_rftLadderCap,_rftCalcBase+(chosen.length-1-si)*_rftLS);_rftNC2.push(chosen[oi]);_rftNR2.push(Math.max(_rftFSCleanMin,rv));});}else{_rftSI.forEach(function(oi){_rftNC2.push(chosen[oi]);_rftNR2.push(_rftFSCleanMin);});}chosen=_rftNC2;_perExReps=_rftNR2;}
   // Hard-lock user-specified rounds and exCnt
-  if(cfg.rounds&&rounds!==cfg.rounds){rounds=cfg.rounds;while(reps.length<rounds)reps.push(reps[reps.length-1]||baseReps||10);if(reps.length>rounds)reps=reps.slice(0,rounds);}
+  if(cfg.rounds){rounds=cfg.rounds;while(reps.length<rounds)reps.push(reps[reps.length-1]||baseReps||10);if(reps.length>rounds)reps=reps.slice(0,rounds);}
   if(cfg.exCnt&&chosen.length>cfg.exCnt){chosen=chosen.slice(0,cfg.exCnt);if(_perExReps)_perExReps=_perExReps.slice(0,cfg.exCnt);}
   var items=[{kind:'sep',label:'── '+rounds+' ROUNDS ──'}];
   chosen.forEach(function(ex,i){
@@ -2256,6 +2257,20 @@ function mkBuyInOut(time,lv,team,cfg){
   }
   bIn=Object.assign({},bIn,{amount:buyInAmt});
   bOut=Object.assign({},bOut,{amount:cashOutAmt});
+  // ── Cap cardio to time budget — keep within range, don't override user-set amounts ──
+  {var _biBC2=_BUYIN_CARDIO_TABLE[lv]||_BUYIN_CARDIO_TABLE.intermediate;
+   var _biMult2=(team===2)?2:1;
+   var _biCapSec2=time*60*(mode==='both'?0.22:0.28);
+   function _biCapAmt2(cEx,userSet){
+     if(userSet!=null)return cEx;
+     var _cS=_cardioSecEst(cEx,lv,team,true);if(_cS<=_biCapSec2)return cEx;
+     var _r=_biCapSec2/_cS;
+     var _nA=cEx.unit==='Cal'?Math.max(_biBC2.calMin*_biMult2,_roundCal(Math.round(cEx.amount*_r),team)):Math.max(_biBC2.mMin*_biMult2,_roundMtr(Math.round(cEx.amount*_r)));
+     return Object.assign({},cEx,{amount:_nA});
+   }
+   if(mode==='both'||mode==='buyin')bIn=_biCapAmt2(bIn,cfg.buyInAmt);
+   if(mode==='both'||mode==='cashout')bOut=_biCapAmt2(bOut,cfg.cashOutAmt);
+   buyInAmt=bIn.amount;cashOutAmt=bOut.amount;}
   // Subtract buy-in / cash-out estimated time from WOD budget
   var _biSec=(mode==='both'||mode==='buyin')?_cardioSecEst(bIn,lv,team,true):0;
   var _boSec=(mode==='both'||mode==='cashout')?_cardioSecEst(bOut,lv,team,true):0;
@@ -4014,7 +4029,7 @@ function toggleRftCardio(si){
 function regenRft(si){
   var sec=S.wod.sections[si];
   var cfg=sec.rftCfg||{};
-  var _sr=_stickyRep(sec,S.level,S.teamSize);if(_sr&&!cfg.baseReps&&!cfg.schemeKey&&!cfg.customReps)cfg=Object.assign({},cfg,{baseReps:_sr});
+  var _sr=_stickyRep(sec,S.level,S.teamSize);if(_sr&&!cfg.baseReps&&!cfg.schemeKey&&!cfg.customReps&&!cfg.rounds&&!cfg.exCnt)cfg=Object.assign({},cfg,{baseReps:_sr});
   var _sc=_stickyCardio(sec);
   var newSecs=_regenBest(mkRFT,S.wod.cfg.time,S.level,S.teamSize,cfg);
   if(!newSecs)return;
@@ -4703,6 +4718,7 @@ function toggleTabataRest(si){
   if(btn){btn.textContent=v?'ON':'OFF';btn.style.cssText=(v?S_sel:S_btn)+';min-width:60px;text-align:center';}
 }
 function _updateTabataChip(si){
+  if(!S.wod||S.wod.type!=='tabata')return;
   var _tSec=S.wod&&S.wod.sections&&S.wod.sections[si];
   var _ct=(_tSec&&_tSec.infoVars&&_tSec.infoVars.tot)||4;
   var _ctEl=document.getElementById('chip-time-val');
