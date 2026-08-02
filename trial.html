@@ -6134,7 +6134,23 @@ function tryCode(){
     render();
   });
 }
+// ── عدّاد زوّار الترايل: يسجّل كل جهاز جديد يفتح صفحة الترايل مرة واحدة في Supabase ──
+function logTrialVisit(){
+  try{
+    if(typeof TRIAL==='undefined'||!TRIAL)return;              // صفحة الترايل فقط
+    var K='wod_trial_vid';
+    if(localStorage.getItem(K))return;                          // هذا الجهاز محسوب مسبقاً
+    var vid='v'+Date.now().toString(36)+Math.random().toString(36).slice(2,10);
+    localStorage.setItem(K,vid);
+    fetch(SUPABASE_URL+'/rest/v1/trial_visits',{
+      method:'POST',
+      headers:{'apikey':SUPABASE_KEY,'Authorization':'Bearer '+SUPABASE_KEY,'Content-Type':'application/json','Prefer':'return=minimal'},
+      body:JSON.stringify({id:vid,user_agent:(navigator.userAgent||'').slice(0,180)})
+    }).catch(function(){});
+  }catch(e){}
+}
 loadCfg();
+logTrialVisit();
 checkAccess();
 // ─── My WODs (Saved WODs) ────────────────────────────────────────────────────
 var _SW_MAX=30;
