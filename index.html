@@ -4547,8 +4547,14 @@ function _tabTimerSync(){
   t.idx=idx;t.rem=t.cum[idx]-real;t.wallAnchor=Date.now()-real*1000;
   _tabTimerRender();
 }
+function _reviveAudio(){
+  if(_audioCtx&&_audioCtx.state==='closed'){_audioCtx=null;_audioReady=false;}
+  if(!_audioCtx){try{_audioCtx=new(window.AudioContext||window.webkitAudioContext)();}catch(e){}}
+  if(_audioCtx&&_audioCtx.state==='suspended'){_audioCtx.resume().then(function(){_audioReady=true;}).catch(function(){});}
+}
 document.addEventListener('visibilitychange',function(){
   if(document.visibilityState==='visible'){
+    _reviveAudio();
     if(document.getElementById('wod-timer-ov')){_wlRequest();_wodTimerSync();}
     else if(document.getElementById('tab-timer-ov')){_wlRequest();_tabTimerSync();}
   }
@@ -4572,6 +4578,7 @@ function _unlockAudio(){
   document.addEventListener(ev,_unlockAudio,{once:false,passive:true});
 });
 function _getAudioCtx(){
+  if(_audioCtx&&_audioCtx.state==='closed'){_audioCtx=null;_audioReady=false;}
   if(!_audioCtx){try{_audioCtx=new(window.AudioContext||window.webkitAudioContext)();}catch(e){return null;}}
   if(_audioCtx.state==='suspended'){_audioCtx.resume().catch(function(){});}
   return _audioCtx;

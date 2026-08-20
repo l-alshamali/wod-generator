@@ -3119,7 +3119,7 @@ function step0(){
   +'<div style="font-size:13px;color:var(--txt2);font-weight:500;letter-spacing:1px">'+t('sub')+'</div>'
   +'</div>'
   +dots(0)+'<div class="qc ani"><div class="ql">'+t('step1')+'</div><div class="qt" style="margin-bottom:16px">'+t('step1q')+'</div><div class="og">'
-  +lvls.map(function(x){if(TRIAL&&x[0]!=='beginner'){return'<button class="ob" style="position:relative;pointer-events:none;opacity:0.45"><span class="oi">'+x[1]+'</span><span class="on">'+x[2]+'</span>'+(x[3]?'<span class="od">'+x[3]+'</span>':'')+"<span style=\"position:absolute;top:6px;left:8px;font-size:20px;line-height:1\">🔒</span></button>";}return'<button class="ob'+(S.level===x[0]?' sel':'')+'" onclick="setLevel(\''+x[0]+'\''+',this)"><span class="oi">'+x[1]+'</span><span class="on">'+x[2]+'</span>'+(x[3]?'<span class="od">'+x[3]+'</span>':'')+"</button>";}).join('')+'</div></div>';
+  +lvls.map(function(x){if(TRIAL&&x[0]!=='beginner'){return'<button class="ob" style="position:relative;pointer-events:none;opacity:0.45"><span class="oi">'+x[1]+'</span><span class="on">'+x[2]+'</span>'+(x[3]?'<span class="od">'+x[3]+'</span>':'')+"<span style=\"position:absolute;top:6px;left:8px;font-size:20px;line-height:1\">🔒</span></button>";}return'<button class="ob'+(S.level===x[0]?' sel':'')+'" onclick="setLevel(\''+x[0]+'\',this)"><span class="oi">'+x[1]+'</span><span class="on">'+x[2]+'</span>'+(x[3]?'<span class="od">'+x[3]+'</span>':'')+'</button>'}).join('')+'</div></div>';
 }
 function setLevel(l,el){S.level=l;S.wod=null;if(el)el.classList.add('sel');setTimeout(function(){S.step=1;render()},220)}
 function step1(){
@@ -4549,8 +4549,14 @@ function _tabTimerSync(){
   t.idx=idx;t.rem=t.cum[idx]-real;t.wallAnchor=Date.now()-real*1000;
   _tabTimerRender();
 }
+function _reviveAudio(){
+  if(_audioCtx&&_audioCtx.state==='closed'){_audioCtx=null;_audioReady=false;}
+  if(!_audioCtx){try{_audioCtx=new(window.AudioContext||window.webkitAudioContext)();}catch(e){}}
+  if(_audioCtx&&_audioCtx.state==='suspended'){_audioCtx.resume().then(function(){_audioReady=true;}).catch(function(){});}
+}
 document.addEventListener('visibilitychange',function(){
   if(document.visibilityState==='visible'){
+    _reviveAudio();
     if(document.getElementById('wod-timer-ov')){_wlRequest();_wodTimerSync();}
     else if(document.getElementById('tab-timer-ov')){_wlRequest();_tabTimerSync();}
   }
@@ -4574,6 +4580,7 @@ function _unlockAudio(){
   document.addEventListener(ev,_unlockAudio,{once:false,passive:true});
 });
 function _getAudioCtx(){
+  if(_audioCtx&&_audioCtx.state==='closed'){_audioCtx=null;_audioReady=false;}
   if(!_audioCtx){try{_audioCtx=new(window.AudioContext||window.webkitAudioContext)();}catch(e){return null;}}
   if(_audioCtx.state==='suspended'){_audioCtx.resume().catch(function(){});}
   return _audioCtx;
